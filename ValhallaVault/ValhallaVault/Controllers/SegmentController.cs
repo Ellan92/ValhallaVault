@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using ValhallaVault.Data;
+using ValhallaVault.Data.Repository;
+using ValhallaVault.Models;
 
 namespace ValhallaVault.Controllers
 {
@@ -7,5 +9,72 @@ namespace ValhallaVault.Controllers
     [ApiController]
     public class SegmentController : ControllerBase
     {
+        private readonly ApplicationDbContext _context;
+        private readonly GenericRepo<SegmentModel> _repo;
+        private readonly SegmentRepo _segmentRepo;
+        public SegmentController(ApplicationDbContext dbContext, GenericRepo<SegmentModel> genericRepo, SegmentRepo segmentRepo)
+        {
+            _context = dbContext;
+            _repo = genericRepo;
+            _segmentRepo = segmentRepo;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<SegmentModel>>> GetAllResponses()
+        {
+            var responses = await _repo.GetAllAsync();
+
+            return Ok(responses);
+        }
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var segmentById = await _repo.GetByIdAsync(id);
+
+            if (segmentById != null)
+            {
+                return Ok(segmentById);
+            }
+            return BadRequest();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> PostCategory(SegmentModel segmentModel)
+        {
+            if (segmentModel != null)
+            {
+                await _repo.AddAsync(segmentModel);
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var deleteSegment = _context.Responses.FirstOrDefault(x => x.Id == id);
+
+            if (deleteSegment != null)
+            {
+                await _repo.DeleteAsync(id);
+                return Ok();
+            }
+            return NoContent();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateCategory(int segmentId, string newSegmentText)
+        {
+            if (newSegmentText != null)
+            {
+                await _segmentRepo.UpdateSegmentDescriptionAsync(segmentId, newSegmentText);
+                return Ok();
+            }
+            return BadRequest();
+        }
     }
 }
