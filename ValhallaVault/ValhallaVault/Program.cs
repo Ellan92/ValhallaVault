@@ -47,7 +47,7 @@ using (ServiceProvider sp = builder.Services.BuildServiceProvider())
     var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
     var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
 
-    context.Database.Migrate();
+    // context.Database.Migrate();
 
     ApplicationUser newUser = new()
     {

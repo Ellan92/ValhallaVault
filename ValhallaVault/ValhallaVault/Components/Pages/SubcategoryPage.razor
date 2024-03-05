@@ -1,0 +1,45 @@
+﻿
+@page "/segment/{segmentId}" 
+@inject ApplicationDbContext _context 
+@inject NavigationManager Navigation 
+
+<h3>Subkategorier</h3>
+
+@if (Subcategories != null && Subcategories.Any())
+{
+    @foreach (var subcategory in Subcategories)
+    {
+        <div>
+            <h4>Namn: @subcategory.SubCategoryName</h4> 
+            <p>Beskrivning: @subcategory.Description</p> 
+            <p>Antal frågor: @subcategory.Questions.Count</p> 
+        </div>
+    }
+}
+else
+{
+    <p>Inga subkategorier hittades.</p> 
+}
+
+<a href="/segments">Tillbaka till Segmentsidan</a> <!-- Länk tillbaka till segmentsidan -->
+<a href="/">Tillbaka till Hemsidan</a> <!-- Länk tillbaka till hemsidan -->
+
+@code {
+    [Parameter]
+    public int SegmentId { get; set; } // parameter för segmentets ID
+
+    private List<SubcategoryModel> Subcategories { get; set; } // Lista för att lagra alla subkategorier 
+
+    protected override async Task OnInitializedAsync()
+    {
+        var segment = await _context.Segments.Include(s => s.SubCategories).FirstOrDefaultAsync(s => s.Id == SegmentId);
+        if (segment != null)
+        {
+            Subcategories = segment.SubCategories; // Hämtar subkategorier för det valda segmentet
+        }
+        else
+        {
+            Navigation.NavigateTo("/"); // Om segmentet inte hittas, navigera tillbaka till hemsidan
+        }
+    }
+}
