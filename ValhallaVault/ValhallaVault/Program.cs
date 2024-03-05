@@ -34,11 +34,63 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
+//using (ServiceProvider sp = builder.Services.BuildServiceProvider())
+//{
+//    var context = sp.GetRequiredService<ApplicationDbContext>();
+//    var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
+//    var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
+
+//    //context.Database.Migrate();
+
+//    ApplicationUser newUser = new()
+//    {
+//        UserName = "admin",
+//        Email = "adminuser@mail.com",
+//        EmailConfirmed = true,
+//    };
+
+//    ApplicationUser secondUser = new()
+//    {
+//        UserName = "user",
+//        Email = "user@mail.com",
+//        EmailConfirmed = true,
+//    };
+
+//    var user = signInManager.UserManager.FindByEmailAsync(newUser.Email).GetAwaiter().GetResult();
+//    var user2 = signInManager.UserManager.FindByEmailAsync(secondUser.Email).GetAwaiter().GetResult();
+
+//    if (user == null && user2 == null)
+//    {
+//        // Skapa en ny user
+//        signInManager.UserManager.CreateAsync(newUser, "Password1234!").GetAwaiter().GetResult();
+//        signInManager.UserManager.CreateAsync(secondUser, "Password1234!").GetAwaiter().GetResult();
+//        //signInManager.UserManager.ConfirmEmailAsync(newUser);
+
+//        // Kolla om adminrollen existerar
+//        bool adminRoleExists = roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult();
+
+//        if (!adminRoleExists)
+//        {
+//            // Skapa adminrollen
+//            IdentityRole adminRole = new()
+//            {
+//                Name = "Admin",
+
+//            };
+//            roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
+//        }
+
+//        // Tilldela adminrollen till den nya användaren
+//        signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
+//    }
+//}
 
 var app = builder.Build();
 
