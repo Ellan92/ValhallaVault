@@ -8,7 +8,7 @@ namespace ValhallaVault.Models
         [Key]
         public int Id { get; set; }
         public bool IsCorrect { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; } = null!;
         public ApplicationUser User { get; set; } = null!;
     }
 }
