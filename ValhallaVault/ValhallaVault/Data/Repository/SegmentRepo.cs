@@ -23,5 +23,20 @@
                 throw new Exception("Segment not found.");
             }
         }
+
+        public async Task UpdateSegmentNameAsync(int segmentId, string newSegmentName)
+        {
+            var segment = await _context.Segments.FindAsync(segmentId);
+
+            if (segment != null)
+            {
+                segment.SegmentName = newSegmentName;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Segment not found.");
+            }
+        }
     }
 }

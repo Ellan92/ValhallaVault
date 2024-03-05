@@ -23,5 +23,20 @@
                 throw new Exception("Subcategory not found.");
             }
         }
+
+        public async Task UpdateSubcategoryNameAsync(int subcategoryId, string newSubcategoryName)
+        {
+            var subcategory = await _context.Subcategories.FindAsync(subcategoryId);
+
+            if (subcategory != null)
+            {
+                subcategory.SubCategoryName = newSubcategoryName;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Subcategory not found.");
+            }
+        }
     }
 }
