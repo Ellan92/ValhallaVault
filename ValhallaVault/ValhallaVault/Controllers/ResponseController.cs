@@ -67,13 +67,5 @@ namespace ValhallaVault.Controllers
             return NoContent();
         }
 
-
-        //[HttpPut]
-        //public async Task<IActionResult> UpdateResponse(ResponseModel updatedResponse)
-        //{
-        //    await _repo.
-        //}
-
-
     }
 }
