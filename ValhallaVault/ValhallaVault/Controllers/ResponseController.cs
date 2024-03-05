@@ -22,7 +22,7 @@ namespace ValhallaVault.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ResponseModel>>> GetAllResponses()
         {
-            var responses = _repo.GetAll();
+            var responses = await _repo.GetAllAsync();
 
             return Ok(responses);
         }
@@ -31,7 +31,7 @@ namespace ValhallaVault.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var responseById = _repo.GetById(id);
+            var responseById = await _repo.GetByIdAsync(id);
 
             if (responseById != null)
             {
@@ -46,7 +46,7 @@ namespace ValhallaVault.Controllers
         {
             if (newResponse != null)
             {
-                _repo.Add(newResponse);
+                await _repo.AddAsync(newResponse);
                 return Ok();
             }
             return BadRequest();
@@ -54,15 +54,26 @@ namespace ValhallaVault.Controllers
         }
 
 
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            var deleteResponse = _context.Responses.FirstOrDefault(x => x.Id == id);
+
+            if (deleteResponse != null)
+            {
+                await _repo.DeleteAsync(id);
+                return Ok();
+            }
+            return NoContent();
         }
+
+
+        //[HttpPut]
+        //public async Task<IActionResult> UpdateResponse(ResponseModel updatedResponse)
+        //{
+        //    await _repo.
+        //}
+
+
     }
 }
