@@ -1,0 +1,43 @@
+﻿@page "/Homepage"
+
+<PageTitle>UserPage</PageTitle>
+
+<h3>User Homepage</h3>
+
+<div class="row-cols-4">
+    <div> 
+       <input placeholder="Search Category" @bind="searchText" @bind:event="oninput" />
+    </div>
+</div>
+<br />
+
+<ul>
+    <div>
+        <a href="Category"><h5 class="Category1">Category1</h5></a>
+        <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar bg-success" style="width: 25%">25%</div>
+        </div>
+    </div>
+    <br />
+    <div>
+        <a href="Category"><h5 class="Category1">Category2</h5></a>
+        <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar bg-success" style="width: 25%">25%</div>
+        </div>
+    </div>
+    <br />
+    <div>
+        <a href="Category"><h5 class="Category1">Category3</h5></a>
+        <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar bg-success" style="width: 25%">25%</div>
+        </div>
+    </div>
+    <br />
+</ul>
+
+
+
+@code {
+    private string searchText = "";
+
+}
