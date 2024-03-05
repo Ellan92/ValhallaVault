@@ -4,11 +4,8 @@ namespace ValhallaVault.Data.Repository
 {
     public class GenericRepo<T> where T : class
     {
-        // Repo som har direktkontakt med databasen via dbcontext och returnerar data med hjälp av DbSet. 
-
         private readonly ApplicationDbContext _context;
         private readonly DbSet<T> _dbSet;
-
 
         public GenericRepo(ApplicationDbContext context)
         {
@@ -16,40 +13,37 @@ namespace ValhallaVault.Data.Repository
             _dbSet = context.Set<T>();
         }
 
-
-        public List<T> GetAll()
+        public async Task<List<T>> GetAllAsync()
         {
-            return _dbSet.ToList();
+            return await _dbSet.ToListAsync();
         }
 
-        // Hitta model med ID
-        public T? GetById(int id)
+        public async Task<T> GetByIdAsync(int id)
         {
-            return _dbSet.Find(id);
+
+            return await _dbSet.FindAsync(id);
         }
 
-        // Lägg till model
-        public void Add(T entity)
+        public async Task AddAsync(T entity)
         {
-            _dbSet.Add(entity);
-            Complete();
+            await _dbSet.AddAsync(entity);
+            await CompleteAsync();
         }
 
-        // Delete model med ID
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            T? entityToDelete = GetById(id);
+            T entityToDelete = await GetByIdAsync(id);
 
             if (entityToDelete != null)
             {
                 _dbSet.Remove(entityToDelete);
+                await CompleteAsync();
             }
         }
 
-        // Spara ändringar
-        public void Complete()
+        public async Task CompleteAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }
