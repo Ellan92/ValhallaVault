@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace ValhallaVault.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateIdentitySchema : Migration
+    public partial class initCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,20 @@ namespace ValhallaVault.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,6 +170,108 @@ namespace ValhallaVault.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Responses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IsCorrect = table.Column<bool>(type: "bit", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Responses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Responses_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Segments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SegmentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Segments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Segments_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Subcategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SubCategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SegmentId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subcategories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Subcategories_Segments_SegmentId",
+                        column: x => x.SegmentId,
+                        principalTable: "Segments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Questions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SubcategoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Questions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Questions_Subcategories_SubcategoryId",
+                        column: x => x.SubcategoryId,
+                        principalTable: "Subcategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "CategoryName", "Description" },
+                values: new object[] { 1, "Test Category", "Test Category-desc" });
+
+            migrationBuilder.InsertData(
+                table: "Segments",
+                columns: new[] { "Id", "CategoryId", "Description", "SegmentName" },
+                values: new object[] { 1, 1, "Test Segment-desc", "Test Segment" });
+
+            migrationBuilder.InsertData(
+                table: "Subcategories",
+                columns: new[] { "Id", "Description", "SegmentId", "SubCategoryName" },
+                values: new object[] { 1, "Test Subcategory-desc", 1, "Test Subcategory" });
+
+            migrationBuilder.InsertData(
+                table: "Questions",
+                columns: new[] { "Id", "Question", "SubcategoryId" },
+                values: new object[] { 1, "Test Question", 1 });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -194,6 +310,26 @@ namespace ValhallaVault.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Questions_SubcategoryId",
+                table: "Questions",
+                column: "SubcategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Responses_UserId",
+                table: "Responses",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Segments_CategoryId",
+                table: "Segments",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subcategories_SegmentId",
+                table: "Subcategories",
+                column: "SegmentId");
         }
 
         /// <inheritdoc />
@@ -215,10 +351,25 @@ namespace ValhallaVault.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Questions");
+
+            migrationBuilder.DropTable(
+                name: "Responses");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Subcategories");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Segments");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
         }
     }
 }
