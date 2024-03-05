@@ -17,17 +17,20 @@
 
 <PageTitle>Register</PageTitle>
 
-<h1>Register</h1>
 
+<div style="background-image: url('/Images/RegisterScreen.jpeg'); background-size: cover; background-position: center top; height: 90vh; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
+    <div class="col-md-12" style="height: 10%"></div>
+    <h1 class="text-white display-2">Register</h1>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
+        <section style="background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 10px;">
         <StatusMessage Message="@Message" />
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
-            <h2>Create a new account.</h2>
-            <hr />
+                    <h2 class="text-white">Create a new account.</h2>
+                    <hr class="text-white" />
             <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
+                    <div class="form-floating mb-3" style="background-color: rgba(255, 255, 255, 0.8); border-radius: 5px;">
                 <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label for="email">Email</label>
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
@@ -44,14 +47,9 @@
             </div>
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </EditForm>
+       </section>
     </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
-    </div>
+</div>
 </div>
 
 @code {

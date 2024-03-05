@@ -12,28 +12,30 @@
 
 <PageTitle>Log in</PageTitle>
 
-<h1>Log in</h1>
+<div style="background-image: url('/Images/LoginScreen.jpg'); background-size: cover; background-position: center top; height: 90vh; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
+    <div class="col-md-12" style="height: 10%"></div>
+<h1 class="text-white display-2">Log in</h1>
 <div class="row">
-    <div class="col-md-4">
-        <section>
+    <div class="col-md-12">
+        <section style="background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 10px;">
             <StatusMessage Message="@errorMessage" />
             <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
-                <h2>Use a local account to log in.</h2>
-                <hr />
+                    <h2 class="text-white">Use a local account to log in.</h2>
+                    <hr class="text-white" />
                 <ValidationSummary class="text-danger" role="alert" />
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label for="email" class="form-label">Email</label>
+                    <label for="email" class="form-label text-black">Email</label>
                     <ValidationMessage For="() => Input.Email" class="text-danger" />
                 </div>
                 <div class="form-floating mb-3">
                     <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label text-black">Password</label>
                     <ValidationMessage For="() => Input.Password" class="text-danger" />
                 </div>
                 <div class="checkbox mb-3">
-                    <label class="form-label">
+                    <label class="form-label text-white">
                         <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
                         Remember me
                     </label>
@@ -43,25 +45,19 @@
                 </div>
                 <div>
                     <p>
-                        <a href="Account/ForgotPassword">Forgot your password?</a>
+                        <a href="Account/ForgotPassword" class="text-white">Forgot your password?</a>
                     </p>
                     <p>
-                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
+                            <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))" class="text-white">Register as a new user</a>
                     </p>
                     <p>
-                        <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
+                        <a href="Account/ResendEmailConfirmation" class="text-white">Resend email confirmation</a>
                     </p>
                 </div>
             </EditForm>
         </section>
     </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
-    </div>
+</div>
 </div>
 
 @code {
