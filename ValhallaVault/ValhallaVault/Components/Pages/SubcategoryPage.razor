@@ -1,5 +1,5 @@
 ﻿
-@page "/segment/{segmentId}" 
+@page "/segment/{id:segmentId}" 
 @using Microsoft.EntityFrameworkCore
 @using ValhallaVault.Models
 @inject ValhallaVault.Managers.SubcategoryManager subcategorymanager
@@ -9,31 +9,39 @@
 
 @if (Subcategories != null && Subcategories.Any())
 {
-    @foreach (var subcategory in Subcategories)
+    @foreach (var subcategory in Subcategories) 
     {
         <div>
-            <h4>Namn: @subcategory.SubCategoryName</h4> 
-            <p>Beskrivning: @subcategory.Description</p> 
-            <p>Antal frågor: @subcategory.Questions.Count</p> 
+            <h4>Subcategory name: @subcategory.SubCategoryName</h4> 
+            <p>Number of questions: @subcategory.Questions.Count</p>
+            <a href="@($"QuestionPage/{subcategory.Id}")">Start questions for this subcategory</a>
         </div>
     }
 }
+
+
 else
 {
-    <p>Inga subkategorier hittades.</p> 
+    <p>No subcategories found.</p> 
 }
 
-<a href="/segments">Tillbaka till Segmentsidan</a> <!-- Länk tillbaka till segmentsidan -->
-<a href="/">Tillbaka till Hemsidan</a> <!-- Länk tillbaka till hemsidan -->
+<a href="/segments">Back to segment</a> 
+
 
 @code {
     [Parameter]
-    public int SegmentId { get; set; } // parameter för segmentets ID
+    public int SegmentId { get; set; } 
 
-    private List<SubcategoryModel> Subcategories { get; set; } // Lista för att lagra alla subkategorier 
+    private List<SubcategoryModel>? Subcategories { get; set; } 
 
     protected override async Task OnInitializedAsync()
     {
-      
+   
+        var subcategories = await subcategorymanager.GetSubcategoriesBySegmentIdAsync(SegmentId);
+
+        if (subcategories!=null) 
+        {
+            subcategories = Subcategories;
+        }
     }
 }

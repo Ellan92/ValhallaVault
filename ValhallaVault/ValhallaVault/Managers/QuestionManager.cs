@@ -1,4 +1,5 @@
 ﻿using ValhallaVault.Data.Repository;
+using ValhallaVault.Models;
 
 namespace ValhallaVault.Managers
 {
@@ -13,6 +14,12 @@ namespace ValhallaVault.Managers
         public async Task UpdateQuestionAsync(int questionId, string newQuestion)
         {
             await _questionRepo.UpdateQuestionAsync(questionId, newQuestion);
+        }
+
+        public async Task<List<QuestionModel>> GetQuestionsBySubcategoryIdAsync(int subcategoryId)
+        {
+
+            return await _questionRepo.GetQuestionsBySubcategoryIdAsync(subcategoryId);
         }
 
     }
