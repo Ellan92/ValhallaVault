@@ -1,26 +1,120 @@
 ﻿@page "/admin"
 @using Microsoft.AspNetCore.Authorization
+@using System.ComponentModel.DataAnnotations
+@using ValhallaVault.Data.Repository
 @using ValhallaVault.Models
 @attribute [Authorize(Roles = "Admin")]
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider provider
-@* @inject CategoryRepo  *@
+@inject GenericRepo<CategoryModel> categoryRepo
+@inject GenericRepo<SegmentModel> segmentRepo
+@inject GenericRepo<SubcategoryModel> subcategoryRepo
+@inject GenericRepo<QuestionModel> questionRepo
+
+<EditForm Model="Input" OnValidSubmit="HandleSubmit" FormName="AddNewModel">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <h3>Category</h3>
+    <strong>Category Name: </strong><InputText @bind-Value="Input.CategoryName"></InputText>
+    <strong>Category Description: </strong><InputTextArea @bind-Value="Input.CategoryDescription" class="form-control"></InputTextArea>
+
+
+    <h3>Segment</h3>
+    <strong>Segment Name: </strong><InputText @bind-Value="Input.SegmentName"></InputText>
+    <strong>Segment Description: </strong><InputText @bind-Value="Input.SegmentDescription"></InputText>
+    <button @onclick="AddSegment" class="btn btn-primary">Add Segment</button>
+
+    <h3>Subcategory</h3>
+    <strong>Subcategory Name: </strong><InputText @bind-Value="Input.SubcategoryName"></InputText>
+    <strong>Subcategory Description: </strong><InputText @bind-Value="Input.SubcategoryDescription"></InputText>
+
+
+    <input type="submit" class="btn btn-success" />
+</EditForm>
+
+@if(Segments != null)
+{
+    <ul>
+        @foreach (var segment in Segments)
+        {
+            <li>segment.SegmentName</li>
+        }
+    </ul>
+}
+
+@* The POST request does not specify which form is being submitted. To fix this, ensure <form> elements have a @formname attribute with any unique value, or pass a FormName parameter if using <EditForm>. *@
+
 
 @code {
 
-    private List<CategoryModel> AllCategories;
+    // [SupplyParameterFromForm]
+    // private List<CategoryModel> Categories;
+    [SupplyParameterFromForm]
+    private List<SegmentModel> Segments { get; set; } = new();
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+
 
     [SupplyParameterFromForm]
     public CategoryModel NewCategory { get; set; } = new();
+    public SegmentModel NewSegment { get; set; } = new();
+    public SubcategoryModel NewSubcategory { get; set; } = new();
+    public QuestionModel NewQuestion { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        // AllCategories = await repo.GetAllCarsAsync();
 
-        // var user = await provider.GetAuthenticationStateAsync();
-        // if (!user.User.IsInRole("Admin"))
-        // {
-        //     navigationManager.NavigateTo("/AccessDenied");
-        // }
     }
+
+    private async Task HandleSubmit()
+    {
+        await categoryRepo.AddAsync(NewCategory);
+    }
+
+    private async Task AddSegment()
+    {
+        // Create a new segment and add it to the list
+        var newSegment = new SegmentModel { SegmentName = Input.SegmentName, Description = Input.SegmentDescription };
+        Segments.Add(newSegment);
+
+        // Clear input fields
+        // segmentName = string.Empty;
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [Display(Name = "Category Name")]
+        public string CategoryName { get; set; } = "";
+
+        [Display(Name = "Category Description")]
+        public string CategoryDescription { get; set; } = "";
+
+        // [SupplyParameterFromForm]
+        // public List<SegmentModel> Segments { get; set; } = new();
+
+        [Required]
+        [Display(Name = "Segment Name")]
+        public string SegmentName { get; set; } = "";
+
+        [Display(Name = "Segment Decsription")]
+        public string SegmentDescription { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Subcategory Name")]
+        public string SubcategoryName { get; set; } = "";
+
+        [Display(Name = "Subcategory Description")]
+        public string SubcategoryDescription { get; set; } = "";
+
+        public int SegmentCategoryId { get; set; }
+
+        [Required]
+        [Display(Name = "Confirm password")]
+        public string ConfirmPassword { get; set; } = "";
+    }
+
+
 }
