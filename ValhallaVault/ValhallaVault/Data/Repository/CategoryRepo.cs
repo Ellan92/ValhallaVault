@@ -22,6 +22,7 @@
             {
                 throw new Exception("Category not found.");
             }
+
         }
 
         public async Task UpdateCategoryNameAsync(int categoryId, string newCategoryName)

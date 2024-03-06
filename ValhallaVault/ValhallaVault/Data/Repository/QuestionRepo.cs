@@ -3,12 +3,10 @@
     public class QuestionRepo
     {
         private readonly ApplicationDbContext _context;
-
         public QuestionRepo(ApplicationDbContext context)
         {
             _context = context;
         }
-
         public async Task UpdateQuestionAsync(int questionId, string newQuestionText)
         {
             var question = await _context.Questions.FindAsync(questionId);
