@@ -1,5 +1,7 @@
 ﻿
 @page "/segment/{segmentId}" 
+@using Microsoft.EntityFrameworkCore
+@using ValhallaVault.Models
 <--> ANVÄND MANAGER FÖR KONTAKT MED REPOT </>
 @inject NavigationManager Navigation 
 
@@ -33,14 +35,14 @@ else
     protected override async Task OnInitializedAsync()
     {
         // <--> ANVÄND MANAGER FÖR KONTAKT MED REPOT </>
-        var segment = await _context.Segments.Include(s => s.SubCategories).FirstOrDefaultAsync(s => s.Id == SegmentId);
-        if (segment != null)
-        {
-            Subcategories = segment.SubCategories; // Hämtar subkategorier för det valda segmentet
-        }
-        else
-        {
-            Navigation.NavigateTo("/"); // Om segmentet inte hittas, navigera tillbaka till hemsidan
-        }
+        // var segment = await DbContext.Segments.Include(s => s.SubCategories).FirstOrDefaultAsync(s => s.Id == SegmentId);
+        // if (segment != null)
+        // {
+        //     Subcategories = segment.SubCategories; // Hämtar subkategorier för det valda segmentet
+        // }
+        // else
+        // {
+        //     Navigation.NavigateTo("/"); // Om segmentet inte hittas, navigera tillbaka till hemsidan
+        // }
     }
 }
