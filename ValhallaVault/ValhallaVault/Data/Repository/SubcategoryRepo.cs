@@ -1,4 +1,7 @@
-﻿namespace ValhallaVault.Data.Repository
+﻿using Microsoft.EntityFrameworkCore;
+using ValhallaVault.Models;
+
+namespace ValhallaVault.Data.Repository
 {
     public class SubcategoryRepo
     {
@@ -8,6 +11,16 @@
         {
             _context = context;
         }
+
+        public async Task<List<SubcategoryModel>> GetSubcategoriesBySegmentIdAsync(int segmentId)
+        {
+            var subcategories = await _context.Subcategories
+                .Where(s => s.SegmentId == segmentId)
+                .ToListAsync();
+
+            return subcategories;
+        }
+
 
         public async Task UpdateSubcategoryDescriptionAsync(int subcategoryId, string newDescription)
         {
