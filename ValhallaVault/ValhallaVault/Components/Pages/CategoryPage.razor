@@ -11,19 +11,11 @@
   
 }
 
-@if (CategorySegments!=null)
-{
-    @foreach (var segment in @CategorySegments)
-    {
-        <h2>@segment.SegmentName</h2>
-    }
-}
 
 @code {
 
     public CategoryModel? chosenCategory { get; set; }
 
-    public List <SegmentModel>? CategorySegments { get; set; }
 
     [Parameter]
     public int categoryId { get; set; } 
@@ -36,11 +28,6 @@
         {
             category = chosenCategory;
 
-            var allCategorySegments = await segmentManager.GetSegmentsByCategoryIdAsync(categoryId);
-            if (allCategorySegments !=null)
-            {
-                allCategorySegments = CategorySegments;
-            }
 
         }
     }
