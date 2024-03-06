@@ -2,20 +2,36 @@
 @using ValhallaVault.Models
 @inject ValhallaVault.Managers.GenericManager<CategoryModel> genericManager
 @inject ValhallaVault.Managers.SegmentManager segmentManager
+@inject ValhallaVault.Managers.SubcategoryManager subcategoryManager
 
 <PageTitle>Category page</PageTitle>
 
-@if (chosenCategory!=null)
+@if (chosenCategory!=null)  // Visa info om kategorin
 {
     <h1>@chosenCategory.CategoryName</h1>
   
 }
 
-@if (CategorySegments!=null)
+@if (CategorySegments!=null) // Visa info om kategorins alla segment 
 {
-    @foreach (var segment in @CategorySegments)
+    @foreach (var segment in @CategorySegments) 
     {
         <h2>@segment.SegmentName</h2>
+    }
+}
+
+@if (SegmentSubcategories != null && SegmentSubcategories.Any()) // Visa subkategorier för varje segment
+{
+    @foreach (var subcategoryList in SegmentSubcategories) // nestad foreach loop för att loopa igenom listan av listor. 
+    {
+        <h3>Subcategories</h3>
+        <ul>
+            @foreach (var subcategory in subcategoryList)
+            {
+                <li>@subcategory.SubCategoryName</li>
+              
+            }
+        </ul>
     }
 }
 
@@ -24,6 +40,8 @@
     public CategoryModel? chosenCategory { get; set; }
 
     public List <SegmentModel>? CategorySegments { get; set; }
+
+    public List<List<SubcategoryModel>> SegmentSubcategories { get; set; } = new(); // En lista av listor 
 
     [Parameter]
     public int categoryId { get; set; } 
@@ -40,6 +58,20 @@
             if (allCategorySegments !=null)
             {
                 allCategorySegments = CategorySegments;
+
+                if (allCategorySegments !=null)
+                {
+                    foreach (var segment in allCategorySegments)
+                    {
+                        // Returnera en subcategorylista för varje segment 
+                        var subcategoryList = await subcategoryManager.GetSubcategoriesBySegmentIdAsync(segment.Id);
+                        if (subcategoryList != null && subcategoryList.Any())
+                        {
+                            // Lägg till listan
+                            SegmentSubcategories.Add(subcategoryList);
+                        }
+                    }
+                }
             }
 
         }
