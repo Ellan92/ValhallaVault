@@ -1,4 +1,5 @@
 ﻿using ValhallaVault.Data.Repository;
+using ValhallaVault.Models;
 
 namespace ValhallaVault.Managers
 {
@@ -15,6 +16,11 @@ namespace ValhallaVault.Managers
             await _segmentRepo.UpdateSegmentDescriptionAsync(segmentId, newDescription);
         }
 
+        public async Task<List<SegmentModel>> GetSegmentsByCategoryIdAsync(int categoryId)
+        {
+            var segments = await _segmentRepo.GetSegmentsByCategoryIdAsync(categoryId);
+            return segments;
+        }
         public async Task UpdateSegmentNameAsync(int segmentId, string newName)
         {
             await _segmentRepo.UpdateSegmentNameAsync(segmentId, newName);
