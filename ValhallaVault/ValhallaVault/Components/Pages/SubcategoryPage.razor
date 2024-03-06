@@ -1,6 +1,6 @@
 ﻿
 @page "/segment/{segmentId}" 
-@inject ApplicationDbContext _context 
+<--> ANVÄND MANAGER FÖR KONTAKT MED REPOT </>
 @inject NavigationManager Navigation 
 
 <h3>Subkategorier</h3>
@@ -32,6 +32,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        // <--> ANVÄND MANAGER FÖR KONTAKT MED REPOT </>
         var segment = await _context.Segments.Include(s => s.SubCategories).FirstOrDefaultAsync(s => s.Id == SegmentId);
         if (segment != null)
         {
