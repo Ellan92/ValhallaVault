@@ -5,6 +5,24 @@
 
 <h3>Segment</h3>
 
+
+@if (chosenSegment!=null)
+{
+<h1>@chosenSegment.SegmentName</h1>
+
+}
+
+@if (segmentSubcategory != null)
+{
+    @foreach (var subcategory in @segmentSubcategory)
+    {
+        <h2>@subcategory</h2>
+    }
+}
+
+<!--Farre-->
+
+
 @code {
 
     public SegmentModel? chosenSegment { get; set; }
@@ -21,10 +39,10 @@
         {
             segment = chosenSegment;
 
-            var allSubcategories = await subcategoryManager.
+            var allSubcategories = await subcategoryManager.GetSubcategoriesByCategoryIdAsync(segmentId);
             if (allSubcategories != null)
             {
-                allsubcategories = segmentSubcategory;
+                allSubcategories = segmentSubcategory;
             }
 
         }
