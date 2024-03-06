@@ -5,6 +5,8 @@ using ValhallaVault.Client.Pages;
 using ValhallaVault.Components;
 using ValhallaVault.Components.Account;
 using ValhallaVault.Data;
+using ValhallaVault.Data.Repository;
+using ValhallaVault.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,16 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
+builder.Services.AddScoped<QuestionRepo>();
+builder.Services.AddScoped<SegmentRepo>();
+builder.Services.AddScoped<CategoryRepo>();
+builder.Services.AddScoped<SubcategoryRepo>();
+builder.Services.AddScoped<GenericRepo<QuestionModel>>();
+builder.Services.AddScoped<GenericRepo<SegmentModel>>();
+builder.Services.AddScoped<GenericRepo<SubcategoryModel>>();
+builder.Services.AddScoped<GenericRepo<CategoryModel>>();
+
+
 
 builder.Services.AddAuthentication(options =>
     {
@@ -40,6 +52,21 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+            policy =>
+            {
+                policy.AllowAnyOrigin();
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+            });
+});
+
 
 using (ServiceProvider sp = builder.Services.BuildServiceProvider())
 {
@@ -94,6 +121,9 @@ using (ServiceProvider sp = builder.Services.BuildServiceProvider())
 
 var app = builder.Build();
 
+app.UseSwagger();
+app.UseSwaggerUI();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -107,6 +137,9 @@ else
     app.UseHsts();
 }
 
+
+
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
@@ -119,5 +152,7 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+app.MapControllers();
 
 app.Run();

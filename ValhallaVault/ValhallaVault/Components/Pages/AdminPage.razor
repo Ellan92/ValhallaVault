@@ -1,0 +1,26 @@
+﻿@page "/admin"
+@using Microsoft.AspNetCore.Authorization
+@using ValhallaVault.Models
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider provider
+@* @inject CategoryRepo  *@
+
+@code {
+
+    private List<CategoryModel> AllCategories;
+
+    [SupplyParameterFromForm]
+    public CategoryModel NewCategory { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // AllCategories = await repo.GetAllCarsAsync();
+
+        // var user = await provider.GetAuthenticationStateAsync();
+        // if (!user.User.IsInRole("Admin"))
+        // {
+        //     navigationManager.NavigateTo("/AccessDenied");
+        // }
+    }
+}

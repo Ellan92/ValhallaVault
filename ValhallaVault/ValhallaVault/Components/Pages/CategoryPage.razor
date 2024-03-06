@@ -1,23 +1,48 @@
-﻿@page "/Category/{Iid}" 
+@page "/category/{int:categoryId}"
+@using ValhallaVault.Models
+@inject ValhallaVault.Managers.GenericManager<CategoryModel> genericManager
+@inject ValhallaVault.Managers.SegmentManager segmentManager
+
 <PageTitle>Category page</PageTitle>
-<h3>CategoryPage</h3>
 
+@if (chosenCategory!=null)
+{
+    <h1>@chosenCategory.CategoryName</h1>
+  
+}
 
-<div >
-    <labe>About:</labe>
-    <br />
-     Add description for category
-</div>
-
-<div class="subCatOptions">
-  <ul>
-
-  </ul>
-</div>
-
-
+@if (CategorySegments!=null)
+{
+    @foreach (var segment in @CategorySegments)
+    {
+        <h2>@segment.SegmentName</h2>
+    }
+}
 
 @code {
 
+    public CategoryModel? chosenCategory { get; set; }
+
+    public List <SegmentModel>? CategorySegments { get; set; }
+
+    [Parameter]
+    public int categoryId { get; set; } 
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var category = await genericManager.GetByIdAsync(categoryId);
+        if (category !=null)
+        {
+            category = chosenCategory;
+
+            var allCategorySegments = await segmentManager.GetSegmentsByCategoryIdAsync(categoryId);
+            if (allCategorySegments !=null)
+            {
+                allCategorySegments = CategorySegments;
+            }
+
+        }
+    }
 
 }

@@ -1,14 +1,34 @@
-﻿@page "/segment" 
+@page "/segment/{int:segmentId}"
+@inject ValhallaVault.Managers.SubcategoryManager subcategoryManager
+@using ValhallaVault.Models
+@inject ValhallaVault.Managers.GenericManager<SegmentModel> genericManager
+
 <h3>Segment</h3>
 
-<div>
-    <labe>About:</labe>
-    <br />
-    Add description for Segment
-</div>
-
-
-
 @code {
+
+    public SegmentModel? chosenSegment { get; set; }
+
+    public List<SubcategoryModel>? segmentSubcategory { get; set; }
+
+    [Parameter]
+    public int segmentId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var segment = await genericManager.GetByIdAsync(segmentId);
+        if (segment != null)
+        {
+            segment = chosenSegment;
+
+            var allSubcategories = await subcategoryManager.
+            if (allSubcategories != null)
+            {
+                allsubcategories = segmentSubcategory;
+            }
+
+        }
+    }
+
 
 }
