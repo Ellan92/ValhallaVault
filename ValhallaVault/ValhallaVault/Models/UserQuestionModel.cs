@@ -3,6 +3,7 @@ using ValhallaVault.Data;
 
 namespace ValhallaVault.Models
 {
+
     [PrimaryKey("UserId", new string[] { "QuestionId" })]
     public class UserQuestionModel
     {
@@ -13,4 +14,5 @@ namespace ValhallaVault.Models
         public int ResponseId { get; set; }
         public ResponseModel Response { get; set; } = null!;
     }
+
 }
