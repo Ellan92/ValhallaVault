@@ -1,4 +1,7 @@
-﻿namespace ValhallaVault.Data.Repository
+﻿using Microsoft.EntityFrameworkCore;
+using ValhallaVault.Models;
+
+namespace ValhallaVault.Data.Repository
 {
     public class QuestionRepo
     {
@@ -6,6 +9,13 @@
         public QuestionRepo(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<List<QuestionModel>> GetQuestionsBySubcategoryIdAsync(int subcategoryId)
+        {
+            return await _context.Questions
+                .Where(q => q.SubcategoryId == subcategoryId)
+                .ToListAsync();
         }
         public async Task UpdateQuestionAsync(int questionId, string newQuestionText)
         {
