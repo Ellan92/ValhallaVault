@@ -1,0 +1,35 @@
+﻿@page "/QuestionPage/{int:subcategoryId}"
+@using ValhallaVault.Models
+@inject ValhallaVault.Managers.QuestionManager questionManager
+@inject NavigationManager Navigation
+
+<h3>Questions for Subcategory</h3>
+
+@if (Questions != null && Questions.Any())
+{
+    @foreach (var question in Questions)
+    {
+        <div>
+            <h4>@question.Question</h4>
+        </div>
+    }
+}
+else
+{
+    <p>No questions found for this subcategory.</p>
+}
+
+<a href="/segments">Back to segment</a>
+
+@code {
+    [Parameter]
+    public int SubcategoryId { get; set; }
+
+    private List<QuestionModel>? Questions { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Hämta frågor för den angivna subkategorin baserat på subkategoriens ID
+        Questions = await questionManager.GetQuestionsBySubcategoryIdAsync(SubcategoryId);
+    }
+}
