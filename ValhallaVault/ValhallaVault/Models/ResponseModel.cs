@@ -10,6 +10,8 @@ namespace ValhallaVault.Models
         public bool IsCorrect { get; set; }
         public string? Answer { get; set; }
         public string? Explanation { get; set; }
+        public int QuestionId { get; set; }
+        public QuestionModel QuestionModel { get; set; } = null!;
         public string UserId { get; set; } = null!;
         public ApplicationUser User { get; set; } = null!;
     }

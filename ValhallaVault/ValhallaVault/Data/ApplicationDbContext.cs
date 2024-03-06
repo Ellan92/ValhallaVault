@@ -42,368 +42,358 @@ namespace ValhallaVault.Data
                 new SegmentModel
                 {
                     Id = 1,
-                    SegmentName = "Del 1",
+                    SegmentName = "Kreditkortsbedrägeri",
                     CategoryId = 1,
                 },
             new SegmentModel
             {
                 Id = 2,
-                SegmentName = "Del 2",
+                SegmentName = "Romansbedrägeri",
                 CategoryId = 1,
             },
             new SegmentModel
             {
                 Id = 3,
-                SegmentName = "Del 3",
+                SegmentName = "Investeringsbedrägeri",
                 CategoryId = 1,
             },
             new SegmentModel
             {
                 Id = 4,
-                SegmentName = "Del 1",
-                CategoryId = 2,
+                SegmentName = "Telefonbedrägeri",
+                CategoryId = 1,
             },
             new SegmentModel
             {
                 Id = 5,
-                SegmentName = "Del 2",
-                CategoryId = 2,
+                SegmentName = "Bedrägerier i hemmet",
+                CategoryId = 1,
             },
             new SegmentModel
             {
                 Id = 6,
-                SegmentName = "Del 3",
-                CategoryId = 2,
+                SegmentName = "Identitetsstöld",
+                CategoryId = 1,
             },
             new SegmentModel
             {
                 Id = 7,
-                SegmentName = "Del 4",
-                CategoryId = 2,
+                SegmentName = "Nätfiske och bluffmejl",
+                CategoryId = 1,
             },
             new SegmentModel
             {
                 Id = 8,
-                SegmentName = "Del 1",
-                CategoryId = 3,
+                SegmentName = "Investeringsbedrägeri på nätet",
+                CategoryId = 1,
             },
             new SegmentModel
             {
                 Id = 9,
-                SegmentName = "Del 2",
-                CategoryId = 3,
+                SegmentName = "Abonnemangsfällor och falska fakturor",
+                CategoryId = 1,
             },
             new SegmentModel
-            {
-                Id = 10,
-                SegmentName = "Del 3",
-                CategoryId = 3,
-            });
-
-            builder.Entity<SubcategoryModel>().HasData(
-                new SubcategoryModel
-                {
-                    Id = 1,
-                    SubCategoryName = "Kreditkortsbedrägeri",
-                    SegmentId = 1,
-                },
-            new SubcategoryModel
-            {
-                Id = 2,
-                SubCategoryName = "Romansbedrägeri",
-                SegmentId = 1,
-            },
-            new SubcategoryModel
-            {
-                Id = 3,
-                SubCategoryName = "Investeringsbedrägeri",
-                SegmentId = 1,
-            },
-            new SubcategoryModel
-            {
-                Id = 4,
-                SubCategoryName = "Telefonbedrägeri",
-                SegmentId = 1,
-            },
-            new SubcategoryModel
-            {
-                Id = 5,
-                SubCategoryName = "Bedrägerier i hemmet",
-                SegmentId = 2,
-            },
-            new SubcategoryModel
-            {
-                Id = 6,
-                SubCategoryName = "Identitetsstöld",
-                SegmentId = 2,
-            },
-            new SubcategoryModel
-            {
-                Id = 7,
-                SubCategoryName = "Nätfiske och bluffmejl",
-                SegmentId = 2,
-            },
-            new SubcategoryModel
-            {
-                Id = 8,
-                SubCategoryName = "Investeringsbedrägeri på nätet",
-                SegmentId = 2,
-            },
-            new SubcategoryModel
-            {
-                Id = 9,
-                SubCategoryName = "Abonnemangsfällor och falska fakturor",
-                SegmentId = 3,
-            },
-            new SubcategoryModel
-            {
-                Id = 10,
-                SubCategoryName = "Ransomware",
-                SegmentId = 3,
-            },
-            new SubcategoryModel
             {
                 Id = 11,
-                SubCategoryName = "Statistik och förhållningssätt",
-                SegmentId = 3,
+                SegmentName = "Ransomware",
+                CategoryId = 1,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 12,
-                SubCategoryName = "Digital säkerhet på företag",
-                SegmentId = 4,
+                SegmentName = "Statistik och förhållningssätt",
+                CategoryId = 1,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 13,
-                SubCategoryName = "Risker och beredskap",
-                SegmentId = 4,
+                SegmentName = "Digital säkerhet på företag",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 14,
-                SubCategoryName = "Aktörer inom cyberbrott",
-                SegmentId = 4,
+                SegmentName = "Aktörer inom cyberbrott",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 15,
-                SubCategoryName = "Ökad digital närvaro och distansarbete",
-                SegmentId = 4,
+                SegmentName = "Ökad digital närvaro och distansarbete",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 16,
-                SubCategoryName = "Cyberangrepp mot känsliga sektorer",
-                SegmentId = 4,
+                SegmentName = "Cyberangrepp mot känsliga sektorer",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 17,
-                SubCategoryName = "Cyberrånet mot Mersk ",
-                SegmentId = 4,
+                SegmentName = "Cyberrånet mot Mersk",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 18,
-                SubCategoryName = "Social engineering",
-                SegmentId = 5,
+                SegmentName = "Social engineering",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 19,
-                SubCategoryName = "Nätfiske och skräppost",
-                SegmentId = 5,
+                SegmentName = "Nätfiske och skräppost",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 20,
-                SubCategoryName = "Vishing",
-                SegmentId = 5,
+                SegmentName = "Vishing",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 21,
-                SubCategoryName = "Varning för vishing",
-                SegmentId = 5,
+                SegmentName = "Varning för vishing",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 22,
-                SubCategoryName = "Identifiera VD-mejl",
-                SegmentId = 5,
+                SegmentName = "Identifiera VD-mejl",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 23,
-                SubCategoryName = "Öneangrepp och presentkortsbluffar",
-                SegmentId = 5,
+                SegmentName = "Öneangrepp och presentkortsbluffar",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 24,
-                SubCategoryName = "Virus, maskar och trojaner",
-                SegmentId = 6,
+                SegmentName = "Virus, maskar och trojaner",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 25,
-                SubCategoryName = "Så kan det gå till",
-                SegmentId = 6,
+                SegmentName = "Så kan det gå till",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 26,
-                SubCategoryName = "Nätverksintrång",
-                SegmentId = 6,
+                SegmentName = "Nätverksintrång",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 27,
-                SubCategoryName = "Dataintrång",
-                SegmentId = 6,
+                SegmentName = "Dataintrång",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 28,
-                SubCategoryName = "Hackad!",
-                SegmentId = 6,
+                SegmentName = "Hackad!",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 29,
-                SubCategoryName = "Vägarna in",
-                SegmentId = 6,
+                SegmentName = "Utpressningsvirus",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 30,
-                SubCategoryName = "Utpressningsvirus",
-                SegmentId = 7,
+                SegmentName = "Attacker mot servrar",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 31,
-                SubCategoryName = "Attacker mot servrar",
-                SegmentId = 7,
+                SegmentName = "Cyberangrepp i Norden",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 32,
-                SubCategoryName = "Cyberangrepp i Norden",
-                SegmentId = 7,
+                SegmentName = "It-brottslingarnas verktyg",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 33,
-                SubCategoryName = "It-brottslingarnas verktyg",
-                SegmentId = 7,
+                SegmentName = "Mirai, Wannacry och fallet Düsseldorf",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 34,
-                SubCategoryName = "Mirai, Wannacry och fallet Düsseldorf",
-                SegmentId = 7,
+                SegmentName = "De sårbara molnen",
+                CategoryId = 2,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 35,
-                SubCategoryName = "De sårbara molnen",
-                SegmentId = 7,
+                SegmentName = "Allmänt om cyberspionage",
+                CategoryId = 3,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 36,
-                SubCategoryName = "Allmänt om cyberspionage",
-                SegmentId = 8,
+                SegmentName = "Metoder för cyberspionage",
+                CategoryId = 3,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 37,
-                SubCategoryName = "Metoder för cyberspionage",
-                SegmentId = 8,
+                SegmentName = "Säkerhetsskyddslagen",
+                CategoryId = 3,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 38,
-                SubCategoryName = "Säkerhetsskyddslagen",
-                SegmentId = 8,
+                SegmentName = "Cyberspionagets aktörer",
+                CategoryId = 3,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 39,
-                SubCategoryName = "Cyberspionagets aktörer",
-                SegmentId = 8,
+                SegmentName = "Värvningsförsök",
+                CategoryId = 3,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 40,
-                SubCategoryName = "Värvningsförsök",
-                SegmentId = 9,
+                SegmentName = "Affärsspionage",
+                CategoryId = 3,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 41,
-                SubCategoryName = "Affärsspionage",
-                SegmentId = 9,
+                SegmentName = "Påverkanskampanjer",
+                CategoryId = 3,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 42,
-                SubCategoryName = "Påverkanskampanjer",
-                SegmentId = 9,
+                SegmentName = "Svensk underrättelsetjänst och cyberförsvar",
+                CategoryId = 3,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 43,
-                SubCategoryName = "Svensk underrättelsetjänst och cyberförsvar",
-                SegmentId = 10,
+                SegmentName = "Signalspaning, informationssäkerhet och 5G",
+                CategoryId = 3,
             },
-            new SubcategoryModel
+            new SegmentModel
             {
                 Id = 44,
-                SubCategoryName = "Signalspaning, informationssäkerhet och 5G",
-                SegmentId = 10,
-            },
-            new SubcategoryModel
-            {
-                Id = 45,
-                SubCategoryName = "Samverkan mot cyberspionage",
-                SegmentId = 10,
+                SegmentName = "Samverkan mot cyberspionage",
+                CategoryId = 3,
             });
 
+
+
             builder.Entity<QuestionModel>().HasData(
-                new QuestionModel
-                {
-                    Id = 1,
-                    Question = "Du får ett oväntat telefonsamtal från någon som påstår sig vara från din bank. Personen ber dig bekräfta ditt kontonummer och lösenord för att säkerställa din kontos säkerhet efter en påstådd säkerhetsincident. Hur bör du tolka denna situation?",
-                    SubcategoryId = 1,
-                },
+            new QuestionModel
+            {
+                Id = 1,
+                Question = "Du får ett oväntat telefonsamtal från någon som påstår sig vara från din bank. Personen ber dig bekräfta ditt kontonummer och lösenord för att säkerställa din kontos säkerhet efter en påstådd säkerhetsincident. Hur bör du tolka denna situation?",
+                SubcategoryId = 1,
+            },
             new QuestionModel
             {
                 Id = 2,
                 Question = "Efter flera månader av daglig kommunikation med någon du träffade på en datingsida, börjar personen berätta om en plötslig finansiell kris och ber om din hjälp genom att överföra pengar. Vad indikerar detta mest sannolikt?",
-                SubcategoryId = 1,
+                SubcategoryId = 2,
             },
             new QuestionModel
             {
                 Id = 3,
                 Question = "Du får ett e-postmeddelande/samtal om ett exklusivt erbjudande att investera i ett startup-företag som påstås ha en revolutionerande ny teknologi, med garantier om exceptionellt hög avkastning på mycket kort tid. Hur bör du förhålla dig till erbjudandet?",
-                SubcategoryId = 1,
+                SubcategoryId = 3,
             },
             new QuestionModel
             {
                 Id = 4,
                 Question = "Efter en online-shoppingrunda märker du oidentifierade transaktioner på ditt kreditkortsutdrag från företag du aldrig handlat från. Vad indikerar detta mest sannolikt?",
-                SubcategoryId = 1,
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 5,
+                Question = "Inom företaget märker man att konfidentiella dokument regelbundet läcker ut till konkurrenter. Efter en intern granskning upptäcks det att en anställd omedvetet har installerat skadlig programvara genom att klicka på en länk i ett phishing-e-postmeddelande. Vilken åtgärd bör prioriteras för att förhindra framtida incidenter?",
+                SubcategoryId = 12,
+            },
+            new QuestionModel
+            {
+                Id = 6,
+                Question = "Inom företaget upptäckts det en sårbarhet i vår programvara som kunde möjliggöra obehörig åtkomst till användardata. Företaget har inte omedelbart en lösning. Vilken är den mest lämpliga första åtgärden?",
+                SubcategoryId = 13,
+            },
+            new QuestionModel
+            {
+                Id = 7,
+                Question = "Vårt företag blir måltavla för en DDoS-attack som överväldigar våra servers och gör våra tjänster otillgängliga för kunder. Vilken typ av aktör är mest sannolikt ansvarig för denna typ av attack?",
+                SubcategoryId = 14,
+            },
+            new QuestionModel
+            {
+                Id = 8,
+                Question = "Med övergången till distansarbete upptäcker vårt företag en ökning av säkerhetsincidenter, inklusive obehörig åtkomst till företagsdata. Vilken åtgärd bör företaget vidta för att adressera denna nya riskmiljö?",
+                SubcategoryId = 15,
+            },
+            new QuestionModel
+            {
+                Id = 9,
+                Question = "Hälsovårdsmyndigheten utsätts för ett cyberangrepp som krypterar patientdata och kräver lösen för att återställa åtkomsten. Vilken typ av angrepp har de sannolikt blivit utsatta för?",
+                SubcategoryId = 16,
+            },
+            new QuestionModel
+            {
+                Id = 10,
+                Question = "Det globala fraktbolaget Maersk blev offer för ett omfattande cyberangrepp som avsevärt störde deras verksamhet världen över. Vilken typ av malware var primärt ansvarig för denna incident?",
+                SubcategoryId = 17,
+            },
+            new QuestionModel
+            {
+                Id = 11,
+                Question = "Regeringen upptäcker att känslig politisk kommunikation har läckt och misstänker elektronisk övervakning. Vilket fenomen beskriver bäst denna situation?",
+                SubcategoryId = 36,
+            },
+            new QuestionModel
+            {
+                Id = 12,
+                Question = "Regeringen blir varse om en sofistikerad skadeprogramskampanj som utnyttjar Zero-day sårbarheter för att infiltrera deras nätverk och stjäla oerhört viktig data. Vilken metod för cyberspionage används sannolikt här?",
+                SubcategoryId = 37,
+            },
+            new QuestionModel
+            {
+                Id = 13,
+                Question = "Regeringen i Sverige ökar sitt interna säkerhetsprotokoll för att skydda sig mot utländska underrättelsetjänsters infiltration. Vilken lagstiftning ger ramverket för detta skydd?",
+                SubcategoryId = 38,
+            },
+            new QuestionModel
+            {
+                Id = 14,
+                Question = "Lunds universitet upptäcker att forskningsdata om ny teknologi har stulits. Undersökningar tyder på en välorganiserad grupp med kopplingar till en utländsk stat. Vilken typ av aktör ligger sannolikt bakom detta?",
+                SubcategoryId = 39,
             });
+
 
             builder.Entity<ResponseModel>().HasData(
                 new ResponseModel
                 {
                     Id = 1,
                     IsCorrect = false,
-                    Answer = "Ett legitimt försök från banken att skydda ditt konto"
+                    Answer = "Ett legitimt försök från banken att skydda ditt konto",
+
                 },
                 new ResponseModel
                 {
@@ -425,19 +415,14 @@ namespace ValhallaVault.Data
                 .HasForeignKey(c => c.CategoryId);
 
             builder.Entity<SegmentModel>()
-                .HasMany(x => x.SubCategories)
+                .HasMany(x => x.Questions)
                 .WithOne(c => c.Segment)
                 .HasForeignKey(c => c.SegmentId);
 
-            builder.Entity<SubcategoryModel>()
-                .HasMany(x => x.Questions)
-                .WithOne(c => c.SubCategory)
-                .HasForeignKey(c => c.SubcategoryId);
-
             builder.Entity<ApplicationUser>()
-                .HasMany(x => x.Responses)
-                .WithOne(c => c.User)
-                .HasForeignKey(c => c.UserId);
+                .HasMany(x => x.Questions)
+                .WithMany(c => c.Users);
+
         }
     }
 }

@@ -10,6 +10,6 @@ namespace ValhallaVault.Models
         public string? Description { get; set; }
         public int CategoryId { get; set; }
         public CategoryModel Category { get; set; } = null!;
-        public List<SubcategoryModel> SubCategories { get; set; } = new();
+        public List<QuestionModel> Questions { get; set; } = new();
     }
 }
