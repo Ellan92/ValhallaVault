@@ -12,8 +12,8 @@ using ValhallaVault.Data;
 namespace ValhallaVault.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240307105045_initCreateForReal")]
-    partial class initCreateForReal
+    [Migration("20240307145622_frst")]
+    partial class frst
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

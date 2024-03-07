@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ValhallaVault.Migrations
 {
     /// <inheritdoc />
-    public partial class initCreateForReal : Migration
+    public partial class frst : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

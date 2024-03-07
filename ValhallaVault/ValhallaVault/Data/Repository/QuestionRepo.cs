@@ -11,10 +11,10 @@ namespace ValhallaVault.Data.Repository
             _context = context;
         }
 
-        public async Task<List<QuestionModel>> GetQuestionsBySubcategoryIdAsync(int subcategoryId)
+        public async Task<List<QuestionModel>> GetQuestionsBySubcategoryIdAsync(int segmentId)
         {
             return await _context.Questions
-                .Where(q => q.SubcategoryId == subcategoryId)
+                .Where(q => q.SubcategoryId == segmentId)
                 .ToListAsync();
         }
         public async Task UpdateQuestionAsync(int questionId, string newQuestionText)

@@ -1,48 +1,71 @@
-@page "/segment/{segmentId}"
-@inject ValhallaVault.Managers.SubcategoryManager subcategoryManager
+@page "/SegmentPage/{segmentId:int}"
 @using ValhallaVault.Models
 @inject ValhallaVault.Managers.GenericManager<SegmentModel> genericManager
+@inject ValhallaVault.Managers.SubcategoryManager subcategoryManager
 
-<h3>Segment</h3>
 
 
-@if (chosenSegment!=null)
+@if (chosenSegment != null)
 {
-<h1>@chosenSegment.SegmentName</h1>
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title">@chosenSegment.SegmentName</h1>
+        </div>
+    </div>
+
 
 }
 
-@if (segmentSubcategory != null)
+@if (Subcategories.Count > 0)
 {
-    @foreach (var subcategory in @segmentSubcategory)
-    {
-        <a href="/QuestionPage"> <h2>@subcategory.SubCategoryName</h2> </a>
-    }
+    <div class="card mt-3">
+        <div class="card-body">
+            <h2 class="card-title">Ämnesområden som ingår i detta segment:</h2>
+            @foreach (var subcat in Subcategories)
+            {
+                <p class="card-text">@subcat.SubCategoryName</p>
+            }
+        </div>
+
+        <div>
+            <a href="@($"QuestionPage/{segmentId}")">Starta frågorna</a>
+        </div>
+
+    </div>
+
+   
 }
+
+
 
 @code {
 
     public SegmentModel? chosenSegment { get; set; }
 
-    public List<SubcategoryModel>? segmentSubcategory { get; set; }
+
+    public List<SubcategoryModel> Subcategories { get; set; } = new();
 
     [Parameter]
     public int segmentId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        // var segment = await genericManager.GetByIdAsync(segmentId);
-        // if (segment != null)
-        // {
-        //     segment = chosenSegment;
+        var segment = await genericManager.GetByIdAsync(segmentId);
+        if (segment != null)
+        {
+            segment = chosenSegment;
+     
 
-        //     var allSubcategories = await subcategoryManager.GetSubcategoriesByCategoryIdAsync(segmentId);
-        //     if (allSubcategories != null)
-        //     {
-        //         allSubcategories = segmentSubcategory;
-        //     }
+            var allSubcategories = await subcategoryManager.GetSubcategoriesBySegmentIdAsync(segmentId);
+            if (allSubcategories != null)
+            {
+                foreach (var subcategory in allSubcategories)
+                {
+                    Subcategories.Add(subcategory);
+                }
+            }
 
-        // }
+         }
     }
 
 
