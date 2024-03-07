@@ -1,9 +1,35 @@
 ﻿@page "/Homepage"
+@using ValhallaVault.Data
+@using ValhallaVault.Models
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@inject AuthenticationStateProvider AuthenticationProvider
+@inject ValhallaVault.Managers.UserManager usermanager
+@inject SignInManager<ApplicationUser> SignInManager
+
 @attribute [Authorize]
 <PageTitle>UserPage</PageTitle>
 
-<h3>User Homepage</h3>
+
+<h4>Välkommen, @Name</h4>
+
+<h3>Dina resultat:</h3>
+@if (Results.Count>0)
+{
+    @foreach (var result in Results)
+    {
+        <p>Fråga: @result.Question</p>
+        <p>Ditt svar: @result.Answer</p>
+        if (result.IsCorrect)
+        {
+            <p>Du hade rätt!</p>
+        }
+        else if (!result.IsCorrect)
+        {
+            <p>Du hade tyvärr fel.</p>
+        }
+    }
+}
 
 <div class="row-cols-4">
     <div> 
@@ -38,6 +64,35 @@
 
 
 @code {
+    public string? Name { get; set; }
+    public List<ResultModel> Results { get; set; } = new();
+    private ApplicationUser? signedIn; // representerar den inloggade användaren 
+    private AuthenticationState? State; // representerar autentiseringsstatusen för användaren 
     private string searchText = "";
 
+    protected async override Task OnInitializedAsync()
+    {
+        // Hämta användarens AuthenticationState 
+        State = await AuthenticationProvider.GetAuthenticationStateAsync();
+        var user = State.User;
+        Name = user.Identity.Name;
+
+        var findUser = usermanager.GetUserByName(Name);
+        if (findUser!=null)
+        {
+            signedIn = findUser;
+            // kolla om usern har några resultat
+            if (signedIn.UserResults!=null && signedIn.UserResults.Any())
+            {
+                foreach (var result in signedIn.UserResults)
+                {
+                    Results.Add(result.Result);
+                }
+            }
+        }
+
+       
+     
+    }
+    
 }
