@@ -1,4 +1,4 @@
-@page "/segment/{int:segmentId}"
+@page "/segment/{segmentId}"
 @inject ValhallaVault.Managers.SubcategoryManager subcategoryManager
 @using ValhallaVault.Models
 @inject ValhallaVault.Managers.GenericManager<SegmentModel> genericManager
@@ -31,18 +31,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var segment = await genericManager.GetByIdAsync(segmentId);
-        if (segment != null)
-        {
-            segment = chosenSegment;
+        // var segment = await genericManager.GetByIdAsync(segmentId);
+        // if (segment != null)
+        // {
+        //     segment = chosenSegment;
 
-            var allSubcategories = await subcategoryManager.GetSubcategoriesByCategoryIdAsync(segmentId);
-            if (allSubcategories != null)
-            {
-                allSubcategories = segmentSubcategory;
-            }
+        //     var allSubcategories = await subcategoryManager.GetSubcategoriesByCategoryIdAsync(segmentId);
+        //     if (allSubcategories != null)
+        //     {
+        //         allSubcategories = segmentSubcategory;
+        //     }
 
-        }
+        // }
     }
 
 
