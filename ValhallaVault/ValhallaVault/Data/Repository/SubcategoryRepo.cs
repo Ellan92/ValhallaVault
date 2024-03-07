@@ -12,15 +12,15 @@ namespace ValhallaVault.Data.Repository
             _context = context;
         }
 
-
-        public async Task<List<SubcategoryModel>> GetSubcategoryBySegmentIdAsync(int segmentId)
+        public async Task<List<SubcategoryModel>> GetSubcategoriesBySegmentIdAsync(int segmentId)
         {
-            var subcategory = await _context.Subcategories
+            var subcategories = await _context.Subcategories
                 .Where(s => s.SegmentId == segmentId)
                 .ToListAsync();
 
-            return subcategory;
+            return subcategories;
         }
+
         public async Task UpdateSubcategoryDescriptionAsync(int subcategoryId, string newDescription)
         {
             var subcategory = await _context.Subcategories.FindAsync(subcategoryId);
