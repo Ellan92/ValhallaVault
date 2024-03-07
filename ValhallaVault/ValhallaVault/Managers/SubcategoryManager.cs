@@ -11,6 +11,12 @@ namespace ValhallaVault.Managers
         {
             _subcategoryRepo = subcategoryRepo;
         }
+        public async Task<List<SubcategoryModel>> GetSubcategoriesByCategoryIdAsync(int subcategoryId)
+        {
+            var segments = await _subcategoryRepo.GetSubcategoryBySegmentIdAsync(subcategoryId);
+            return segments;
+        }
+
         public async Task UpdateSubcategoryDescriptionAsync(int subcategoryId, string newDescription)
         {
             await _subcategoryRepo.UpdateSubcategoryDescriptionAsync(subcategoryId, newDescription);
