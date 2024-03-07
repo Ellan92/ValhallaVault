@@ -6,10 +6,10 @@ namespace ValhallaVault.Models
     {
         [Key]
         public int Id { get; set; }
-        public string SubCategoryName { get; set; } = null!;
+        public string? SubCategoryName { get; set; }
         public string? Description { get; set; }
-        public List<QuestionModel> Questions { get; set; } = new();
-        public int SegmentId { get; set; }
-        public SegmentModel Segment { get; set; } = null!;
+        public int SegmentId { get; set; }  // one-to-many med SegmentModel
+        public SegmentModel Segment { get; set; }  // one-to-many med SegmentModel
+        public List<QuestionModel> Questions { get; set; } = null!; // one-to-many med Questionsmodel
     }
 }

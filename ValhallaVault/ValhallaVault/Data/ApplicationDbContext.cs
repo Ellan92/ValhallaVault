@@ -8,9 +8,10 @@ namespace ValhallaVault.Data
     {
         public DbSet<CategoryModel> Categories { get; set; }
         public DbSet<SegmentModel> Segments { get; set; }
-        public DbSet<SubcategoryModel> Subcategories { get; set; }
+        public DbSet<UserResult> UserResults { get; set; }
         public DbSet<QuestionModel> Questions { get; set; }
-        public DbSet<ResponseModel> Responses { get; set; }
+        public DbSet<SubcategoryModel> Subcategories { get; set; }
+        public DbSet<SolutionModel> Solutions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -376,6 +377,12 @@ namespace ValhallaVault.Data
                 new QuestionModel
                 {
                     Id = 1,
+                    Options = new List<string>
+                {
+                    "Ett legitimt försök från banken att skydda ditt konto",
+                    "En informationsinsamling för en marknadsundersökning",
+                    "Ett potentiellt telefonbedrägeri"
+                },
                     Question = "Du får ett oväntat telefonsamtal från någon som påstår sig vara från din bank. Personen ber dig bekräfta ditt kontonummer och lösenord för att säkerställa din kontos säkerhet efter en påstådd säkerhetsincident. Hur bör du tolka denna situation?",
                     SubcategoryId = 1,
                 },
@@ -383,61 +390,71 @@ namespace ValhallaVault.Data
             {
                 Id = 2,
                 Question = "Efter flera månader av daglig kommunikation med någon du träffade på en datingsida, börjar personen berätta om en plötslig finansiell kris och ber om din hjälp genom att överföra pengar. Vad indikerar detta mest sannolikt?",
-                SubcategoryId = 1,
+                SubcategoryId = 2,
             },
             new QuestionModel
             {
                 Id = 3,
                 Question = "Du får ett e-postmeddelande/samtal om ett exklusivt erbjudande att investera i ett startup-företag som påstås ha en revolutionerande ny teknologi, med garantier om exceptionellt hög avkastning på mycket kort tid. Hur bör du förhålla dig till erbjudandet?",
-                SubcategoryId = 1,
+                SubcategoryId = 3,
             },
             new QuestionModel
             {
                 Id = 4,
                 Question = "Efter en online-shoppingrunda märker du oidentifierade transaktioner på ditt kreditkortsutdrag från företag du aldrig handlat från. Vad indikerar detta mest sannolikt?",
-                SubcategoryId = 1,
+                SubcategoryId = 4,
             });
 
-            builder.Entity<ResponseModel>().HasData(
-                new ResponseModel
-                {
-                    Id = 1,
-                    IsCorrect = false,
-                    Answer = "Ett legitimt försök från banken att skydda ditt konto"
-                },
-                new ResponseModel
-                {
-                    Id = 2,
-                    IsCorrect = false,
-                    Answer = "En informationsinsamling för en marknadsundersökning"
-                },
-                new ResponseModel
-                {
-                    Id = 3,
-                    IsCorrect = true,
-                    Answer = "Ett potentiellt telefonbedrägeri",
-                    Explanation = "Banker och andra finansiella institutioner begär aldrig känslig information såsom kontonummer eller lösenord via telefon. Detta är ett klassiskt tecken på telefonbedrägeri."
-                });
 
-            builder.Entity<CategoryModel>()
-                .HasMany(x => x.Segments)
-                .WithOne(c => c.Category)
-                .HasForeignKey(c => c.CategoryId);
 
+            // Beskrivning: en kategori innehåller flera segment men ett segment tillhör bara en kategori. 
+            // 1:N mellan category och segment:
             builder.Entity<SegmentModel>()
-                .HasMany(x => x.SubCategories)
-                .WithOne(c => c.Segment)
-                .HasForeignKey(c => c.SegmentId);
+            .HasOne(s => s.Category)
+            .WithMany(c => c.Segments)
+            .HasForeignKey(s => s.CategoryId);
 
+            // Beskrivning: en subkategori tillhör ett segment men ett segment innehåller flera subkategorier. 
+            // 1:N mellan segment och subcategory:
             builder.Entity<SubcategoryModel>()
-                .HasMany(x => x.Questions)
-                .WithOne(c => c.SubCategory)
-                .HasForeignKey(c => c.SubcategoryId);
+            .HasOne(s => s.Segment)
+            .WithMany(c => c.Subcategories)
+            .HasForeignKey(s => s.SegmentId);
 
-            builder.Entity<ApplicationUser>()
-                .HasMany(x => x.Responses)
-                .WithOne(c => c.User)
-                .HasForeignKey(c => c.UserId);
+            // Beskrivning: En subkategori innehåller flera frågor men en fråga tillhör bara en subkategori. 
+            // 1:N mellan subcategory och question:
+            builder.Entity<QuestionModel>()
+            .HasOne(s => s.SubCategory)
+            .WithMany(c => c.Questions)
+            .HasForeignKey(s => s.SubcategoryId);
+
+            // Beskrivning: En fråga har bara en solution och en solution tillhör bara en fråga. 
+            // 1:1 mellan question och solution:
+            builder.Entity<QuestionModel>()
+           .HasOne(q => q.Solution)
+           .WithOne(s => s.Question)
+           .HasForeignKey<SolutionModel>(s => s.QuestionId);
+
+            // Beskrivning: Ett svarsresultat tillhör bara en fråga men en fråga kan ha många svarsresultat
+            //  1:N mellan result och question:
+            builder.Entity<ResultModel>()
+           .HasOne(r => r.Question)
+           .WithMany(q => q.Results)
+           .HasForeignKey(s => s.QuestionId);
+
+            // Beskrivning: en user kan ha många svarsresultat och ett svarsresultat kan has av många users 
+            // M:N mellan user och result
+            // Beskrivning: en user kan ha många svarsresultat och ett svarsresultat kan has av många users 
+            // M:N mellan user och result
+            builder.Entity<UserResult>()
+                .HasOne(ur => ur.User)
+                .WithMany(u => u.UserResults)
+                .HasForeignKey(ur => ur.UserId);
+
+            builder.Entity<UserResult>()
+                .HasOne(u => u.Result)
+                .WithMany(t => t.UserResults)
+                .HasForeignKey(tt => tt.ResultId);
         }
     }
 }

@@ -19,13 +19,13 @@ namespace ValhallaVault.Controllers
             _questionRepo = questionRepo;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<ResponseModel>>> GetAllResponses()
-        {
-            var responses = await _repo.GetAllAsync();
+        //[HttpGet]
+        //public async Task<ActionResult<List<ResponseModel>>> GetAllResponses()
+        //{
+        //    var responses = await _repo.GetAllAsync();
 
-            return Ok(responses);
-        }
+        //    return Ok(responses);
+        //}
 
 
         [HttpGet("{id}")]
@@ -54,29 +54,29 @@ namespace ValhallaVault.Controllers
         }
 
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var deleteQuestion = _context.Responses.FirstOrDefault(x => x.Id == id);
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    var deleteQuestion = _context.Responses.FirstOrDefault(x => x.Id == id);
 
-            if (deleteQuestion != null)
-            {
-                await _repo.DeleteAsync(id);
-                return Ok();
-            }
-            return NoContent();
-        }
+        //    if (deleteQuestion != null)
+        //    {
+        //        await _repo.DeleteAsync(id);
+        //        return Ok();
+        //    }
+        //    return NoContent();
+        //}
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateQuestion(int questionId, string newQuestionText)
-        {
-            if (newQuestionText != null)
-            {
+        //[HttpPut]
+        //public async Task<IActionResult> UpdateQuestion(int questionId, string newQuestionText)
+        //{
+        //    if (newQuestionText != null)
+        //    {
 
-                await _questionRepo.UpdateQuestionAsync(questionId, newQuestionText);
-                return Ok();
-            }
-            return BadRequest();
-        }
+        //        await _questionRepo.UpdateQuestionAsync(questionId, newQuestionText);
+        //        return Ok();
+        //    }
+        //    return BadRequest();
+        //}
     }
 }

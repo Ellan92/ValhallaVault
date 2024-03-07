@@ -55,18 +55,18 @@ namespace ValhallaVault.Controllers
         }
 
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var deleteCategory = _context.Responses.FirstOrDefault(x => x.Id == id);
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    var deleteCategory = _context.Responses.FirstOrDefault(x => x.Id == id);
 
-            if (deleteCategory != null)
-            {
-                await _repo.DeleteAsync(id);
-                return Ok();
-            }
-            return NoContent();
-        }
+        //    if (deleteCategory != null)
+        //    {
+        //        await _repo.DeleteAsync(id);
+        //        return Ok();
+        //    }
+        //    return NoContent();
+        //}
 
         [HttpPut]
         public async Task<IActionResult> UpdateCategory(int categoryId, string newCategoryText)
