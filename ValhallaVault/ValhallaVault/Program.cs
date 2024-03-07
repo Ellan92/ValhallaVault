@@ -28,6 +28,7 @@ builder.Services.AddScoped<QuestionRepo>();
 builder.Services.AddScoped<SegmentRepo>();
 builder.Services.AddScoped<CategoryRepo>();
 builder.Services.AddScoped<SubcategoryRepo>();
+builder.Services.AddScoped<UserRepo>();
 builder.Services.AddScoped<GenericRepo<QuestionModel>>();
 builder.Services.AddScoped<GenericRepo<SegmentModel>>();
 builder.Services.AddScoped<GenericRepo<SubcategoryModel>>();
@@ -39,6 +40,7 @@ builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<SegmentModel>>(
 builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<SubcategoryModel>>();
 builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<QuestionModel>>();
 builder.Services.AddScoped<ValhallaVault.Managers.SegmentManager>();
+builder.Services.AddScoped<ValhallaVault.Managers.UserManager>();
 builder.Services.AddScoped<ValhallaVault.Managers.SubcategoryManager>();
 builder.Services.AddScoped<ValhallaVault.Managers.QuestionManager>();
 
