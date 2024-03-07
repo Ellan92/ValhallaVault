@@ -22,6 +22,8 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
+
+// Repos
 builder.Services.AddScoped<QuestionRepo>();
 builder.Services.AddScoped<SegmentRepo>();
 builder.Services.AddScoped<CategoryRepo>();
@@ -31,6 +33,14 @@ builder.Services.AddScoped<GenericRepo<SegmentModel>>();
 builder.Services.AddScoped<GenericRepo<SubcategoryModel>>();
 builder.Services.AddScoped<GenericRepo<CategoryModel>>();
 
+// Managers
+builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<CategoryModel>>();
+builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<SegmentModel>>();
+builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<SubcategoryModel>>();
+builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<QuestionModel>>();
+builder.Services.AddScoped<ValhallaVault.Managers.SegmentManager>();
+builder.Services.AddScoped<ValhallaVault.Managers.SubcategoryManager>();
+builder.Services.AddScoped<ValhallaVault.Managers.QuestionManager>();
 
 
 builder.Services.AddAuthentication(options =>
@@ -75,7 +85,7 @@ using (ServiceProvider sp = builder.Services.BuildServiceProvider())
     var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
     var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
 
-    //context.Database.Migrate();
+    // context.Database.Migrate();
 
     ApplicationUser newUser = new()
     {

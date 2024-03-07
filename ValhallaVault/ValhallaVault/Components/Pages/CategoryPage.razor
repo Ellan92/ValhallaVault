@@ -1,14 +1,41 @@
-@page "/category/{categoryId}"
+@page "/CategoryPage/{categoryId:int}"
 @using ValhallaVault.Models
-@inject ValhallaVault.Managers.GenericManager<CategoryModel> genericManager
-
+@inject ValhallaVault.Managers.GenericManager<CategoryModel> categoryManager
+@inject ValhallaVault.Managers.SegmentManager segmentManager
 
 <PageTitle>Category page</PageTitle>
 
-@if (chosenCategory!=null)
+@if (chosenCategory != null)
 {
-    <h1>@chosenCategory.CategoryName</h1>
-  
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title">Kategori: @chosenCategory.CategoryName</h1>
+            @if (!string.IsNullOrEmpty(chosenCategory.Description))
+            {
+                <p class="card-text">@chosenCategory.Description</p>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        <h2>Category not found.</h2>
+    </div>
+}
+
+@if (Segments.Count > 0)
+{
+    <div class="card mt-3">
+        <div class="card-body">
+            <h2 class="card-title">Segment i kategorin</h2>
+            <h4 class="card-subtitle mb-2 text-muted">Klicka på ett segment för att läsa mer om segmentet eller starta frågorna.</h4>
+            @foreach (var segment in Segments)
+            {
+                <a href="@($"SegmentPage/{segment.Id}")" class="card-link">@segment.SegmentName</a>
+            }
+        </div>
+    </div>
 }
 
 
@@ -16,20 +43,27 @@
 
     public CategoryModel? chosenCategory { get; set; }
 
+    public List<SegmentModel> Segments { get; set; } = new();
 
     [Parameter]
-    public int categoryId { get; set; } 
-
+    public int categoryId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var category = await genericManager.GetByIdAsync(categoryId);
-        if (category !=null)
+        // Försök hitta en kategori med detta id
+        chosenCategory = await categoryManager.GetByIdAsync(categoryId);
+
+        if (chosenCategory!=null)
         {
-            category = chosenCategory;
-
-
+            var segments = await segmentManager.GetSegmentsByCategoryIdAsync(categoryId);
+            if (segments!=null)
+            {
+                foreach (var segment in segments)
+                {
+                    Segments.Add(segment);
+                }
+            }
         }
-    }
 
+    }
 }
