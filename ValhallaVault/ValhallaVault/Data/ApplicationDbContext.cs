@@ -415,6 +415,18 @@ namespace ValhallaVault.Data
                 Id = 4,
                 Options = new List<string>
                 {
+                    "Installera en app som blockerar misstänkta samtal",
+                    "Aldrig svara på samtal från okända nummer",
+                    "Upprätta starka säkerhetsfrågor med din bank som krävs för att identifiera dig över telefon"
+                },
+                Question = "Hur kan du bäst skydda dig mot telefonbedrägerier",
+                SubcategoryId = 1,
+            },
+            new QuestionModel
+            {
+                Id = 5,
+                Options = new List<string>
+                {
                     "En legitim begäran om hjälp från en person i nöd",
                     "Ett romansbedrägeri",
                     "En tillfällig ekonomisk svårighet"
@@ -424,38 +436,26 @@ namespace ValhallaVault.Data
             },
             new QuestionModel
             {
-                Id = 5,
-                Options = new List<string>
-                {
-                    "Ett misstag av kreditkortsföretaget",
-                    "Kreditkortsbedrägeri",
-                    "Obehöriga köp av en familjemedlem"
-                },
-                Question = "Efter en online-shoppingrunda märker du oidentifierade transaktioner på ditt kreditkortsutdrag från företag du aldrig handlat från. Vad indikerar detta mest sannolikt?",
-                SubcategoryId = 3,
-            },
-            new QuestionModel
-            {
                 Id = 6,
                 Options = new List<string>
                 {
-                    "Ett misstag av kreditkortsföretaget",
-                    "Kreditkortsbedrägeri",
-                    "Obehöriga köp av en familjemedlem"
+                    "Genomföra omedelbar investering för att inte missa möjligheten",
+                    "Investeringsbedrägeri",
+                    "Begära mer information för att utföra en noggrann ‘’due diligence’"
                 },
-                Question = "Efter en online-shoppingrunda märker du oidentifierade transaktioner på ditt kreditkortsutdrag från företag du aldrig handlat från. Vad indikerar detta mest sannolikt?",
-                SubcategoryId = 4,
+                Question = "Du får ett e-postmeddelande/samtal om ett exklusivt erbjudande att investera i ett startup-företag som påstås ha en revolutionerande ny teknologi, med garantier om exceptionellt hög avkastning på mycket kort tid. Hur bör du förhålla dig till erbjudandet?",
+                SubcategoryId = 3,
             },
             new QuestionModel
             {
                 Id = 7,
                 Options = new List<string>
                 {
-                    "",
-                    "",
-                    ""
+                    "Ett misstag av kreditkortsföretaget",
+                    "Kreditkortsbedrägeri",
+                    "Obehöriga köp av en familjemedlem"
                 },
-                Question = "",
+                Question = "Efter en online-shoppingrunda märker du oidentifierade transaktioner på ditt kreditkortsutdrag från företag du aldrig handlat från. Vad indikerar detta mest sannolikt?",
                 SubcategoryId = 4,
             },
             new QuestionModel
@@ -463,145 +463,194 @@ namespace ValhallaVault.Data
                 Id = 8,
                 Options = new List<string>
                 {
-                    "",
-                    "",
-                    ""
+                    "Utbildning i digital säkerhet för alla anställda",
+                    "Installera en starkare brandvägg",
+                    "Byta ut all IT-utrustning"
                 },
-                Question = "",
-                SubcategoryId = 4,
+                Question = "Inom företaget märker man att konfidentiella dokument regelbundet läcker ut till konkurrenter. Efter en intern granskning upptäcks det att en anställd omedvetet har installerat skadlig programvara genom att klicka på en länk i ett phishing-e-postmeddelande. Vilken åtgärd bör prioriteras för att förhindra framtida incidenter?",
+                SubcategoryId = 12,
             },
             new QuestionModel
             {
                 Id = 9,
                 Options = new List<string>
                 {
-                    "",
-                    "",
-                    ""
+                    "Manuellt kontrollera varje anställds lösenord en gång per år",
+                    "Implementera en policy för lösenordskomplexitet som kräver automatiska lösenordsändringar var 90:e dag",
+                    "Uppmana anställda att välja lättihågda lösenord för att undvika att skriva ner dem"
                 },
-                Question = "",
-                SubcategoryId = 4,
+                Question = "Vilken åtgärd är mest effektiv för att säkerställa att anställda regelbundet uppdaterar sina lösenord till starkare och mer komplexa versioner?",
+                SubcategoryId = 12,
             },
             new QuestionModel
             {
                 Id = 10,
                 Options = new List<string>
                 {
-                    "",
-                    "",
-                    ""
+                    "Förbjuda användning av offentliga Wi-Fi-nätverk helt och hållet",
+                    "Utrusta alla anställdas enheter med VPN (Virtual Private Network)-tjänster",
+                    "Endast tillåta anställda att arbeta offline när de inte är på kontoret"
                 },
-                Question = "",
-                SubcategoryId = 4,
+                Question = "Hur kan företaget effektivt minska risken för att anställda oavsiktligt exponerar företagsdata via otrygga Wi-Fi-nätverk?",
+                SubcategoryId = 12,
             },
             new QuestionModel
             {
                 Id = 11,
                 Options = new List<string>
                 {
-                    "",
-                    "",
-                    ""
+                    "Blockera all inkommande e-post från externa källor",
+                    "Installera och uppdatera regelbundet e-postsäkerhetslösningar som filtrerar bort skadlig programvara och misstänkta länkar",
+                    "Låta anställda använda personliga e-postkonton för arbete för att minska risken för företagets e-postservers säkerhet"
                 },
-                Question = "",
-                SubcategoryId = 4,
+                Question = "Vilken åtgärd bör ett företag ta för att skydda sig mot intrång via e-postbaserade hot som phishing?",
+                SubcategoryId = 12,
             },
             new QuestionModel
             {
                 Id = 12,
                 Options = new List<string>
                 {
-                    "",
-                    "",
-                    ""
+                    "Informera alla användare om sårbarheten och rekommendera temporära skyddsåtgärder",
+                    "Ignorera problemet tills en patch kan utvecklas",
+                    "Stänga ner tjänsten tillfälligt"
                 },
-                Question = "",
-                SubcategoryId = 4,
+                Question = "Inom företaget upptäckts det en sårbarhet i vår programvara som kunde möjliggöra obehörig åtkomst till användardata. Företaget har inte omedelbart en lösning. Vilken är den mest lämpliga första åtgärden?",
+                SubcategoryId = 13,
             },
             new QuestionModel
             {
                 Id = 13,
                 Options = new List<string>
                 {
-                    "",
-                    "",
-                    ""
+                    "En enskild hackare med ett personligt vendetta",
+                    "En konkurrerande företagsentitet",
+                    "Organiserade cyberbrottsliga grupper"
                 },
-                Question = "",
-                SubcategoryId = 4,
+                Question = "Vårt företag blir måltavla för en DDoS-attack som överväldigar våra servers och gör våra tjänster otillgängliga för kunder. Vilken typ av aktör är mest sannolikt ansvarig för denna typ av attack?",
+                SubcategoryId = 14,
             },
             new QuestionModel
             {
                 Id = 14,
                 Options = new List<string>
                 {
-                    "",
-                    "",
-                    ""
+                    "Återgå till kontorsarbete",
+                    "Införa striktare lösenordspolicyer och tvåfaktorsautentisering för fjärråtkomst",
+                    "Förbjuda användning av personliga enheter för arbete"
                 },
-                Question = "",
-                SubcategoryId = 4,
+                Question = "Med övergången till distansarbete upptäcker vårt företag en ökning av säkerhetsincidenter, inklusive obehörig åtkomst till företagsdata. Vilken åtgärd bör företaget vidta för att adressera denna nya riskmiljö?",
+                SubcategoryId = 15,
             },
             new QuestionModel
             {
                 Id = 15,
                 Options = new List<string>
                 {
-                    "",
-                    "",
-                    ""
+                    "Phishing",
+                    "Ransomware",
+                    "Spyware"
                 },
-                Question = "",
-                SubcategoryId = 4,
+                Question = "Hälsovårdsmyndigheten utsätts för ett cyberangrepp som krypterar patientdata och kräver lösen för att återställa åtkomsten. Vilken typ av angrepp har de sannolikt blivit utsatta för?",
+                SubcategoryId = 16,
             },
             new QuestionModel
             {
                 Id = 16,
                 Options = new List<string>
                 {
-                    "",
-                    "",
-                    ""
+                    "Spyware",
+                    "Ransomware",
+                    "Adware"
                 },
-                Question = "",
-                SubcategoryId = 4,
+                Question = "Det globala fraktbolaget Maersk blev offer för ett omfattande cyberangrepp som avsevärt störde deras verksamhet världen över. Vilken typ av malware var primärt ansvarig för denna incident?",
+                SubcategoryId = 17,
             },
             new QuestionModel
             {
                 Id = 17,
                 Options = new List<string>
                 {
-                    "",
-                    "",
-                    ""
+                    "Cyberkriminalitet",
+                    "Cyberspionage",
+                    "Cyberterrorism"
                 },
-                Question = "",
-                SubcategoryId = 4,
+                Question = "Regeringen upptäcker att känslig politisk kommunikation har läckt och misstänker elektronisk övervakning. Vilket fenomen beskriver bäst denna situation?",
+                SubcategoryId = 36,
             },
             new QuestionModel
             {
                 Id = 18,
                 Options = new List<string>
                 {
-                    "",
-                    "",
-                    ""
+                    "Öka användningen av kryptering för all intern och extern kommunikation",
+                    "Förbjuda all användning av e-post och återgå till fysisk korrespondens",
+                    "Installera antivirusprogram på alla datorer"
                 },
-                Question = "",
-                SubcategoryId = 4,
+                Question = "Vilken försvarsstrategi är mest effektiv mot cyberspionage som riktar sig mot känslig kommunikation?",
+                SubcategoryId = 36,
             },
             new QuestionModel
             {
                 Id = 19,
                 Options = new List<string>
                 {
-                    "",
-                    "",
-                    ""
+                    "Genomföra strikta bakgrundskontroller av alla anställda",
+                    "Implementera ett omfattande program för beteendeanalys och anomalidetektering",
+                    "Begränsa internetanvändningen på arbetsplatsen till arbetsrelaterade aktiviteter"
                 },
-                Question = "",
-                SubcategoryId = 4,
+                Question = "Hur kan organisationer bäst upptäcka och motverka insiderhot som bidrar till cyberspionage?",
+                SubcategoryId = 36,
+            },
+            new QuestionModel
+            {
+                Id = 20,
+                Options = new List<string>
+                {
+                    "Genomföra regelbundna medvetenhetsträningar för alla anställda om cybersäkerhet",
+                    "Hålla all mjukvara och operativsystem uppdaterade med de senaste säkerhetspatcharna",
+                    "Endast använda egenutvecklad mjukvara för alla verksamhetsprocesser"
+                },
+                Question = "Vilken åtgärd är viktigast för att skydda sig mot cyberspionage genom utnyttjande av mjukvarusårbarheter?",
+                SubcategoryId = 36,
+            },
+            new QuestionModel
+            {
+                Id = 21,
+                Options = new List<string>
+                {
+                    "Social ingenjörskonst",
+                    "Massövervakning",
+                    "Riktade cyberattacker"
+                },
+                Question = "Regeringen blir varse om en sofistikerad skadeprogramskampanj som utnyttjar Zero-day sårbarheter för att infiltrera deras nätverk och stjäla oerhört viktig data. Vilken metod för cyberspionage används sannolikt här?",
+                SubcategoryId = 37,
+            },
+            new QuestionModel
+            {
+                Id = 22,
+                Options = new List<string>
+                {
+                    "GDPR",
+                    "Säkerhetsskyddslagen",
+                    "IT-säkerhetslagen"
+                },
+                Question = "Regeringen i Sverige ökar sitt interna säkerhetsprotokoll för att skydda sig mot utländska underrättelsetjänsters infiltration. Vilken lagstiftning ger ramverket för detta skydd?",
+                SubcategoryId = 38,
+            },
+            new QuestionModel
+            {
+                Id = 23,
+                Options = new List<string>
+                {
+                    "Oberoende hackare",
+                    "Aktivistgrupper",
+                    "Statssponsrade hackers"
+                },
+                Question = "Lunds universitet upptäcker att forskningsdata om ny teknologi har stulits. Undersökningar tyder på en välorganiserad grupp med kopplingar till en utländsk stat. Vilken typ av aktör ligger sannolikt bakom detta?",
+                SubcategoryId = 39,
             });
+
 
 
             builder.Entity<SolutionModel>().HasData(
