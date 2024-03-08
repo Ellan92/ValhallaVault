@@ -49,3 +49,37 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+/*Custom css*/
+
+html, body {
+    background-color: #778da9
+}
+
+.Category1, Category2, Category3{
+    
+    color: #111111;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+
+}
+
+.row-cols-4 
+{
+
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+h3 {
+    font-weight: bold;
+    font-family: Cambria;
+}
+
+.progress
+{
+    width: 37%
+
+
+}
