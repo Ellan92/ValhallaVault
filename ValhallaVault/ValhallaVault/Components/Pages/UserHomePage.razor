@@ -7,6 +7,7 @@
 @inject ValhallaVault.Managers.UserManager usermanager
 @inject SignInManager<ApplicationUser> SignInManager
 
+
 @attribute [Authorize]
 <PageTitle>UserPage</PageTitle>
 
@@ -14,20 +15,11 @@
 <h4>Välkommen, @Name</h4>
 
 <h3>Dina resultat:</h3>
-@if (Results.Count>0)
+@if (Results.Count>=0)
 {
     @foreach (var result in Results)
     {
-        <p>Fråga: @result.Question</p>
-        <p>Ditt svar: @result.Answer</p>
-        if (result.IsCorrect)
-        {
-            <p>Du hade rätt!</p>
-        }
-        else if (!result.IsCorrect)
-        {
-            <p>Du hade tyvärr fel.</p>
-        }
+       <p>@result</p>
     }
 }
 
@@ -61,11 +53,9 @@
     <br />
 </ul>
 
-
-
 @code {
     public string? Name { get; set; }
-    public List<ResultModel> Results { get; set; } = new();
+    public List<string> Results { get; set; } = new();
     private ApplicationUser? signedIn; // representerar den inloggade användaren 
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren 
     private string searchText = "";
@@ -77,16 +67,15 @@
         var user = State.User;
         Name = user.Identity.Name;
 
-        var findUser = usermanager.GetUserByName(Name);
-        if (findUser!=null)
+        var findtheUser = await usermanager.GetUserByNameAsync(Name);
+        if (findtheUser!=null)
         {
-            signedIn = findUser;
             // kolla om usern har några resultat
-            if (signedIn.UserResults!=null && signedIn.UserResults.Any())
+            if (findtheUser.UserResults!=null && findtheUser.UserResults.Any())
             {
-                foreach (var result in signedIn.UserResults)
+                foreach (var result in findtheUser.UserResults)
                 {
-                    Results.Add(result.Result);
+                    Results.Add(result.Result.Answer.ToString());
                 }
             }
         }

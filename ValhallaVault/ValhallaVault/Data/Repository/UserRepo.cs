@@ -1,4 +1,6 @@
-﻿namespace ValhallaVault.Data.Repository
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ValhallaVault.Data.Repository
 {
     public class UserRepo
     {
@@ -7,6 +9,15 @@
         public UserRepo(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<ApplicationUser?> GetUserByNameAsync(string userName)
+        {
+
+            var user = await _context.Users.Include(u => u.UserResults).ThenInclude(r => r.Result)
+                .FirstOrDefaultAsync(u => u.UserName == userName);
+
+            return user;
         }
 
         public ApplicationUser? GetUserByName(string userName)
