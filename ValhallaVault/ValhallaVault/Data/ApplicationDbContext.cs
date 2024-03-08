@@ -389,22 +389,301 @@ namespace ValhallaVault.Data
             new QuestionModel
             {
                 Id = 2,
+                Options = new List<string>
+                {
+                    "Ge dem informationen de ber om, för säkerhets skull",
+                    "Avsluta samtalet och kontakta din bank direkt via ett officiellt nummer du vet är korrekt",
+                    "Vänta på att de ska ringa tillbaka för att bekräfta deras legitimitet"
+                },
+                Question = "Vad bör du göra omedelbart efter att ha mottagit ett misstänkt telefonsamtal där någon frågar efter personlig finansiell information?",
+                SubcategoryId = 1,
+            },
+            new QuestionModel
+            {
+                Id = 3,
+                Options = new List<string>
+                {
+                    "Banker skickar ofta e-postmeddelanden som ber kunder att direkt ange lösenord och kontonummer för verifiering.",
+                    "Banker ringer regelbundet sina kunder för att be dem upprepa sina kontouppgifter för säkerhetsuppdateringar.",
+                    "Banker och finansiella institutioner kommer aldrig att be dig om ditt lösenord eller kontonummer via telefon eller e-post."
+                },
+                Question = "Vilket av följande påståenden är sant angående hur finansiella institutioner kommunicerar med sina kunder?",
+                SubcategoryId = 1,
+            },
+            new QuestionModel
+            {
+                Id = 4,
+                Options = new List<string>
+                {
+                    "En legitim begäran om hjälp från en person i nöd",
+                    "Ett romansbedrägeri",
+                    "En tillfällig ekonomisk svårighet"
+                },
                 Question = "Efter flera månader av daglig kommunikation med någon du träffade på en datingsida, börjar personen berätta om en plötslig finansiell kris och ber om din hjälp genom att överföra pengar. Vad indikerar detta mest sannolikt?",
                 SubcategoryId = 2,
             },
             new QuestionModel
             {
-                Id = 3,
-                Question = "Du får ett e-postmeddelande/samtal om ett exklusivt erbjudande att investera i ett startup-företag som påstås ha en revolutionerande ny teknologi, med garantier om exceptionellt hög avkastning på mycket kort tid. Hur bör du förhålla dig till erbjudandet?",
+                Id = 5,
+                Options = new List<string>
+                {
+                    "Ett misstag av kreditkortsföretaget",
+                    "Kreditkortsbedrägeri",
+                    "Obehöriga köp av en familjemedlem"
+                },
+                Question = "Efter en online-shoppingrunda märker du oidentifierade transaktioner på ditt kreditkortsutdrag från företag du aldrig handlat från. Vad indikerar detta mest sannolikt?",
                 SubcategoryId = 3,
             },
             new QuestionModel
             {
-                Id = 4,
+                Id = 6,
+                Options = new List<string>
+                {
+                    "Ett misstag av kreditkortsföretaget",
+                    "Kreditkortsbedrägeri",
+                    "Obehöriga köp av en familjemedlem"
+                },
                 Question = "Efter en online-shoppingrunda märker du oidentifierade transaktioner på ditt kreditkortsutdrag från företag du aldrig handlat från. Vad indikerar detta mest sannolikt?",
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 7,
+                Options = new List<string>
+                {
+                    "",
+                    "",
+                    ""
+                },
+                Question = "",
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 8,
+                Options = new List<string>
+                {
+                    "",
+                    "",
+                    ""
+                },
+                Question = "",
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 9,
+                Options = new List<string>
+                {
+                    "",
+                    "",
+                    ""
+                },
+                Question = "",
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 10,
+                Options = new List<string>
+                {
+                    "",
+                    "",
+                    ""
+                },
+                Question = "",
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 11,
+                Options = new List<string>
+                {
+                    "",
+                    "",
+                    ""
+                },
+                Question = "",
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 12,
+                Options = new List<string>
+                {
+                    "",
+                    "",
+                    ""
+                },
+                Question = "",
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 13,
+                Options = new List<string>
+                {
+                    "",
+                    "",
+                    ""
+                },
+                Question = "",
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 14,
+                Options = new List<string>
+                {
+                    "",
+                    "",
+                    ""
+                },
+                Question = "",
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 15,
+                Options = new List<string>
+                {
+                    "",
+                    "",
+                    ""
+                },
+                Question = "",
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 16,
+                Options = new List<string>
+                {
+                    "",
+                    "",
+                    ""
+                },
+                Question = "",
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 17,
+                Options = new List<string>
+                {
+                    "",
+                    "",
+                    ""
+                },
+                Question = "",
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 18,
+                Options = new List<string>
+                {
+                    "",
+                    "",
+                    ""
+                },
+                Question = "",
+                SubcategoryId = 4,
+            },
+            new QuestionModel
+            {
+                Id = 19,
+                Options = new List<string>
+                {
+                    "",
+                    "",
+                    ""
+                },
+                Question = "",
                 SubcategoryId = 4,
             });
 
+
+            builder.Entity<SolutionModel>().HasData(
+                new SolutionModel
+                {
+                    Id = 1,
+                    CorrectAnswer = "Ett potentiellt telefonbedrägeri",
+                    QuestionId = 1,
+                    Explanation = "Banker och andra finansiella institutioner begär aldrig känslig information såsom kontonummer eller lösenord via telefon. Detta är ett klassiskt tecken på telefonbedrägeri."
+
+                }, new SolutionModel
+                {
+                    Id = 2,
+                    CorrectAnswer = "Avsluta samtalet och kontakta din bank direkt via ett officiellt nummer du vet är korrekt.",
+                    QuestionId = 2,
+                    Explanation = "Det säkraste sättet att hantera potentiella telefonbedrägerier är att avsluta samtalet och sedan själv ringa upp din bank via ett telefonnummer du vet är korrekt (till exempel från deras officiella webbplats eller ditt bankkort) för att verifiera om samtalet var legitimt."
+                },
+                new SolutionModel
+                {
+                    Id = 3,
+                    CorrectAnswer = "Banker och finansiella institutioner kommer aldrig att be dig om ditt lösenord eller kontonummer via telefon eller e-post.",
+                    QuestionId = 3,
+                    Explanation = "Kommunikationen från banker och finansiella institutioner innehåller aldrig förfrågningar om känslig information som lösenord eller kontonummer via osäkra kanaler som telefon eller e-post. Detta är en grundläggande säkerhetsprincip."
+
+                },
+                new SolutionModel
+                {
+                    Id = 4,
+                    CorrectAnswer = "Upprätta starka säkerhetsfrågor med din bank som krävs för att identifiera dig över telefon",
+                    QuestionId = 4,
+                    Explanation = "Genom att ha förutbestämda säkerhetsfrågor med din bank kan du och banken ha en säker metod för att bekräfta varandras identitet under telefonsamtal. Detta minskar risken för att bli lurad av bedragare som inte kan svara på dessa frågor.\r\n"
+
+                },
+                new SolutionModel
+                {
+                    Id = 5,
+                    CorrectAnswer = "Ett romansbedrägeri",
+                    QuestionId = 5,
+                    Explanation = "Begäran om pengar, särskilt under omständigheter där två personer aldrig har träffats fysiskt, är ett vanligt tecken på romansbedrägeri",
+
+                },
+                new SolutionModel
+                {
+                    Id = 4,
+                    CorrectAnswer = "Investeringsbedrägeri",
+                    QuestionId = 4,
+                    Explanation = "Erbjudanden som lovar hög avkastning med liten eller ingen risk, särskilt via oönskade e-postmeddelanden, är ofta tecken på investeringsbedrägerier."
+
+                },
+                new SolutionModel
+                {
+                    Id = 5,
+                    CorrectAnswer = "Kreditkortsbedrägeri",
+                    QuestionId = 5,
+                    Explanation = "Oidentifierade transaktioner på ditt kreditkortsutdrag är en stark indikation på att ditt kortnummer har komprometterats och använts för obehöriga köp, vilket är typiskt för kreditkortsbedrägeri."
+
+                },
+                new SolutionModel
+                {
+                    Id = 6,
+                    CorrectAnswer = "Utbildning i digital säkerhet för alla anställda",
+                    QuestionId = 6,
+                    Explanation = "Utbildning i digital säkerhet är avgörande för att hjälpa anställda att känna igen och undvika säkerhetshot som phishing, vilket är en vanlig attackvektor"
+
+                },
+                new SolutionModel
+                {
+                    Id = 7,
+                    CorrectAnswer = "Implementera en policy för lösenordskomplexitet som kräver automatiska lösenordsändringar var 90:e dag",
+                    QuestionId = 7,
+                    Explanation = "En automatisk policy för lösenordsändring tvingar fram regelbundna uppdateringar och säkerställer att lösenorden hålls starka och svåra att knäcka, vilket minskar risken för obehörig åtkomst."
+
+                },
+                new SolutionModel
+                {
+                    Id = 8,
+                    CorrectAnswer = "Implementera en policy för lösenordskomplexitet som kräver automatiska lösenordsändringar var 90:e dag",
+                    QuestionId = 7,
+                    Explanation = "En automatisk policy för lösenordsändring tvingar fram regelbundna uppdateringar och säkerställer att lösenorden hålls starka och svåra att knäcka, vilket minskar risken för obehörig åtkomst."
+
+                }
+                ); 
 
 
             // Beskrivning: en kategori innehåller flera segment men ett segment tillhör bara en kategori. 
