@@ -16,5 +16,13 @@ namespace ValhallaVault.Managers
         {
             return _userRepo.GetUserByName(userName);
         }
+
+        public async Task<ApplicationUser?> GetUserByNameAsync(string userName)
+        {
+            var user = await _userRepo.GetUserByNameAsync(userName);
+            return user;
+        }
+
+
     }
 }
