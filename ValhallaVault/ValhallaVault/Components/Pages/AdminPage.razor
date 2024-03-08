@@ -10,54 +10,114 @@
 @inject GenericRepo<SegmentModel> segmentRepo
 @inject GenericRepo<SubcategoryModel> subcategoryRepo
 @inject GenericRepo<QuestionModel> questionRepo
-
-<EditForm Model="Input" OnValidSubmit="HandleSubmit" FormName="AddNewModel">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <h3>Category</h3>
-    <strong>Category Name: </strong><InputText @bind-Value="Input.CategoryName"></InputText>
-    <strong>Category Description: </strong><InputTextArea @bind-Value="Input.CategoryDescription" class="form-control"></InputTextArea>
+@rendermode InteractiveServer
 
 
-    <h3>Segment</h3>
-    <strong>Segment Name: </strong><InputText @bind-Value="Input.SegmentName"></InputText>
-    <strong>Segment Description: </strong><InputText @bind-Value="Input.SegmentDescription"></InputText>
+<div style="background-image: url('/Images/AdminPageScreen.jpg'); background-size: cover; background-position: center top; height: 100vh; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
+    <h1 class="text-white display-2">Add Content</h1>
+
+            <h3 class="text-white display-6">Category</h3>
+            <strong class="text-white">Category Name: </strong><input @bind="categoryName"></input>
+            <br/>
+            <strong class="text-white">Category Description: </strong><input @bind="categoryDescription"></input>
+            <br/>
+            <button @onclick="AddCategory" class="btn btn-primary">Add Category</button>
+            <br/>
+            @if (Categories != null)
+            {
+                <ul>
+                    @foreach (var category in Categories)
+                    {
+                        <li>@category.CategoryName</li>
+                    }
+                </ul>
+            }
+    <h3 class="text-white display-6">Segment</h3>
+    <strong class="text-white">Segment Name: </strong><input @bind="segmentName"></input>
+    <br/>
+    <strong class="text-white">Segment Description: </strong><input @bind="segmentDescription"></input>
+    <br/>
     <button @onclick="AddSegment" class="btn btn-primary">Add Segment</button>
+    <br/>
+    @if (Segments != null)
+    {
+        <ul>
+            @foreach (var segment in Segments)
+            {
+                <li>@segment.SegmentName</li>
+            }
+        </ul>
+    }
 
-    <h3>Subcategory</h3>
-    <strong>Subcategory Name: </strong><InputText @bind-Value="Input.SubcategoryName"></InputText>
-    <strong>Subcategory Description: </strong><InputText @bind-Value="Input.SubcategoryDescription"></InputText>
-
-
-    <input type="submit" class="btn btn-success" />
-</EditForm>
-
-@if(Segments != null)
-{
-    <ul>
-        @foreach (var segment in Segments)
+    <h3 class="text-white display-6">Subcategory</h3>
+    <strong class="text-white">Subcategory Name: </strong><input @bind="subcategoryName"></input>
+    <br/>
+    <strong class="text-white">Subcategory Description: </strong><input @bind="subcategoryDescription"></input>
+    <br/>
+    <button @onclick="AddSubcategory" class="btn btn-primary">Add Subcategory</button>
+    <br/>
+    @if (Subcategories != null)
+    {
+        <ul>
+            @foreach (var subCategory in Subcategories)
+            {
+                <li>@subCategory.SubCategoryName</li>
+            }
+        </ul>
+    }
+    <h3 class="text-white display-6">Questions</h3>
+    <strong class="text-white">Question Name: </strong><input @bind="question"></input>
+    <br/>
+    <button @onclick="AddQuestion" class="btn btn-primary">Add Question</button>
+    <br/>
+    @if (Questions != null)
+    {
+        <ul>
+            @foreach (var question in Questions)
+            {
+                <li>@question.Question</li>
+            }
+        </ul>
+    }
+    <br/>
+    <strong class="text-white">Options: </strong><input @bind="option"></input>
+@*     <button @onclick="(() => AddOption(option))" class="btn btn-dark">Add Option</button> *@
+    <button @onclick="AddOption" class="btn btn-dark">Add Option</button>
+    <br/>
+    @if(options != null)
+    {
+        <ul>
+        @foreach(string option in options)
         {
-            <li>segment.SegmentName</li>
+            <li>@option</li>
         }
-    </ul>
-}
+        </ul>
+    }
+    <br/>
 
-@* The POST request does not specify which form is being submitted. To fix this, ensure <form> elements have a @formname attribute with any unique value, or pass a FormName parameter if using <EditForm>. *@
+<button @onclick="SubmitForm" class="btn btn-success">Submit</button>
 
+</div>
 
 @code {
 
-    // [SupplyParameterFromForm]
-    // private List<CategoryModel> Categories;
-    [SupplyParameterFromForm]
+    private List<CategoryModel> Categories { get; set; } = new();
+    private string? categoryName;
+    private string? categoryDescription;
+
     private List<SegmentModel> Segments { get; set; } = new();
+    private string? segmentName;
+    private string? segmentDescription;
 
-    [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    private List<SubcategoryModel> Subcategories { get; set; } = new();
+    private string? subcategoryName;
+    private string? subcategoryDescription;
 
+    private List<QuestionModel> Questions { get; set; } = new();
+    private string? question;
+    private string? option;
+    private List<string> options = new();
 
-
-    [SupplyParameterFromForm]
     public CategoryModel NewCategory { get; set; } = new();
     public SegmentModel NewSegment { get; set; } = new();
     public SubcategoryModel NewSubcategory { get; set; } = new();
@@ -73,48 +133,88 @@
         await categoryRepo.AddAsync(NewCategory);
     }
 
+    private async Task AddCategory()
+    {
+
+        // Create a new segment and add it to the list
+        var newCategory = new CategoryModel { CategoryName = categoryName, Description = categoryDescription };
+        Categories.Add(newCategory);
+
+        // Clear input fields
+        categoryName = "";
+        categoryDescription = "";
+    }
+
     private async Task AddSegment()
     {
         // Create a new segment and add it to the list
-        var newSegment = new SegmentModel { SegmentName = Input.SegmentName, Description = Input.SegmentDescription };
+        var newSegment = new SegmentModel { SegmentName = segmentName, Description = segmentDescription };
         Segments.Add(newSegment);
 
         // Clear input fields
-        // segmentName = string.Empty;
+        segmentName = "";
+        segmentDescription = "";
     }
 
-    private sealed class InputModel
+    private async Task AddSubcategory()
     {
-        [Required]
-        [Display(Name = "Category Name")]
-        public string CategoryName { get; set; } = "";
+        // Create a new segment and add it to the list
+        var newSubcategory = new SubcategoryModel { SubCategoryName = subcategoryName, Description = subcategoryDescription };
+        Subcategories.Add(newSubcategory);
 
-        [Display(Name = "Category Description")]
-        public string CategoryDescription { get; set; } = "";
-
-        // [SupplyParameterFromForm]
-        // public List<SegmentModel> Segments { get; set; } = new();
-
-        [Required]
-        [Display(Name = "Segment Name")]
-        public string SegmentName { get; set; } = "";
-
-        [Display(Name = "Segment Decsription")]
-        public string SegmentDescription { get; set; } = "";
-
-        [Required]
-        [Display(Name = "Subcategory Name")]
-        public string SubcategoryName { get; set; } = "";
-
-        [Display(Name = "Subcategory Description")]
-        public string SubcategoryDescription { get; set; } = "";
-
-        public int SegmentCategoryId { get; set; }
-
-        [Required]
-        [Display(Name = "Confirm password")]
-        public string ConfirmPassword { get; set; } = "";
+        // Clear input fields
+        subcategoryName = "";
+        subcategoryDescription = "";
     }
+
+    private async Task AddQuestion()
+    {
+        var newQuestion = new QuestionModel { Question = question, Options = options };
+        Questions.Add(newQuestion);
+
+        // Clear input fields
+        question = "";
+    }
+
+    private async Task AddOption()
+    {
+        options.Add(option);
+        option = "";
+    }
+
+    public async Task SubmitForm()
+    {
+        
+    }
+
+    // private sealed class InputModel
+    // {
+    //     // [Required]
+    //     [Display(Name = "Category Name")]
+    //     public string CategoryName { get; set; } = "";
+
+    //     [Display(Name = "Category Description")]
+    //     public string CategoryDescription { get; set; } = "";
+
+    //     // [SupplyParameterFromForm]
+    //     // public List<SegmentModel> Segments { get; set; } = new();
+
+    //     // [Required]
+    //     [Display(Name = "Segment Name")]
+    //     public string SegmentName { get; set; } = "";
+
+    //     [Display(Name = "Segment Decsription")]
+    //     public string SegmentDescription { get; set; } = "";
+
+    //     // [Required]
+    //     [Display(Name = "Subcategory Name")]
+    //     public string SubcategoryName { get; set; } = "";
+
+    //     [Display(Name = "Subcategory Description")]
+    //     public string SubcategoryDescription { get; set; } = "";
+
+    //     public int SegmentCategoryId { get; set; }
+    // }
 
 
 }
