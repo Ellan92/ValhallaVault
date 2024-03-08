@@ -33,13 +33,18 @@ builder.Services.AddScoped<GenericRepo<QuestionModel>>();
 builder.Services.AddScoped<GenericRepo<SegmentModel>>();
 builder.Services.AddScoped<GenericRepo<SubcategoryModel>>();
 builder.Services.AddScoped<GenericRepo<CategoryModel>>();
+builder.Services.AddScoped<GenericRepo<ApplicationUser>>();
+builder.Services.AddScoped<GenericRepo<ResultModel>>();
 
 // Managers
 builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<CategoryModel>>();
 builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<SegmentModel>>();
 builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<SubcategoryModel>>();
 builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<QuestionModel>>();
+builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<ApplicationUser>>();
+builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<ResultModel>>();
 builder.Services.AddScoped<ValhallaVault.Managers.SegmentManager>();
+builder.Services.AddScoped<ValhallaVault.Managers.Factory>();
 builder.Services.AddScoped<ValhallaVault.Managers.UserManager>();
 builder.Services.AddScoped<ValhallaVault.Managers.SubcategoryManager>();
 builder.Services.AddScoped<ValhallaVault.Managers.QuestionManager>();
@@ -87,7 +92,7 @@ using (ServiceProvider sp = builder.Services.BuildServiceProvider())
     var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
     var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
 
-    context.Database.Migrate();
+    //context.Database.Migrate();
 
     ApplicationUser newUser = new()
     {

@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Identity
 @inject AuthenticationStateProvider AuthenticationProvider
 @inject ValhallaVault.Managers.UserManager usermanager
+@inject ValhallaVault.Managers.GenericManager<CategoryModel> categoryManager
 @inject SignInManager<ApplicationUser> SignInManager
 
 
@@ -75,7 +76,7 @@
             {
                 foreach (var result in findtheUser.UserResults)
                 {
-                    Results.Add(result.Result.Answer.ToString());
+                    Results.Add("Du svarade: " + result.Result.Answer.ToString());
                 }
             }
         }
