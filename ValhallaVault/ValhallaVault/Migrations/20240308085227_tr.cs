@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ValhallaVault.Migrations
 {
     /// <inheritdoc />
-    public partial class initCreate : Migration
+    public partial class tr : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -386,9 +386,38 @@ namespace ValhallaVault.Migrations
                 values: new object[,]
                 {
                     { 1, "[\"Ett legitimt f\\u00F6rs\\u00F6k fr\\u00E5n banken att skydda ditt konto\",\"En informationsinsamling f\\u00F6r en marknadsunders\\u00F6kning\",\"Ett potentiellt telefonbedr\\u00E4geri\"]", "Du får ett oväntat telefonsamtal från någon som påstår sig vara från din bank. Personen ber dig bekräfta ditt kontonummer och lösenord för att säkerställa din kontos säkerhet efter en påstådd säkerhetsincident. Hur bör du tolka denna situation?", 1 },
-                    { 2, null, "Efter flera månader av daglig kommunikation med någon du träffade på en datingsida, börjar personen berätta om en plötslig finansiell kris och ber om din hjälp genom att överföra pengar. Vad indikerar detta mest sannolikt?", 2 },
-                    { 3, null, "Du får ett e-postmeddelande/samtal om ett exklusivt erbjudande att investera i ett startup-företag som påstås ha en revolutionerande ny teknologi, med garantier om exceptionellt hög avkastning på mycket kort tid. Hur bör du förhålla dig till erbjudandet?", 3 },
-                    { 4, null, "Efter en online-shoppingrunda märker du oidentifierade transaktioner på ditt kreditkortsutdrag från företag du aldrig handlat från. Vad indikerar detta mest sannolikt?", 4 }
+                    { 2, "[\"Ge dem informationen de ber om, f\\u00F6r s\\u00E4kerhets skull\",\"Avsluta samtalet och kontakta din bank direkt via ett officiellt nummer du vet \\u00E4r korrekt\",\"V\\u00E4nta p\\u00E5 att de ska ringa tillbaka f\\u00F6r att bekr\\u00E4fta deras legitimitet\"]", "Vad bör du göra omedelbart efter att ha mottagit ett misstänkt telefonsamtal där någon frågar efter personlig finansiell information?", 1 },
+                    { 3, "[\"Banker skickar ofta e-postmeddelanden som ber kunder att direkt ange l\\u00F6senord och kontonummer f\\u00F6r verifiering.\",\"Banker ringer regelbundet sina kunder f\\u00F6r att be dem upprepa sina kontouppgifter f\\u00F6r s\\u00E4kerhetsuppdateringar.\",\"Banker och finansiella institutioner kommer aldrig att be dig om ditt l\\u00F6senord eller kontonummer via telefon eller e-post.\"]", "Vilket av följande påståenden är sant angående hur finansiella institutioner kommunicerar med sina kunder?", 1 },
+                    { 4, "[\"En legitim beg\\u00E4ran om hj\\u00E4lp fr\\u00E5n en person i n\\u00F6d\",\"Ett romansbedr\\u00E4geri\",\"En tillf\\u00E4llig ekonomisk sv\\u00E5righet\"]", "Efter flera månader av daglig kommunikation med någon du träffade på en datingsida, börjar personen berätta om en plötslig finansiell kris och ber om din hjälp genom att överföra pengar. Vad indikerar detta mest sannolikt?", 2 },
+                    { 5, "[\"Ett misstag av kreditkortsf\\u00F6retaget\",\"Kreditkortsbedr\\u00E4geri\",\"Obeh\\u00F6riga k\\u00F6p av en familjemedlem\"]", "Efter en online-shoppingrunda märker du oidentifierade transaktioner på ditt kreditkortsutdrag från företag du aldrig handlat från. Vad indikerar detta mest sannolikt?", 3 },
+                    { 6, "[\"Ett misstag av kreditkortsf\\u00F6retaget\",\"Kreditkortsbedr\\u00E4geri\",\"Obeh\\u00F6riga k\\u00F6p av en familjemedlem\"]", "Efter en online-shoppingrunda märker du oidentifierade transaktioner på ditt kreditkortsutdrag från företag du aldrig handlat från. Vad indikerar detta mest sannolikt?", 4 },
+                    { 7, "[\"\",\"\",\"\"]", "", 4 },
+                    { 8, "[\"\",\"\",\"\"]", "", 4 },
+                    { 9, "[\"\",\"\",\"\"]", "", 4 },
+                    { 10, "[\"\",\"\",\"\"]", "", 4 },
+                    { 11, "[\"\",\"\",\"\"]", "", 4 },
+                    { 12, "[\"\",\"\",\"\"]", "", 4 },
+                    { 13, "[\"\",\"\",\"\"]", "", 4 },
+                    { 14, "[\"\",\"\",\"\"]", "", 4 },
+                    { 15, "[\"\",\"\",\"\"]", "", 4 },
+                    { 16, "[\"\",\"\",\"\"]", "", 4 },
+                    { 17, "[\"\",\"\",\"\"]", "", 4 },
+                    { 18, "[\"\",\"\",\"\"]", "", 4 },
+                    { 19, "[\"\",\"\",\"\"]", "", 4 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Solutions",
+                columns: new[] { "Id", "CorrectAnswer", "Explanation", "QuestionId" },
+                values: new object[,]
+                {
+                    { 1, "Ett potentiellt telefonbedrägeri", "Banker och andra finansiella institutioner begär aldrig känslig information såsom kontonummer eller lösenord via telefon. Detta är ett klassiskt tecken på telefonbedrägeri.", 1 },
+                    { 2, "Avsluta samtalet och kontakta din bank direkt via ett officiellt nummer du vet är korrekt.", "Det säkraste sättet att hantera potentiella telefonbedrägerier är att avsluta samtalet och sedan själv ringa upp din bank via ett telefonnummer du vet är korrekt (till exempel från deras officiella webbplats eller ditt bankkort) för att verifiera om samtalet var legitimt.", 2 },
+                    { 3, "Banker och finansiella institutioner kommer aldrig att be dig om ditt lösenord eller kontonummer via telefon eller e-post.", "Kommunikationen från banker och finansiella institutioner innehåller aldrig förfrågningar om känslig information som lösenord eller kontonummer via osäkra kanaler som telefon eller e-post. Detta är en grundläggande säkerhetsprincip.", 3 },
+                    { 4, "Investeringsbedrägeri", "Erbjudanden som lovar hög avkastning med liten eller ingen risk, särskilt via oönskade e-postmeddelanden, är ofta tecken på investeringsbedrägerier.", 4 },
+                    { 5, "Kreditkortsbedrägeri", "Oidentifierade transaktioner på ditt kreditkortsutdrag är en stark indikation på att ditt kortnummer har komprometterats och använts för obehöriga köp, vilket är typiskt för kreditkortsbedrägeri.", 5 },
+                    { 6, "Utbildning i digital säkerhet för alla anställda", "Utbildning i digital säkerhet är avgörande för att hjälpa anställda att känna igen och undvika säkerhetshot som phishing, vilket är en vanlig attackvektor", 6 },
+                    { 7, "Implementera en policy för lösenordskomplexitet som kräver automatiska lösenordsändringar var 90:e dag", "En automatisk policy för lösenordsändring tvingar fram regelbundna uppdateringar och säkerställer att lösenorden hålls starka och svåra att knäcka, vilket minskar risken för obehörig åtkomst.", 7 }
                 });
 
             migrationBuilder.CreateIndex(

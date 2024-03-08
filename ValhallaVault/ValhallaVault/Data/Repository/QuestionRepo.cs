@@ -17,6 +17,18 @@ namespace ValhallaVault.Data.Repository
                 .Where(q => q.SubcategoryId == segmentId)
                 .ToListAsync();
         }
+
+        public async Task<SolutionModel?> GetSolutionByQuestionId(int questionId)
+        {
+            // Hämta solution för den specifika question med hjälp av questionId
+            var solution = await _context.Questions
+                .Where(q => q.Id == questionId)
+                .Select(q => q.Solution)
+                .FirstOrDefaultAsync();
+
+            return solution;
+        }
+
         public async Task UpdateQuestionAsync(int questionId, string newQuestionText)
         {
             var question = await _context.Questions.FindAsync(questionId);

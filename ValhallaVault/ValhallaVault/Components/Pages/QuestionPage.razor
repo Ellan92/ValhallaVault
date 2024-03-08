@@ -1,9 +1,26 @@
 ﻿@page "/QuestionPage/{chosenSegment:int}"
 @using ValhallaVault.Models
+@using ValhallaVault.Data
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
 @inject ValhallaVault.Managers.QuestionManager questionManager
 @inject NavigationManager Navigation
 @inject ValhallaVault.Managers.GenericManager<SegmentModel> genericManager
+@inject ValhallaVault.Managers.GenericManager<ResultModel> genericResultManager
+@inject ValhallaVault.Managers.GenericManager<ApplicationUser> genericUserManager
 @inject ValhallaVault.Managers.SubcategoryManager subcategoryManager
+@inject AuthenticationStateProvider AuthenticationProvider
+@inject ValhallaVault.Managers.UserManager usermanager
+@inject SignInManager<ApplicationUser> SignInManager
+@rendermode InteractiveServer
+
+<style>
+    /* ändra stilen på a elementen (svarsalternativ)*/
+    a.pointer 
+    {
+        cursor: pointer; /* Ange pekare som muspekare */
+    }
+</style>
 
 <div class="container">
     <div class="row">
@@ -16,7 +33,6 @@
                 {
                     <div class="card mt-3">
                         <div class="card-body">
-                            <h5>Fråga nummer: @Counter </h5>
                             <h4 class="card-title">@question.Question</h4>
                             <ul class="list-group">
                               
@@ -26,19 +42,14 @@
                                     @foreach (var option in question.Options)
                                     {
                                         <li class="list-group-item">
-                                            <!-- När användaren klickar på ett option, skapa ett result
-                                                 (ResultModel), sätt till true eller false beroende på om
-                                                 valt option stämmer överens med solution.
-                                            -->
-                                            <!--@question.Solution.CorrectAnswer-->
-                                            <a>Alternativ: @option</a>
+                                            <!-- När användaren klickar på ett option, skicka med både question och option -->
+                                            <a class="pointer" @onclick="(() => HandleOptionClick(question, option))">Alternativ: @option</a>
                                         </li>
                                     }
                                 }
                             </ul>
                         </div>
                     </div>
-                    Counter++; // Öka räknaren med 1 efter varje iteration
                 }
             }
             else
@@ -59,6 +70,8 @@
     [Parameter]
     public int chosenSegment { get; set; }
 
+    public string? UserName { get; set; }
+
     public int Counter = 1;
 
     public SegmentModel? ChosenSegment { get; set; }
@@ -66,6 +79,10 @@
     public List<SubcategoryModel> Subcategories { get; set; } = new();
 
     private List<QuestionModel> Questions { get; set; } = new();
+
+    private ApplicationUser? signedIn; // representerar den inloggade användaren
+    private AuthenticationState? State; // representerar autentiseringsstatusen för användaren
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -83,7 +100,6 @@
                     Subcategories.Add(subcategory);
 
                 }
-              
                 if (Subcategories.Count>0)
                 {
                     // Hämta alla frågor för varje subkategori
@@ -102,9 +118,59 @@
                         }
                     }
                 }
-     
             }
 
+        }
+    }
+    // Metod för att utvärdera valt svarsalternativ
+    private async Task HandleOptionClick(QuestionModel question, string chosenOption)
+    {
+        var solutionToQuestion = await questionManager.GetSolutionByQuestionId(question.Id);
+        if (solutionToQuestion!=null)
+        {
+            // Hämta korrekt svar från solution
+            string solution = solutionToQuestion.CorrectAnswer;
+            bool isCorrectAnswer = chosenOption.Equals(solutionToQuestion.CorrectAnswer);
+
+            if (isCorrectAnswer)
+            {
+                // ...Skapa ett result som är korrekt
+                ResultModel newResult = new ResultModel
+                {
+                    Answer = chosenOption,     // vad användaren svarade 
+                    IsCorrect = true,          // svaret var rätt 
+                    Question = question,      // vilken fråga användaren svarade på
+                    QuestionId = question.Id  // vilken fråga användaren svarade på
+                };
+
+                // spara det nya resultatet i databasen
+                await genericResultManager.AddAsync(newResult);
+                await genericResultManager.CompleteAsync();
+
+                // Hämta den inloggade usern för att kunna koppla resultatet till rätt user 
+                State = await AuthenticationProvider.GetAuthenticationStateAsync();
+                var user = State.User;
+                UserName = user.Identity.Name;
+                var findtheUser = await usermanager.GetUserByNameAsync(UserName);
+
+                // om användaren hittades...
+                if (findtheUser != null)
+                {
+                    // ...skapa ett UserResult 
+                    UserResult userresult = new UserResult
+                    {
+                        User = findtheUser,
+                        Result = newResult,
+                        ResultId = newResult.Id,
+                        UserId = findtheUser.Id
+                    };
+
+                    // Lägg till i userns lista av UserResults
+                    findtheUser.UserResults.Add(userresult);
+                    await genericUserManager.CompleteAsync();
+                }
+
+            }
         }
     }
 }
