@@ -679,35 +679,149 @@ namespace ValhallaVault.Data
                 new SolutionModel
                 {
                     Id = 4,
-                    CorrectAnswer = "Investeringsbedrägeri",
+                    CorrectAnswer = "Upprätta starka säkerhetsfrågor med din bank som krävs för att identifiera dig över telefon",
                     QuestionId = 4,
-                    Explanation = "Erbjudanden som lovar hög avkastning med liten eller ingen risk, särskilt via oönskade e-postmeddelanden, är ofta tecken på investeringsbedrägerier."
+                    Explanation = "Genom att ha förutbestämda säkerhetsfrågor med din bank kan du och banken ha en säker metod för att bekräfta varandras identitet under telefonsamtal. Detta minskar risken för att bli lurad av bedragare som inte kan svara på dessa frågor.\r\n"
 
                 },
                 new SolutionModel
                 {
                     Id = 5,
-                    CorrectAnswer = "Kreditkortsbedrägeri",
+                    CorrectAnswer = "Ett romansbedrägeri",
                     QuestionId = 5,
-                    Explanation = "Oidentifierade transaktioner på ditt kreditkortsutdrag är en stark indikation på att ditt kortnummer har komprometterats och använts för obehöriga köp, vilket är typiskt för kreditkortsbedrägeri."
+                    Explanation = "Begäran om pengar, särskilt under omständigheter där två personer aldrig har träffats fysiskt, är ett vanligt tecken på romansbedrägeri",
 
                 },
                 new SolutionModel
                 {
                     Id = 6,
-                    CorrectAnswer = "Utbildning i digital säkerhet för alla anställda",
+                    CorrectAnswer = "Investeringsbedrägeri",
                     QuestionId = 6,
-                    Explanation = "Utbildning i digital säkerhet är avgörande för att hjälpa anställda att känna igen och undvika säkerhetshot som phishing, vilket är en vanlig attackvektor"
+                    Explanation = "Erbjudanden som lovar hög avkastning med liten eller ingen risk, särskilt via oönskade e-postmeddelanden, är ofta tecken på investeringsbedrägerier."
 
                 },
                 new SolutionModel
                 {
                     Id = 7,
-                    CorrectAnswer = "Implementera en policy för lösenordskomplexitet som kräver automatiska lösenordsändringar var 90:e dag",
+                    CorrectAnswer = "Kreditkortsbedrägeri",
                     QuestionId = 7,
+                    Explanation = "Oidentifierade transaktioner på ditt kreditkortsutdrag är en stark indikation på att ditt kortnummer har komprometterats och använts för obehöriga köp, vilket är typiskt för kreditkortsbedrägeri."
+
+                },
+                new SolutionModel
+                {
+                    Id = 8,
+                    CorrectAnswer = "Utbildning i digital säkerhet för alla anställda",
+                    QuestionId = 8,
+                    Explanation = "Utbildning i digital säkerhet är avgörande för att hjälpa anställda att känna igen och undvika säkerhetshot som phishing, vilket är en vanlig attackvektor"
+
+                },
+                new SolutionModel
+                {
+                    Id = 9,
+                    CorrectAnswer = "Implementera en policy för lösenordskomplexitet som kräver automatiska lösenordsändringar var 90:e dag",
+                    QuestionId = 9,
                     Explanation = "En automatisk policy för lösenordsändring tvingar fram regelbundna uppdateringar och säkerställer att lösenorden hålls starka och svåra att knäcka, vilket minskar risken för obehörig åtkomst."
 
-                });
+                },
+                new SolutionModel
+                {
+                    Id = 10,
+                    CorrectAnswer = "Utrusta alla anställdas enheter med VPN (Virtual Private Network)-tjänster",
+                    QuestionId = 10,
+                    Explanation = "Genom att använda VPN kan anställda säkert ansluta till företagets nätverk även från otrygga Wi-Fi-nätverk, vilket krypterar dataöverföring och skyddar mot avlyssning och andra cyberhot."
+
+                },
+                new SolutionModel
+                {
+                    Id= 11,
+                    CorrectAnswer = "Installera och uppdatera regelbundet e-postsäkerhetslösningar som filtrerar bort skadlig programvara och misstänkta länkar",
+                    QuestionId = 11,
+                    Explanation = "Avancerade e-postsäkerhetslösningar kan effektivt identifiera och blockera skadlig programvara och phishing-försök, vilket minskar risken för att anställda oavsiktligt exponerar företagets system och data för cyberhot."
+                }, 
+                new SolutionModel
+                {
+                    Id = 12,
+                    CorrectAnswer = "Informera alla användare om sårbarheten och rekommendera temporära skyddsåtgärder",
+                    QuestionId = 12,
+                    Explanation = "Transparent kommunikation och rådgivning om tillfälliga åtgärder är avgörande för att skydda användarna medan en permanent lösning utvecklas."
+                }, 
+                new SolutionModel
+                {
+                    Id = 13,
+                    CorrectAnswer = "Organiserade cyberbrottsliga grupper",
+                    QuestionId = 13,
+                    Explanation = "DDoS-attacker kräver ofta betydande resurser och koordinering, vilket är karakteristiskt för organiserade cyberbrottsliga grupper."
+                }, 
+                new SolutionModel
+                {
+                    Id = 14,
+                    CorrectAnswer = "Införa striktare lösenordspolicyer och tvåfaktorsautentisering för fjärråtkomst",
+                    QuestionId = 14,
+                    Explanation = "Stärkt autentisering är kritisk för att säkra fjärråtkomst och skydda mot obehörig åtkomst i en distribuerad arbetsmiljö."
+                },
+                new SolutionModel
+                {
+                    Id = 15,
+                    CorrectAnswer = "Ransomware",
+                    QuestionId = 15,
+                    Explanation = "Ransomware-angrepp involverar kryptering av offerdata och kräver lösen för dekryptering, vilket är särskilt skadligt för kritiska sektorer som hälsovård."
+                }, 
+                new SolutionModel
+                {
+                    Id = 16,
+                    CorrectAnswer = "Ransomware",
+                    QuestionId = 16,
+                    Explanation = "Maersk utsattes för NotPetya ransomware-angreppet, som ledde till omfattande störningar och förluster genom att kryptera företagets globala system.Maersk rapporterade att företaget led ekonomiska förluster på grund av NotPetya ransomware-angreppet som uppskattades till cirka 300 miljoner USD. Denna siffra reflekterar de omfattande kostnaderna för störningar i deras globala verksamheter, återställande av system och data, samt förlust av affärer under tiden systemen var nere. NotPetya-angreppet anses vara ett av de mest kostsamma cyberangreppen mot ett enskilt företag och tjänar som en kraftfull påminnelse om de potentiella konsekvenserna av cyberhot."
+                }, 
+                new SolutionModel
+                {
+                    Id = 17,
+                    CorrectAnswer = "Cyberspionage",
+                    QuestionId = 17,
+                    Explanation = "Cyberspionage avser aktiviteter där aktörer, ofta statliga, engagerar sig i övervakning och datainsamling genom cybermedel för att erhålla hemlig information utan målets medgivande, typiskt för politiska, militära eller ekonomiska fördelar. I takt med att cyberspionage blir allt mer sofistikerat, krävs det starkare skyddsmekanismer för att säkra känslig information. Ett av de mest effektiva sätten att skydda data är genom kryptering. Denna teknik säkerställer att informationen förblir privat, även om den skulle hamna i fel händer."
+                }, new SolutionModel
+                {
+                    Id = 18,
+                    CorrectAnswer = "Öka användningen av kryptering för all intern och extern kommunikation",
+                    QuestionId = 18,
+                    Explanation = "Kryptering är en kraftfull metod för att skydda känslig information under överföring och lagring, vilket gör det extremt svårt för obehöriga att få tillgång till och förstå informationen, även om de lyckas avlyssna kommunikationen."
+                }, 
+                new SolutionModel
+                {
+                    Id = 19,
+                    CorrectAnswer = "Implementera ett omfattande program för beteendeanalys och anomalidetektering",
+                    QuestionId = 19,
+                    Explanation = "Program för beteendeanalys och anomalidetektering kan effektivt identifiera ovanligt beteende eller aktiviteter som kan tyda på insiderhot eller obehörig åtkomst till känslig information, vilket är ett kritiskt steg för att förhindra cyberspionage. Mjukvarusårbarheter är ofta den svaga länken som utnyttjas i cyberspionageattacker. Utan snabba och regelbundna säkerhetsuppdateringar och patchar, kan dessa sårbarheter lämna dörrarna vidöppna för angripare. Att hålla programvara och system uppdaterade är en grundläggande men kritisk del av ett effektivt cybersäkerhetsförsvar."
+                }, 
+                new SolutionModel
+                {
+                    Id = 20,
+                    CorrectAnswer = "Hålla all mjukvara och operativsystem uppdaterade med de senaste säkerhetspatcharna",
+                    QuestionId = 20,
+                    Explanation = "Regelbundna uppdateringar och patchning av mjukvara och operativsystem är avgörande för att stänga säkerhetshål som annars kan utnyttjas av cyberspioner. Detta minskar risken för intrång och dataläckor avsevärt."
+                }, 
+                new SolutionModel
+                {
+                    Id = 21,
+                    CorrectAnswer = "Riktade cyberattacker",
+                    QuestionId = 21,
+                    Explanation = "Riktade cyberattacker som utnyttjar noll-dagars Zero-day sårbarheter är en avancerad metod för cyberspionage där angriparen specifikt riktar in sig på ett mål för att komma åt känslig information eller data genom att utnyttja tidigare okända sårbarheter i programvara."
+                },
+                new SolutionModel
+                {
+                    Id = 22,
+                    CorrectAnswer = "Säkerhetsskyddslagen",
+                    QuestionId = 22,
+                    Explanation = "Säkerhetsskyddslagen är en svensk lagstiftning som syftar till att skydda nationellt känslig information från spioneri, sabotage, terroristbrott och andra säkerhetshot. Lagen ställer krav på säkerhetsskyddsåtgärder för verksamheter av betydelse för Sveriges säkerhet."
+                }, 
+                new SolutionModel
+                {
+                    Id = 23,
+                    CorrectAnswer = "Statssponsrade hackers",
+                    QuestionId = 23,
+                    Explanation = "Statssponsrade hackers är aktörer som arbetar på uppdrag av eller med stöd från en regering för att genomföra cyberspionage, ofta riktat mot utländska intressen, organisationer eller regeringar för att få strategiska fördelar."
+                }); 
 
 
             // Beskrivning: en kategori innehåller flera segment men ett segment tillhör bara en kategori. 
