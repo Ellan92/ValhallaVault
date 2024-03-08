@@ -734,25 +734,25 @@ namespace ValhallaVault.Data
                 },
                 new SolutionModel
                 {
-                    Id= 11,
+                    Id = 11,
                     CorrectAnswer = "Installera och uppdatera regelbundet e-postsäkerhetslösningar som filtrerar bort skadlig programvara och misstänkta länkar",
                     QuestionId = 11,
                     Explanation = "Avancerade e-postsäkerhetslösningar kan effektivt identifiera och blockera skadlig programvara och phishing-försök, vilket minskar risken för att anställda oavsiktligt exponerar företagets system och data för cyberhot."
-                }, 
+                },
                 new SolutionModel
                 {
                     Id = 12,
                     CorrectAnswer = "Informera alla användare om sårbarheten och rekommendera temporära skyddsåtgärder",
                     QuestionId = 12,
                     Explanation = "Transparent kommunikation och rådgivning om tillfälliga åtgärder är avgörande för att skydda användarna medan en permanent lösning utvecklas."
-                }, 
+                },
                 new SolutionModel
                 {
                     Id = 13,
                     CorrectAnswer = "Organiserade cyberbrottsliga grupper",
                     QuestionId = 13,
                     Explanation = "DDoS-attacker kräver ofta betydande resurser och koordinering, vilket är karakteristiskt för organiserade cyberbrottsliga grupper."
-                }, 
+                },
                 new SolutionModel
                 {
                     Id = 14,
@@ -766,14 +766,14 @@ namespace ValhallaVault.Data
                     CorrectAnswer = "Ransomware",
                     QuestionId = 15,
                     Explanation = "Ransomware-angrepp involverar kryptering av offerdata och kräver lösen för dekryptering, vilket är särskilt skadligt för kritiska sektorer som hälsovård."
-                }, 
+                },
                 new SolutionModel
                 {
                     Id = 16,
                     CorrectAnswer = "Ransomware",
                     QuestionId = 16,
                     Explanation = "Maersk utsattes för NotPetya ransomware-angreppet, som ledde till omfattande störningar och förluster genom att kryptera företagets globala system.Maersk rapporterade att företaget led ekonomiska förluster på grund av NotPetya ransomware-angreppet som uppskattades till cirka 300 miljoner USD. Denna siffra reflekterar de omfattande kostnaderna för störningar i deras globala verksamheter, återställande av system och data, samt förlust av affärer under tiden systemen var nere. NotPetya-angreppet anses vara ett av de mest kostsamma cyberangreppen mot ett enskilt företag och tjänar som en kraftfull påminnelse om de potentiella konsekvenserna av cyberhot."
-                }, 
+                },
                 new SolutionModel
                 {
                     Id = 17,
@@ -786,21 +786,21 @@ namespace ValhallaVault.Data
                     CorrectAnswer = "Öka användningen av kryptering för all intern och extern kommunikation",
                     QuestionId = 18,
                     Explanation = "Kryptering är en kraftfull metod för att skydda känslig information under överföring och lagring, vilket gör det extremt svårt för obehöriga att få tillgång till och förstå informationen, även om de lyckas avlyssna kommunikationen."
-                }, 
+                },
                 new SolutionModel
                 {
                     Id = 19,
                     CorrectAnswer = "Implementera ett omfattande program för beteendeanalys och anomalidetektering",
                     QuestionId = 19,
                     Explanation = "Program för beteendeanalys och anomalidetektering kan effektivt identifiera ovanligt beteende eller aktiviteter som kan tyda på insiderhot eller obehörig åtkomst till känslig information, vilket är ett kritiskt steg för att förhindra cyberspionage. Mjukvarusårbarheter är ofta den svaga länken som utnyttjas i cyberspionageattacker. Utan snabba och regelbundna säkerhetsuppdateringar och patchar, kan dessa sårbarheter lämna dörrarna vidöppna för angripare. Att hålla programvara och system uppdaterade är en grundläggande men kritisk del av ett effektivt cybersäkerhetsförsvar."
-                }, 
+                },
                 new SolutionModel
                 {
                     Id = 20,
                     CorrectAnswer = "Hålla all mjukvara och operativsystem uppdaterade med de senaste säkerhetspatcharna",
                     QuestionId = 20,
                     Explanation = "Regelbundna uppdateringar och patchning av mjukvara och operativsystem är avgörande för att stänga säkerhetshål som annars kan utnyttjas av cyberspioner. Detta minskar risken för intrång och dataläckor avsevärt."
-                }, 
+                },
                 new SolutionModel
                 {
                     Id = 21,
@@ -814,14 +814,22 @@ namespace ValhallaVault.Data
                     CorrectAnswer = "Säkerhetsskyddslagen",
                     QuestionId = 22,
                     Explanation = "Säkerhetsskyddslagen är en svensk lagstiftning som syftar till att skydda nationellt känslig information från spioneri, sabotage, terroristbrott och andra säkerhetshot. Lagen ställer krav på säkerhetsskyddsåtgärder för verksamheter av betydelse för Sveriges säkerhet."
-                }, 
+                },
                 new SolutionModel
                 {
                     Id = 23,
                     CorrectAnswer = "Statssponsrade hackers",
                     QuestionId = 23,
                     Explanation = "Statssponsrade hackers är aktörer som arbetar på uppdrag av eller med stöd från en regering för att genomföra cyberspionage, ofta riktat mot utländska intressen, organisationer eller regeringar för att få strategiska fördelar."
-                }); 
+                });
+
+            builder.Entity<UserResult>().HasData(
+                new UserResult
+                {
+                    UserId = "30dbf3fb-5839-4bad-a4b4-7448d8b412cd",
+                    ResultId = 1
+                });
+
 
 
             // Beskrivning: en kategori innehåller flera segment men ett segment tillhör bara en kategori. 
