@@ -44,6 +44,7 @@ builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<QuestionModel>>
 builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<ApplicationUser>>();
 builder.Services.AddScoped<ValhallaVault.Managers.GenericManager<ResultModel>>();
 builder.Services.AddScoped<ValhallaVault.Managers.SegmentManager>();
+builder.Services.AddScoped<ValhallaVault.Managers.Factory>();
 builder.Services.AddScoped<ValhallaVault.Managers.UserManager>();
 builder.Services.AddScoped<ValhallaVault.Managers.SubcategoryManager>();
 builder.Services.AddScoped<ValhallaVault.Managers.QuestionManager>();
