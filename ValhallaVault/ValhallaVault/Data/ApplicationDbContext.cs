@@ -823,12 +823,6 @@ namespace ValhallaVault.Data
                     Explanation = "Statssponsrade hackers är aktörer som arbetar på uppdrag av eller med stöd från en regering för att genomföra cyberspionage, ofta riktat mot utländska intressen, organisationer eller regeringar för att få strategiska fördelar."
                 });
 
-            builder.Entity<UserResult>().HasData(
-                new UserResult
-                {
-                    UserId = "30dbf3fb-5839-4bad-a4b4-7448d8b412cd",
-                    ResultId = 1
-                });
 
 
 
@@ -879,7 +873,10 @@ namespace ValhallaVault.Data
             builder.Entity<UserResult>()
                 .HasOne(u => u.Result)
                 .WithMany(t => t.UserResults)
-                .HasForeignKey(tt => tt.ResultId);
+            .HasForeignKey(tt => tt.ResultId);
+
+
+
         }
     }
 }
