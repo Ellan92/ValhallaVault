@@ -19,14 +19,19 @@
                             <h5>Fråga nummer: @Counter </h5>
                             <h4 class="card-title">@question.Question</h4>
                             <ul class="list-group">
-
+                              
                                 @if (question.Options != null && question.Options.Count > 0)
                                 {
                                  
                                     @foreach (var option in question.Options)
                                     {
                                         <li class="list-group-item">
-                                            <a>Alternativ 1: @option</a>
+                                            <!-- När användaren klickar på ett option, skapa ett result
+                                                 (ResultModel), sätt till true eller false beroende på om
+                                                 valt option stämmer överens med solution.
+                                            -->
+                                            <!--@question.Solution.CorrectAnswer-->
+                                            <a>Alternativ: @option</a>
                                         </li>
                                     }
                                 }
@@ -43,7 +48,7 @@
                 </div>
             }
 
-            <a href="/segments" class="btn btn-primary mt-3">Back to segment</a>
+            <a href="@($"SegmentPage/{chosenSegment}")" class="btn btn-primary mt-3">Back to segment</a>
         </div>
     </div>
 </div>
