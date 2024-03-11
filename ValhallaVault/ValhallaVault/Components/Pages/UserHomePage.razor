@@ -16,13 +16,7 @@
 <h4>Välkommen, @Name</h4>
 
 <h3>Dina resultat:</h3>
-@if (Results.Count>=0)
-{
-    @foreach (var result in Results)
-    {
-       <p>@result</p>
-    }
-}
+
 
 <div class="row-cols-4">
     <div> 
@@ -30,6 +24,7 @@
     </div>
 </div>
 <br />
+<h2>Nästa kategori låses upp när du fått minst 80% rätt på den föregående.</h2>
 <ul>
     <div class="Container1">
         <a href="@($"CategoryPage/{1}")"><h5 class="Category1">Kategori 1: Att skydda sig mot bedrägerier</h5></a>
