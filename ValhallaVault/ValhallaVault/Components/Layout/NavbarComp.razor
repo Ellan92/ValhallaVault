@@ -1,0 +1,55 @@
+﻿
+<header class="header">
+    <a href="#" class="logo">Pink Zombies</a>
+
+    <nav class="navbar">
+        <a href="">Home</a>
+        <a href="auth">Auth Required</a>
+        <a href="admin">Admin Page</a>
+
+       <AuthorizeView>
+           <Authorized>
+                <a href="Account/Manage">@context.User.Identity?.Name</a>
+@*                 <div class="nav-item px-3">
+                    <form action="Account/Logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                        <button type="submit" class="nav-link">
+                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                        </button>
+                    </form>
+                </div> *@
+           </Authorized>
+           <NotAuthorized>
+
+                <a href="Account/Register">Register</a>
+                <a href="Account/Login">Login</a>
+                <a href="#">Contact us</a>
+@* 
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Account/Register">
+                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Account/Login">
+                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
+                    </NavLink>
+                </div> *@
+           </NotAuthorized>
+       </AuthorizeView>
+       
+
+        <div class="top-row px-4">
+            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+        </div>
+    </nav>
+
+</header>
+
+@code {
+
+
+
+}
