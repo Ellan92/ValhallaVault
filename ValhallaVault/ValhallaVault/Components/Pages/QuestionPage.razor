@@ -1,5 +1,6 @@
 ﻿@page "/QuestionPage/{chosenSegment:int}"
 @using ValhallaVault.Models
+@using ValhallaVault.Models.ViewModels
 @using ValhallaVault.Data
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
@@ -24,10 +25,12 @@
     .green-text
     {
         color: green;
+        opacity: .7;
     }
 
     .red-text {
         color: red;
+        opacity: .7;
     }
 
 </style>
@@ -37,56 +40,7 @@
         <div class="col-md-12">
             <h3 class="mt-3">Frågor för denna subkategori</h3>
             <p><stronger>Återstående frågor: @Questions.Count </stronger></p>
-            <!--Visa besvarande frågor först, om det finns några-->
-            @if (InCorrectlyAnsweredQuestions!= null && InCorrectlyAnsweredQuestions.Any())
-            {
-                @foreach (var question in InCorrectlyAnsweredQuestions)
-                {
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <h6 class="card-title mt-3 red-text" style="opacity: 0.7;">@question.Question</h6>
-                            <ul class="list-group mt-3 red-text" style="opacity: 0.7;">
-
-                                @if (question.Options != null && question.Options.Count > 0)
-                                {
-                                    @foreach (var option in question.Options)
-                                    {
-                                        <li class="list-group-item mt-3 red-text" style="opacity: 0.7;">
-                                           @option
-                                        </li>
-                                    }
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                }
-            }
-
-            @if (CorrectlyAnsweredQuestions != null && CorrectlyAnsweredQuestions.Any())
-            {
-                @foreach (var question in CorrectlyAnsweredQuestions)
-                {
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <h6 class="card-title mt-3 green-text" style="opacity: 0.7;">@question.Question</h6>
-                            <ul class="list-group mt-3 green-text" style="opacity: 0.7;">
-
-                                @if (question.Options != null && question.Options.Count > 0)
-                                {
-                                    @foreach (var option in question.Options)
-                                    {
-                                        <li class="list-group-item mt-3 green-text" style="opacity: 0.7;">
-                                            @option
-                                        </li>
-                                    }
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                }
-            }
-
-            <!-- Visa frågorna om det finns några -->
+            <!-- Observarade frågor -->
             @if (Questions != null && Questions.Any())
             {
                 @foreach (var question in Questions)
@@ -94,33 +48,43 @@
                     <div class="card mt-3">
                         <div class="card-body">
                             <h4 class="card-title">@question.Question</h4>
-                            <ul class="list-group">
-                              
-                                @if (question.Options != null && question.Options.Count > 0)
+                            <ul class="list-group"> <!-- list-group för alla frågor, vare sig de är besvarade eller inte. -->
+                                @if (question.Options != null && question.Options.Count > 0 && question.IsAnswered==false)
                                 {
                                     @foreach (var option in question.Options)
                                     {
                                         <li class="list-group-item">
                                             <!-- När användaren klickar på ett option, skicka med både question och option -->
                                             <a class="pointer" @onclick="(() => HandleOptionClick(question, option))">@option</a>
+                                           
                                         </li>
                                     }
                                 }
+
                             </ul>
                         </div>
                     </div>
                 }
             }
 
+            <button @onclick="SubmitQuiz">Lämna in</button>
+            @if (MessageIsVisible==true)
+            {
+                <h6>Vänligen svara på alla frågor innan du lämnar in.</h6>
+            }
             <a href="@($"SegmentPage/{chosenSegment}")" class="btn btn-primary mt-3">Tillbaka</a>
 
         </div>
     </div>
 </div>
 
+
+
 @code {
     [Parameter]
     public int chosenSegment { get; set; }
+
+    private bool MessageIsVisible = false;
 
     public string? UserName { get; set; }
 
@@ -130,13 +94,13 @@
 
     public int Points = 0;
 
-    // Listor måste vara public för att kunna ska nås av andra komponenter. 
+    public int NumberOfQuestions = 0;
 
-    public List<QuestionModel> Questions { get; set; } = new();
+    public List<QuestionViewModel> Questions { get; set; } = new();
 
-    public List<QuestionModel> CorrectlyAnsweredQuestions { get; set; } = new();
+    public List<QuestionViewModel> AnsweredQuestions { get; set; } = new();
 
-    public List<QuestionModel> InCorrectlyAnsweredQuestions { get; set; } = new();
+    public List<SolutionModel> Solutions { get; set; } = new();
 
     private ApplicationUser? signedIn; // representerar den inloggade användaren
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren
@@ -147,77 +111,87 @@
         var segment = await genericManager.GetByIdAsync(chosenSegment);
         if (segment != null)
         {
-            segment = ChosenSegment;
+            ChosenSegment = segment;
 
             var allSubcategories = await subcategoryManager.GetSubcategoriesBySegmentIdAsync(chosenSegment);
             if (allSubcategories != null)
             {
                 foreach (var subcategory in allSubcategories)
                 {
-                    // skapa listan med subkategorier
-                    Subcategories.Add(subcategory);
-
+                    Subcategories.Add(subcategory);  // skapa listan med subkategorier
                 }
                 if (Subcategories.Count>0)
                 {
-                    // Hämta alla frågor för varje subkategori
-                    foreach (var sc in Subcategories)
+                    foreach (var sc in Subcategories)   // Hämta alla frågor för varje subkategori
                     {
-                        // en lista med frågor per subkategori 
-                        var questionList = await questionManager.GetQuestionsBySubcategoryIdAsync(sc.Id);
+                        var questionList = await questionManager.GetQuestionsBySubcategoryIdAsync(sc.Id);  // en lista med frågor per subkategori
 
-                        // lägg till alla frågor till en och samma lista (Questions)
-                        if (questionList!=null && questionList.Count>0)
+                        if (questionList != null && questionList.Count > 0) // lägg till alla frågor till en och samma lista (Questions)
                         {
                             foreach (var question in questionList)
                             {
-                                Questions.Add(question);
+                                QuestionViewModel viewmodelQuestion = factory.CreateQuestionViewModel(question); // Gör varje QuestionModel till en QuestionViewModel
+                                Questions.Add(viewmodelQuestion);
                             }
                         }
                     }
                 }
+                NumberOfQuestions = Questions.Count;
             }
         }
     }
 
-    // Metod för att utvärdera valt svarsalternativ
-    private async Task HandleOptionClick(QuestionModel question, string chosenOption)
+    private void SubmitQuiz()
     {
-        // Ta bort frågan från listan när användaren har svarat 
-        Questions.Remove(question);
-        StateHasChanged();   // Signalerar att komponenten har uppdaterats och att UI:et behöver uppdateras
+        int answeredQuestions = AnsweredQuestions.Count;
+        if (answeredQuestions < NumberOfQuestions)
+        {
+            MessageIsVisible = true; // visa meddelandet om att alla frågor måste besvaras. 
+        }
 
-        var solutionToQuestion = await questionManager.GetSolutionByQuestionId(question.Id);
+    }
+
+    private async Task HandleOptionClick(QuestionViewModel question, string chosenOption) // Metod för att utvärdera valt svarsalternativ
+    {
+
+        question.IsAnswered = true;
+        Questions.Remove(question);
+        AnsweredQuestions.Add(question);
+
+        var solutionToQuestion = await questionManager.GetSolutionByQuestionId(question.Id);  // Hämta rätt svar
+    
         if (solutionToQuestion!=null)
         {
-            // Hämta korrekt svar från solution
-            string solution = solutionToQuestion.CorrectAnswer;
-            bool isCorrectAnswer = chosenOption.Equals(solutionToQuestion.CorrectAnswer);
+            Solutions.Add(solutionToQuestion);
+            string solution = solutionToQuestion.CorrectAnswer;  // Omvandla rätt svar till en sträng
+            bool isCorrectAnswer = chosenOption.Equals(solutionToQuestion.CorrectAnswer);  // Jämför strängen med användarens svar
 
-            // Skapa ett resultat
-            ResultModel newResult = null;
+            ResultModel newResult = null;   // Skapa ett resultat
             if (isCorrectAnswer)
             {
-                CorrectlyAnsweredQuestions.Add(question);
-                StateHasChanged();
+                question.IsCorrectAnswer = true;
                 Points++; // lägg till ett poäng
-                          // Skapa ett korrekt resultat med hjälp av Factory
-                newResult = factory.CreateCorrectResult(chosenOption, true, question, question.Id);
+                QuestionModel questionModel = factory.CreateQuestionModel(question);   // Omvandla questionviewmodel till vanlig model
+                newResult = factory.CreateCorrectResult(chosenOption, true, questionModel, question.Id);
+
+                ResultViewModel resultviewmodel = factory.CreateResultViewModel(newResult);
+           
             }
-            else
+            else if (!isCorrectAnswer)
             {
-                InCorrectlyAnsweredQuestions.Add(question);
+                question.IsCorrectAnswer = false;
                 StateHasChanged();
                 if (Points>0)
                 {
                     Points--; // dra bara bort poäng om användaren har minst 1 poäng. 
                 }
-                // Skapa ett felaktigt resultat med hjälp av ResultFactory
-                newResult = factory.CreateWrongResult(chosenOption, false, question, question.Id);
-            }
+                QuestionModel questionModel = factory.CreateQuestionModel(question);
+                newResult = factory.CreateWrongResult(chosenOption, false, questionModel, question.Id);  // Skapa ett felaktigt resultat med hjälp av Factory
 
-            // Spara resultatet i databasen
-            await genericResultManager.AddAsync(newResult);
+                ResultViewModel resultviewmodel = factory.CreateResultViewModel(newResult);
+
+            }
+            await genericResultManager.AddAsync(newResult);  // Spara resultatet i databasen
             await genericResultManager.CompleteAsync();
 
             // Hämta den inloggade usern för att kunna koppla resultatet till rätt användare
@@ -230,7 +204,7 @@
             UserResult userresult;
             if (findtheUser != null)
             {
-                // Skapa ett UserResult med hjälp av UserResultFactory
+                // Skapa ett UserResult med hjälp av Factory
                 userresult = factory.CreateUserResult(findtheUser, newResult);
 
                 if (userresult != null)

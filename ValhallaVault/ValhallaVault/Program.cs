@@ -49,6 +49,8 @@ builder.Services.AddScoped<ValhallaVault.Managers.UserManager>();
 builder.Services.AddScoped<ValhallaVault.Managers.SubcategoryManager>();
 builder.Services.AddScoped<ValhallaVault.Managers.QuestionManager>();
 
+// ge detaljerade error-meddelanden 
+builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 
 builder.Services.AddAuthentication(options =>
     {
