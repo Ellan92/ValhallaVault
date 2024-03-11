@@ -12,10 +12,14 @@
 @inject GenericRepo<QuestionModel> questionRepo
 @rendermode InteractiveServer
 
+@* style="display: flex; flex-direction: row; *@
+@* style="margin-right: 20px;" *@
+
 
 <div style="background-image: url('/Images/AdminPageScreen.jpg'); background-size: cover; background-position: center top; height: 100vh; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
     <h1 class="text-white display-2">Add Content</h1>
-
+    <div class="flex-row row justify-content-between">
+        <div class="col-5">
             <h3 class="text-white display-6">Category</h3>
             <strong class="text-white">Category Name: </strong><input @bind="categoryName"></input>
             <br/>
@@ -23,15 +27,27 @@
             <br/>
             <button @onclick="AddCategory" class="btn btn-primary">Add Category</button>
             <br/>
-            @if (Categories != null)
+
+
+            @if(Categories.Count > 1)
             {
-                <ul>
-                    @foreach (var category in Categories)
-                    {
-                        <li>@category.CategoryName</li>
-                    }
-                </ul>
+                var lastCategory = Categories.Last();
+                if (Categories.Remove(lastCategory)){};
+                
+                <p class="text-danger">Only one category may be added at a time.</p>
             }
+
+                <!-- Display the category list -->
+            <ul>
+                @foreach (var category in Categories)
+                {
+                    <li class="text-white">@category.CategoryName</li>
+                }
+            </ul>
+
+            
+        </div>
+        <div class="col-5">
     <h3 class="text-white display-6">Segment</h3>
     <strong class="text-white">Segment Name: </strong><input @bind="segmentName"></input>
     <br/>
@@ -44,11 +60,14 @@
         <ul>
             @foreach (var segment in Segments)
             {
-                <li>@segment.SegmentName</li>
+                 <li class="text-white">@segment.SegmentName</li>
             }
         </ul>
     }
-
+    </div>
+    </div>
+    <div class="flex-row row justify-content-between">
+        <div class="col-5">
     <h3 class="text-white display-6">Subcategory</h3>
     <strong class="text-white">Subcategory Name: </strong><input @bind="subcategoryName"></input>
     <br/>
@@ -61,10 +80,12 @@
         <ul>
             @foreach (var subCategory in Subcategories)
             {
-                <li>@subCategory.SubCategoryName</li>
+                <li class="text-white">@subCategory.SubCategoryName</li>
             }
         </ul>
     }
+        </div>
+        <div class="col-5">
     <h3 class="text-white display-6">Questions</h3>
     <strong class="text-white">Question Name: </strong><input @bind="question"></input>
     <br/>
@@ -75,27 +96,29 @@
         <ul>
             @foreach (var question in Questions)
             {
-                <li>@question.Question</li>
+                <li class="text-white">@question.Question</li>
             }
         </ul>
     }
     <br/>
+
     <strong class="text-white">Options: </strong><input @bind="option"></input>
 @*     <button @onclick="(() => AddOption(option))" class="btn btn-dark">Add Option</button> *@
-    <button @onclick="AddOption" class="btn btn-dark">Add Option</button>
+            <button @onclick="AddOption" class="btn btn-dark">Add Option</button>
     <br/>
     @if(options != null)
     {
         <ul>
         @foreach(string option in options)
         {
-            <li>@option</li>
+            <li class="text-white">@option</li>
         }
         </ul>
     }
     <br/>
-
-<button @onclick="SubmitForm" class="btn btn-success">Submit</button>
+    </div>
+</div>
+    <button @onclick="SubmitForm" class="btn btn-success btn-lg">Submit</button>
 
 </div>
 
@@ -104,6 +127,8 @@
     private List<CategoryModel> Categories { get; set; } = new();
     private string? categoryName;
     private string? categoryDescription;
+
+    private bool isCategoryAdded = false;
 
     private List<SegmentModel> Segments { get; set; } = new();
     private string? segmentName;
@@ -131,18 +156,25 @@
     private async Task HandleSubmit()
     {
         await categoryRepo.AddAsync(NewCategory);
+        foreach(SegmentModel segment in Segments)
+        {
+            await segmentRepo.AddAsync(NewSegment);
+        }
+
+
     }
 
     private async Task AddCategory()
     {
-
-        // Create a new segment and add it to the list
+        // Create a new category and add it to the list
         var newCategory = new CategoryModel { CategoryName = categoryName, Description = categoryDescription };
         Categories.Add(newCategory);
+        isCategoryAdded = true;
 
         // Clear input fields
         categoryName = "";
         categoryDescription = "";
+
     }
 
     private async Task AddSegment()
