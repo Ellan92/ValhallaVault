@@ -1,10 +1,27 @@
-﻿@* @page "/Category"
+﻿
 
-<PageTitle>Category</PageTitle>
-<h3>Category</h3>
- *@
+<!-- Button component -->
+<button class="custom-btn btn btn-primary" type="submit">@Title</button>
 
-<button class="btn btn-primary" type="submit" Size="Size.Small">@Title </button>
+<!-- CSS-stilar -->
+<style>
+    .custom-btn {
+        background-color: #ff9900;
+        color: #ffffff;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+
+        cursor: pointer;
+    }
+
+        .custom-btn:hover {
+            background-color: #ffcc66;
+        }
+
+        .custom-btn:active {
+            background-color: #e68a00;
+        }
+</style>
 
 @code {
     [Parameter]
