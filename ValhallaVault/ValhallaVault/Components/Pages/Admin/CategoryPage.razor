@@ -1,0 +1,109 @@
+﻿@page "/categorypage"
+@using Microsoft.AspNetCore.Authorization
+@using ValhallaVault.Data.Repository
+@using ValhallaVault.Managers
+@using ValhallaVault.Models
+@using Blazored
+@using Blazored.Modal
+@using Blazored.Modal.Services
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider provider
+@inject GenericRepo<CategoryModel> categoryRepo
+@inject GenericRepo<SegmentModel> segmentRepo
+@inject GenericRepo<SubcategoryModel> subcategoryRepo
+@inject GenericRepo<QuestionModel> questionRepo
+@inject GenericManager<CategoryModel> genericCategoryManager
+@inject CategoryManager categoryManager
+@inject IModalService modal
+@rendermode InteractiveServer
+
+
+<div style="background-image: url('/Images/AdminPageV2.jpg'); background-size: cover; background-position: center top; height: 100vh; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
+	<h1 class="text-white display-2">Categories</h1>
+
+	<ul class="list-unstyled">
+		@if(AllCategories != null)
+		{
+			@foreach(var category in AllCategories)
+			{
+				<li class="text-white display-5">@category.CategoryName</li>
+
+				<button @onclick="() => ShowEditDetails(category.Id)" class="btn btn-outline-light btn-lg">Edit</button>
+				@if (isEditDetailsShown && categoryId == category.Id)
+				{
+					<div>
+						<strong class="text-white">Category Name: </strong><input @bind="categoryName" placeholder="@category.CategoryName"></input>
+						<br/>
+						<strong class="text-white">Category Description: </strong><input @bind="categoryDescription" placeholder="@category.Description"></input>
+						<br/>
+						<button @onclick="() => UpdateCategory(category)" class="btn btn-outline-light">Update</button>
+						<button @onclick="() => DeleteCategory(category)" class="btn btn-outline-light">Delete</button>
+						<button @onclick="HideEditDetails" class="btn btn-outline-light">Cancel</button>
+						@if (isCategoryDeleted)
+						{
+							<p class="bg-danger">Category: @category.CategoryName deleted successfully.</p>
+						}
+					</div>
+				}
+
+			}
+		}
+	</ul>
+
+	
+</div>
+
+
+@code {
+	public List<CategoryModel> AllCategories = new();
+
+	public CategoryModel Category;
+
+	public string categoryName;
+
+	public string categoryDescription;
+
+	public bool isEditDetailsShown = false;
+
+	public bool isCategoryDeleted = false;
+
+	public int categoryId;
+
+	protected override async Task OnInitializedAsync()
+	{
+		Category = await genericCategoryManager.GetByIdAsync(categoryId);
+		AllCategories = await genericCategoryManager.GetAllAsync();
+	}
+
+	public async Task GetAllCategories()
+	{
+		await genericCategoryManager.GetAllAsync();
+	}
+
+	public async Task ShowEditDetails(int selectedCategoryId)
+	{
+		isEditDetailsShown = true;
+
+		categoryId = selectedCategoryId;
+	}
+	public async Task HideEditDetails()
+	{
+		isEditDetailsShown = false;
+	}
+	public async Task UpdateCategory(CategoryModel categoryToUpdate)
+	{
+		await categoryManager.UpdateCategoryNameAsync(categoryId, categoryName);
+		await categoryManager.UpdateCategoryDescriptionAsync(categoryId, categoryDescription);
+	}
+	public async Task DeleteCategory(CategoryModel categoryToDelete)
+	{
+		if(categoryToDelete != null)
+		{
+			await genericCategoryManager.DeleteAsync(categoryId);
+			isCategoryDeleted = true;
+		}
+
+		
+	}
+}
