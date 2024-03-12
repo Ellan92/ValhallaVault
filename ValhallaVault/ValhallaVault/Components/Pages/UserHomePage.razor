@@ -8,7 +8,8 @@
 @inject ValhallaVault.Managers.GenericManager<CategoryModel> categoryManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject ValhallaVault.Managers.QuestionManager questionmanager
-@inject ValhallaVault.Managers.GenericManager<QuestionModel> genericManager
+@inject ValhallaVault.Managers.GenericManager<QuestionModel> genericQuestionManager
+@inject ValhallaVault.Managers.GenericManager<SubcategoryModel> genericSubcategoryManager
 @rendermode InteractiveServer
 
 
@@ -17,11 +18,39 @@
 
 
 <h4>Välkommen, @Name</h4>
-<h3>Dina statistik:</h3>
-<h5>Du har svarat på @Results.Count frågor.</h5>
-<h5>Av dessa var @CorrectAnswers rätt.</h5>
-<button  @onclick="CalculatePercentage">Beräkna procent</button>
-<h5>Det motsvarar @Percentage procent rätt</h5>
+<h3>Din statistik:</h3>
+<h6>Du har svarat på @Questions.Count frågor totalt.</h6>
+<h6>Av dessa var @CorrectAnswers rätt, vilket motsvarar @Percentage % rätt.</h6>
+
+<button @onclick="ToggleResultsVisibility">Se mina resultat</button>
+@if (ShowResults && QuestionSubcategorySegmentTuples.Any())
+{
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Fråga ID</th>
+                    <th>Subkategori ID</th>
+                    <th>Segment ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tuple in QuestionSubcategorySegmentTuples)
+                {
+                    <tr>
+                        <td>@tuple.QuestionId</td>
+                        <td>@tuple.SubcategoryId</td>
+                        <td>@tuple.SegmentId</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else if (!QuestionSubcategorySegmentTuples.Any())
+{
+    <p>Inga frågor att visa.</p>
+}
 
 
 <div class="row-cols-4">
@@ -30,6 +59,8 @@
     </div>
 </div>
 <br />
+
+
 <h2>Nästa kategori låses upp när du fått minst 80% rätt på den föregående.</h2>
 <ul>
     <div class="Container1">
@@ -38,67 +69,78 @@
             <div class="progress-bar bg-success" style="width: 25%">25%</div>
         </div>
     </div>
-    <br />
     <div class="Container2">
         <a href="@($"CategoryPage/{2}")"><h5 class="Category1">Kategori 2: Cybersäkerhet för företag</h5></a>
         <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
             <div class="progress-bar bg-success" style="width: 25%">25%</div>
         </div>
     </div>
-    <br />
     <div class="Container3">
         <a href="@($"CategoryPage/{3}")"><h5 class="Category1">Kategori 3: Cyberspionage</h5></a>
         <div class="progress"role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
             <div class="progress-bar bg-success" style="width: 25%">25%</div>
         </div>
     </div>
-    <br />
 </ul>
 
 @code {
     public string? Name { get; set; }
-    public List<int> QuestionIDs = new();
-    public List<UserResult> Results { get; set; } = new();
+    public List<QuestionModel> Questions = new();
+    private bool ShowResults = false;
     public int CorrectAnswers;
     private ApplicationUser? signedIn; // representerar den inloggade användaren 
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren 
     private string searchText = "";
     private List<ResultModel>? results;
     public int Percentage;
+    public List<(int QuestionId, int SubcategoryId, int SegmentId)> QuestionSubcategorySegmentTuples { get; set; } = new List<(int QuestionId, int SubcategoryId, int SegmentId)>();
 
-
-    private void CalculatePercentage()
+    private void ToggleResultsVisibility()
     {
-        float calculation = ((float)CorrectAnswers / (float)Results.Count) * 100;
-        Percentage = (int)calculation;
+        ShowResults = !ShowResults;
     }
 
     protected async override Task OnInitializedAsync()
     {
-        // Hämta användarens AuthenticationState 
-        State = await AuthenticationProvider.GetAuthenticationStateAsync();
+        State = await AuthenticationProvider.GetAuthenticationStateAsync();  // Hämta användaren med AuthenticationState
         var user = State.User;
         Name = user.Identity.Name;
 
         var findtheUser = await usermanager.GetUserByNameAsync(Name);
         if (findtheUser!=null)
         {
+
+            if (findtheUser.UserResults != null && findtheUser.UserResults.Any())   // kolla om usern har några resultat
+
             findtheUser = signedIn;
             // kolla om usern har några resultat
             if (findtheUser.UserResults!=null && findtheUser.UserResults.Any())
+
             {
                 foreach (var result in findtheUser.UserResults)
                 {
-                    Results.Add(result); // varje userresult motsvarar en fråga. 
+                    QuestionModel question = await genericQuestionManager.GetByIdAsync(result.Result.QuestionId);  // hämta varje fråga.
+                    Questions.Add(question);
+                    int questionId = question.Id;
+                    int subcategoryId = question.SubcategoryId;
+                    SubcategoryModel subcategory = await genericSubcategoryManager.GetByIdAsync(subcategoryId);
+                    QuestionSubcategorySegmentTuples.Add((questionId, subcategoryId, subcategory.SegmentId));
 
-                    if (result.Result.IsCorrect==true) // lägg bara till om svaret var rätt. 
+                    if (result.Result.IsCorrect==true) // Räkna hur många rätt det finns bland resultaten. 
                     {
                         CorrectAnswers++;
-                    }
-                  
-                    
+                    }  
                 }
             }
+            // Beräkna procent rätt på alla frågor totalt.  
+            float calculation = ((float)CorrectAnswers / (float)Questions.Count) * 100;
+            Percentage = (int)calculation;
         }
+
+      
+
+    }
+
     }    
+
 }
