@@ -2,7 +2,7 @@
 {
     public class QuestionViewModel
     {
-        public int Id { get; set; }
+        public int QuestionId { get; set; }
         public bool? IsAnswered { get; set; } // tillägg för viewmodel 
         public string? Question { get; set; }
         public List<string>? Options { get; set; }

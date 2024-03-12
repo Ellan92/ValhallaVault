@@ -14,7 +14,6 @@ namespace ValhallaVault.Managers
             {
                 Answer = result.Answer,
                 IsCorrect = result.IsCorrect,
-                Question = result.Question,
                 QuestionId = result.QuestionId,
                 UserResults = result.UserResults,
             };
@@ -22,25 +21,23 @@ namespace ValhallaVault.Managers
         }
 
 
-        public ResultModel CreateCorrectResult(string answer, bool isCorrect, QuestionModel question, int questionId)
+        public ResultModel CreateCorrectResult(string answer, bool isCorrect, int questionId)
         {
             ResultModel newResult = new ResultModel
             {
                 Answer = answer,        // Vad användaren svarade 
                 IsCorrect = true,       // Svaret var rätt 
-                Question = question,    // Vilken fråga användaren svarade på
                 QuestionId = questionId // Vilken fråga användaren svarade på
             };
             return newResult;
         }
 
-        public ResultModel CreateWrongResult(string answer, bool isCorrect, QuestionModel question, int questionId)
+        public ResultModel CreateWrongResult(string answer, bool isCorrect, int questionId)
         {
             ResultModel newResult = new ResultModel
             {
                 Answer = answer,        // Vad användaren svarade 
                 IsCorrect = false,       // Svaret var fel 
-                Question = question,    // Vilken fråga användaren svarade på
                 QuestionId = questionId // Vilken fråga användaren svarade på
             };
             return newResult;
@@ -63,6 +60,7 @@ namespace ValhallaVault.Managers
         {
             QuestionViewModel viewmodelQuestion = new QuestionViewModel
             {
+                QuestionId = question.Id,
                 Question = question.Question,
                 IsAnswered = false,
                 Options = question.Options,
