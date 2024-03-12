@@ -7,9 +7,9 @@
 
 @if (chosenSegment != null)
 {
-    <div class="card">
+    <div class="card" style="background-color: rgba(0, 15, 89, 0.71); margin-top:5%;">
         <div class="card-body">
-            <h1 class="card-title">@chosenSegment.SegmentName</h1>
+            <h5 class="card-title text-white font-monospace">@chosenSegment.SegmentName</h5>
         </div>
     </div>
 
@@ -19,11 +19,11 @@
 @if (Subcategories.Count > 0)
 {
     <div class="card mt-3">
-        <div class="card-body">
-            <h2 class="card-title">Ämnesområden som ingår i detta segment:</h2>
+        <div class="card-body" style="background-color: rgba(0, 15, 89, 0.71); padding: 2%; margin-top:5%;">
+            <h2 class="fw-light text-white font-monospace card-title">Ämnesområden som ingår i detta segment:</h2>
             @foreach (var subcat in Subcategories)
             {
-                <p class="card-text">@subcat.SubCategoryName</p>
+                <p class="card-text text-white font-monospace card-title">@subcat.SubCategoryName</p>
             }
         </div>
 
