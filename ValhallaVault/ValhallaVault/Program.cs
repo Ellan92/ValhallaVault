@@ -88,56 +88,56 @@ builder.Services.AddCors(options =>
 });
 
 
-//using (ServiceProvider sp = builder.Services.BuildServiceProvider())
-//{
-//    var context = sp.GetRequiredService<ApplicationDbContext>();
-//    var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
-//    var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
+using (ServiceProvider sp = builder.Services.BuildServiceProvider())
+{
+    var context = sp.GetRequiredService<ApplicationDbContext>();
+    var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
+    var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
 
-//    //context.Database.Migrate();
+    //context.Database.Migrate();
 
-//    ApplicationUser newUser = new()
-//    {
-//        UserName = "adminuser@mail.com",
-//        Email = "adminuser@mail.com",
-//        EmailConfirmed = true,
-//    };
+    ApplicationUser newUser = new()
+    {
+        UserName = "adminuser@mail.com",
+        Email = "adminuser@mail.com",
+        EmailConfirmed = true,
+    };
 
-//    ApplicationUser secondUser = new()
-//    {
-//        UserName = "user@mail.com",
-//        Email = "user@mail.com",
-//        EmailConfirmed = true,
-//    };
+    ApplicationUser secondUser = new()
+    {
+        UserName = "user@mail.com",
+        Email = "user@mail.com",
+        EmailConfirmed = true,
+    };
 
-//    var user = signInManager.UserManager.FindByEmailAsync(newUser.Email).GetAwaiter().GetResult();
-//    var user2 = signInManager.UserManager.FindByEmailAsync(secondUser.Email).GetAwaiter().GetResult();
+    var user = signInManager.UserManager.FindByEmailAsync(newUser.Email).GetAwaiter().GetResult();
+    var user2 = signInManager.UserManager.FindByEmailAsync(secondUser.Email).GetAwaiter().GetResult();
 
-//    if (user == null && user2 == null)
-//    {
-//        // Skapa en ny user
-//        signInManager.UserManager.CreateAsync(newUser, "Password1234!").GetAwaiter().GetResult();
-//        signInManager.UserManager.CreateAsync(secondUser, "Password1234!").GetAwaiter().GetResult();
-//        //signInManager.UserManager.ConfirmEmailAsync(newUser);
+    if (user == null && user2 == null)
+    {
+        // Skapa en ny user
+        signInManager.UserManager.CreateAsync(newUser, "Password1234!").GetAwaiter().GetResult();
+        signInManager.UserManager.CreateAsync(secondUser, "Password1234!").GetAwaiter().GetResult();
+        //signInManager.UserManager.ConfirmEmailAsync(newUser);
 
-//        // Kolla om adminrollen existerar
-//        bool adminRoleExists = roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult();
+        // Kolla om adminrollen existerar
+        bool adminRoleExists = roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult();
 
-//        if (!adminRoleExists)
-//        {
-//            // Skapa adminrollen
-//            IdentityRole adminRole = new()
-//            {
-//                Name = "Admin",
+        if (!adminRoleExists)
+        {
+            // Skapa adminrollen
+            IdentityRole adminRole = new()
+            {
+                Name = "Admin",
 
-//            };
-//            roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
-//        }
+            };
+            roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
+        }
 
-//        // Tilldela adminrollen till den nya användaren
-//        signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
-//    }
-//}
+        // Tilldela adminrollen till den nya användaren
+        signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
+    }
+}
 
 var app = builder.Build();
 
