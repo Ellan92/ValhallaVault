@@ -1,0 +1,42 @@
+﻿@page "/categorypage"
+@using Microsoft.AspNetCore.Authorization
+@using ValhallaVault.Data.Repository
+@using ValhallaVault.Managers
+@using ValhallaVault.Models
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider provider
+@inject GenericRepo<CategoryModel> categoryRepo
+@inject GenericRepo<SegmentModel> segmentRepo
+@inject GenericRepo<SubcategoryModel> subcategoryRepo
+@inject GenericRepo<QuestionModel> questionRepo
+@inject GenericManager<CategoryModel> categoryManager
+@rendermode InteractiveServer
+
+
+<div style="background-image: url('/Images/AdminPageV2.jpg'); background-size: cover; background-position: center top; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+	<ul>
+		@if(AllCategories != null)
+		{
+			@foreach(var category in AllCategories)
+			{
+				<li class="text-white">@category.CategoryName</li>
+			}
+		}
+	</ul>
+</div>
+
+
+@code {
+	public List<CategoryModel> AllCategories = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		AllCategories = await categoryManager.GetAllAsync();
+	}
+
+	public async Task GetAllCategories()
+	{
+		await categoryManager.GetAllAsync();
+	}
+}

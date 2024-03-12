@@ -22,11 +22,10 @@ namespace ValhallaVault.Data.Repository
 
         public async Task<SolutionModel?> GetSolutionByQuestionId(int questionId)
         {
-            // Hämta solution för den specifika question med hjälp av questionId
             var solution = await _context.Questions
-                .Where(q => q.Id == questionId)
-                .Select(q => q.Solution)
-                .FirstOrDefaultAsync();
+                 .Where(q => q.Id == questionId)
+                 .Select(q => q.Solution)
+                 .FirstOrDefaultAsync();
 
             return solution;
         }

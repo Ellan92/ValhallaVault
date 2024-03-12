@@ -1,0 +1,53 @@
+﻿@page "/admindashboard"
+@using Microsoft.AspNetCore.Authorization
+@using ValhallaVault.Data.Repository
+@using ValhallaVault.Models
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider provider
+@inject GenericRepo<CategoryModel> categoryRepo
+@inject GenericRepo<SegmentModel> segmentRepo
+@inject GenericRepo<SubcategoryModel> subcategoryRepo
+@inject GenericRepo<QuestionModel> questionRepo
+@rendermode InteractiveServer
+
+
+
+<div style="background-image: url('/Images/AdminPageV2.jpg'); background-size: cover; background-position: center top; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+	<h1 class="display-2 text-white" style="margin-bottom: 3%;">Admin Dashboard</h1>
+	<div class="flex-row row justify-content-between" style="margin: 2%;">
+		<div class="col-5">
+			<button @onclick="NavigateToCategoryPage" class="btn btn-lg btn-outline-light">Categories</button>
+		</div>
+		<div class="col-5">
+			<button @onclick="NavigateToSegmentPage" class="btn btn-lg btn-outline-light">Segments</button>
+		</div>
+		</div>
+	<div class="flex-row row justify-content-between" style="margin: 2%;">
+		<div class="col-5">
+			<button @onclick="NavigateToSubcategoryPage" class="btn btn-lg btn-outline-light">Subcategories</button>
+		</div>
+		<div class="col-5">
+			<button @onclick="NavigateToQuestionsPage" class="btn btn-lg btn-outline-light">Questions</button>
+		</div>
+	</div>
+</div>
+@code {
+	public async Task NavigateToCategoryPage()
+	{
+		navigationManager.NavigateTo("/categorypage");
+	}
+
+	public async Task NavigateToSegmentPage()
+	{
+		navigationManager.NavigateTo("/segmentpage");
+	}
+	public async Task NavigateToSubcategoryPage()
+	{
+		navigationManager.NavigateTo("/subcategorypage");
+	}
+	public async Task NavigateToQuestionsPage()
+	{
+		navigationManager.NavigateTo("/questionspage");
+	}
+}

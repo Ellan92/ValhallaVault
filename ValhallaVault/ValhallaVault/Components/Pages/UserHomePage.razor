@@ -7,15 +7,21 @@
 @inject ValhallaVault.Managers.UserManager usermanager
 @inject ValhallaVault.Managers.GenericManager<CategoryModel> categoryManager
 @inject SignInManager<ApplicationUser> SignInManager
-@inject ValhallaVault.Managers.QuestionManager questionManager
+@inject ValhallaVault.Managers.QuestionManager questionmanager
+@inject ValhallaVault.Managers.GenericManager<QuestionModel> genericManager
+@rendermode InteractiveServer
+
 
 @attribute [Authorize]
 <PageTitle>UserPage</PageTitle>
 
 
 <h4>Välkommen, @Name</h4>
-
-<h3>Dina resultat:</h3>
+<h3>Dina statistik:</h3>
+<h5>Du har svarat på @Results.Count frågor.</h5>
+<h5>Av dessa var @CorrectAnswers rätt.</h5>
+<button  @onclick="CalculatePercentage">Beräkna procent</button>
+<h5>Det motsvarar @Percentage procent rätt</h5>
 
 
 <div class="row-cols-4">
@@ -51,11 +57,21 @@
 
 @code {
     public string? Name { get; set; }
-    public List<string> Results { get; set; } = new();
+    public List<int> QuestionIDs = new();
+    public List<UserResult> Results { get; set; } = new();
+    public int CorrectAnswers;
     private ApplicationUser? signedIn; // representerar den inloggade användaren 
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren 
     private string searchText = "";
     private List<ResultModel>? results;
+    public int Percentage;
+
+
+    private void CalculatePercentage()
+    {
+        float calculation = ((float)CorrectAnswers / (float)Results.Count) * 100;
+        Percentage = (int)calculation;
+    }
 
     protected async override Task OnInitializedAsync()
     {
@@ -73,68 +89,16 @@
             {
                 foreach (var result in findtheUser.UserResults)
                 {
-                    Results.Add("Du svarade: " + result.Result.Answer.ToString());
+                    Results.Add(result); // varje userresult motsvarar en fråga. 
+
+                    if (result.Result.IsCorrect==true) // lägg bara till om svaret var rätt. 
+                    {
+                        CorrectAnswers++;
+                    }
+                  
+                    
                 }
             }
         }
-    }
-
-    public async void CalculateResult(int categoryId)
-    {
-        var amountOfQuestions = await questionManager.GetAllQuestionsInCategoryAsync(categoryId);
-
-        int correctAnswers = 0;
-        int percentage = 0;
-        if(signedIn.UserResults != null)
-        {
-            foreach(var result in signedIn.UserResults)
-            {
-                if (result.Result.IsCorrect)
-                {
-                    correctAnswers++;                 
-                }
-            }
-            
-        }
-    
-        // int correctAnswers = 5;
-        // int counter = 10;
-        // int percentage = 0;
-        // if(signedIn.UserResults != null)
-        // {
-        //     foreach(var result in signedIn.UserResults)
-        //     {
-        //         if (result.Result.IsCorrect)
-        //         {
-        //             correctAnswers++;
-        //         }
-        //         counter++;
-        //     }
-
-        //     percentage = correctAnswers / counter * 100;
-        // }
-
-
-        // double QuestionsThatMustBeCorrect = 8;
-        // QuestionsThatMustBeCorrect = 0.8 / counter;
-        // bool isaWholeNumber = false;
-        // isaWholeNumber = QuestionsThatMustBeCorrect % counter == 0;
-
-        // if (!isaWholeNumber)
-        // {
-        //     Math.Round(QuestionsThatMustBeCorrect);
-        // }
-        //     Console.WriteLine(QuestionsThatMustBeCorrect);
-
-        // int.TryParse(QuestionsThatMustBeCorrect);
-        // talet inte är heltal
-        // nedrunda nederst till närmsta helttal
-
-        // if antalet rätt => avrundat 
-        // == 80% uppfyllt!!!
-
-
-
-    }
-    
+    }    
 }

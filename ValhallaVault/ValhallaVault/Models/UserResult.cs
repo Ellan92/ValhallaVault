@@ -8,7 +8,6 @@ namespace ValhallaVault.Models
     {
         public string UserId { get; set; }
         public ApplicationUser User { get; set; } = null!;
-
         public int ResultId { get; set; }
         public ResultModel Result { get; set; } = null!;
     }
