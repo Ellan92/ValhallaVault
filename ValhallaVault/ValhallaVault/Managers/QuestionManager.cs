@@ -27,5 +27,10 @@ namespace ValhallaVault.Managers
             return await _questionRepo.GetSolutionByQuestionId(questionId);
         }
 
+        public async Task<List<QuestionModel>> GetAllQuestionsInCategoryAsync(int categoryId)
+        {
+            return await _questionRepo.GetAllQuestionsInCategory(categoryId);
+        }
+
     }
 }

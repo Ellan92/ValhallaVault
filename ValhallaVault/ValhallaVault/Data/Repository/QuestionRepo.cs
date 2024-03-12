@@ -18,6 +18,8 @@ namespace ValhallaVault.Data.Repository
                 .ToListAsync();
         }
 
+
+
         public async Task<SolutionModel?> GetSolutionByQuestionId(int questionId)
         {
             var solution = await _context.Questions
@@ -41,6 +43,11 @@ namespace ValhallaVault.Data.Repository
             {
                 throw new Exception("Question not found.");
             }
+        }
+
+        public async Task<List<QuestionModel>> GetAllQuestionsInCategory(int categoryId)
+        {
+            return await _context.Questions.Include(p => p.SubCategory).ThenInclude(p => p.Segment).Where(p => p.SubCategory.Segment.CategoryId == categoryId).ToListAsync();
         }
     }
 }

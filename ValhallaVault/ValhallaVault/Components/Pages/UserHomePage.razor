@@ -12,6 +12,7 @@
 @inject ValhallaVault.Managers.GenericManager<SubcategoryModel> genericSubcategoryManager
 @rendermode InteractiveServer
 
+
 @attribute [Authorize]
 <PageTitle>UserPage</PageTitle>
 
@@ -90,6 +91,7 @@ else if (!QuestionSubcategorySegmentTuples.Any())
     private ApplicationUser? signedIn; // representerar den inloggade användaren 
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren 
     private string searchText = "";
+    private List<ResultModel>? results;
     public int Percentage;
     public List<(int QuestionId, int SubcategoryId, int SegmentId)> QuestionSubcategorySegmentTuples { get; set; } = new List<(int QuestionId, int SubcategoryId, int SegmentId)>();
 
@@ -107,7 +109,13 @@ else if (!QuestionSubcategorySegmentTuples.Any())
         var findtheUser = await usermanager.GetUserByNameAsync(Name);
         if (findtheUser!=null)
         {
+
             if (findtheUser.UserResults != null && findtheUser.UserResults.Any())   // kolla om usern har några resultat
+
+            findtheUser = signedIn;
+            // kolla om usern har några resultat
+            if (findtheUser.UserResults!=null && findtheUser.UserResults.Any())
+
             {
                 foreach (var result in findtheUser.UserResults)
                 {
@@ -128,8 +136,11 @@ else if (!QuestionSubcategorySegmentTuples.Any())
             float calculation = ((float)CorrectAnswers / (float)Questions.Count) * 100;
             Percentage = (int)calculation;
         }
+
       
 
     }
-    
+
+    }    
+
 }
