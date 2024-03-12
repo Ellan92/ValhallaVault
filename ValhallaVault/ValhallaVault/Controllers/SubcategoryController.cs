@@ -20,11 +20,11 @@ namespace ValhallaVault.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<SubcategoryModel>>> GetAllResponses()
+        public async Task<ActionResult<List<SubcategoryModel>>> GetAllSubs()
         {
-            var responses = await _repo.GetAllAsync();
+            var subs = await _repo.GetAllAsync();
 
-            return Ok(responses);
+            return Ok(subs);
         }
 
 
@@ -56,7 +56,7 @@ namespace ValhallaVault.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deleteSubcategory = _context.Responses.FirstOrDefault(x => x.Id == id);
+            var deleteSubcategory = _context.Subcategories.FirstOrDefault(x => x.Id == id);
 
             if (deleteSubcategory != null)
             {

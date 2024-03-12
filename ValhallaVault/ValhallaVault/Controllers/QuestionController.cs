@@ -20,7 +20,7 @@ namespace ValhallaVault.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ResponseModel>>> GetAllResponses()
+        public async Task<ActionResult<List<QuestionModel>>> GetAllQuestions()
         {
             var responses = await _repo.GetAllAsync();
 
@@ -31,11 +31,11 @@ namespace ValhallaVault.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var responseById = await _repo.GetByIdAsync(id);
+            var questionById = await _repo.GetByIdAsync(id);
 
-            if (responseById != null)
+            if (questionById != null)
             {
-                return Ok(responseById);
+                return Ok(questionById);
             }
             return BadRequest();
         }
@@ -57,7 +57,7 @@ namespace ValhallaVault.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deleteQuestion = _context.Responses.FirstOrDefault(x => x.Id == id);
+            var deleteQuestion = _context.Questions.FirstOrDefault(x => x.Id == id);
 
             if (deleteQuestion != null)
             {

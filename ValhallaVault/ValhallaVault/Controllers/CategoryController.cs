@@ -58,7 +58,7 @@ namespace ValhallaVault.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deleteCategory = _context.Responses.FirstOrDefault(x => x.Id == id);
+            var deleteCategory = _context.Categories.FirstOrDefault(x => x.Id == id);
 
             if (deleteCategory != null)
             {

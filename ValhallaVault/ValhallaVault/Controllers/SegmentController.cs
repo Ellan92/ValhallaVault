@@ -20,11 +20,11 @@ namespace ValhallaVault.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<SegmentModel>>> GetAllResponses()
+        public async Task<ActionResult<List<SegmentModel>>> GetAllQuestions()
         {
-            var responses = await _repo.GetAllAsync();
+            var questions = await _repo.GetAllAsync();
 
-            return Ok(responses);
+            return Ok(questions);
         }
 
 
@@ -42,7 +42,7 @@ namespace ValhallaVault.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> PostCategory(SegmentModel segmentModel)
+        public async Task<IActionResult> PostSegment(SegmentModel segmentModel)
         {
             if (segmentModel != null)
             {
@@ -56,7 +56,7 @@ namespace ValhallaVault.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deleteSegment = _context.Responses.FirstOrDefault(x => x.Id == id);
+            var deleteSegment = _context.Segments.FirstOrDefault(x => x.Id == id);
 
             if (deleteSegment != null)
             {
@@ -67,7 +67,7 @@ namespace ValhallaVault.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateCategory(int segmentId, string newSegmentText)
+        public async Task<IActionResult> UpdateSegment(int segmentId, string newSegmentText)
         {
             if (newSegmentText != null)
             {

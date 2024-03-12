@@ -2,10 +2,10 @@
 
 namespace ValhallaVault.Models
 {
-    public class QuestionModel
+    public class ViewModel
     {
-        [Key]
         public int Id { get; set; }
+        public bool? IsAnswered { get; set; }
         public string? Question { get; set; }
         public List<string>? Options { get; set; }
         public SolutionModel Solution { get; set; } = null!;
@@ -13,7 +13,6 @@ namespace ValhallaVault.Models
         public int SubcategoryId { get; set; }  // one-to-many med SubcategoryModel
         public SubcategoryModel SubCategory { get; set; }
         // one-to-many med SubcategoryModel
-
         public List<ResultModel> Results { get; set; } // one-to-many med Resultmodel
     }
 }

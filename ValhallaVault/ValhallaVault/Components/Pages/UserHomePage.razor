@@ -1,8 +1,22 @@
 ﻿@page "/Homepage"
+@using ValhallaVault.Data
+@using ValhallaVault.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@inject AuthenticationStateProvider AuthenticationProvider
+@inject ValhallaVault.Managers.UserManager usermanager
+@inject ValhallaVault.Managers.GenericManager<CategoryModel> categoryManager
+@inject SignInManager<ApplicationUser> SignInManager
 
+
+@attribute [Authorize]
 <PageTitle>UserPage</PageTitle>
 
-<h3>User Homepage</h3>
+
+<h4>Välkommen, @Name</h4>
+
+<h3>Dina resultat:</h3>
+
 
 <div class="row-cols-4">
     <div> 
@@ -10,33 +24,60 @@
     </div>
 </div>
 <br />
+<h2>Nästa kategori låses upp när du fått minst 80% rätt på den föregående.</h2>
 <ul>
-    <div>
-        <a href="/CategoryPage"><h5 class="Category1">Kategori 1: Att skydda sig mot bedrägerier</h5></a>
+    <div class="Container1">
+        <a href="@($"CategoryPage/{1}")"><h5 class="Category1">Kategori 1: Att skydda sig mot bedrägerier</h5></a>
         <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
             <div class="progress-bar bg-success" style="width: 25%">25%</div>
         </div>
     </div>
     <br />
-    <div>
-        <a href="/CategoryPage"><h5 class="Category1">Kategori 2: Cybersäkerhet för företag</h5></a>
+    <div class="Container2">
+        <a href="@($"CategoryPage/{2}")"><h5 class="Category1">Kategori 2: Cybersäkerhet för företag</h5></a>
         <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
             <div class="progress-bar bg-success" style="width: 25%">25%</div>
         </div>
     </div>
     <br />
-    <div>
-        <a href="/CategoryPage"><h5 class="Category1">Kategori 3: Cyberspionage</h5></a>
-        <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+    <div class="Container3">
+        <a href="@($"CategoryPage/{3}")"><h5 class="Category1">Kategori 3: Cyberspionage</h5></a>
+        <div class="progress"role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
             <div class="progress-bar bg-success" style="width: 25%">25%</div>
         </div>
     </div>
     <br />
 </ul>
 
-
-
 @code {
+    public string? Name { get; set; }
+    public List<string> Results { get; set; } = new();
+    private ApplicationUser? signedIn; // representerar den inloggade användaren 
+    private AuthenticationState? State; // representerar autentiseringsstatusen för användaren 
     private string searchText = "";
 
+    protected async override Task OnInitializedAsync()
+    {
+        // Hämta användarens AuthenticationState 
+        State = await AuthenticationProvider.GetAuthenticationStateAsync();
+        var user = State.User;
+        Name = user.Identity.Name;
+
+        var findtheUser = await usermanager.GetUserByNameAsync(Name);
+        if (findtheUser!=null)
+        {
+            // kolla om usern har några resultat
+            if (findtheUser.UserResults!=null && findtheUser.UserResults.Any())
+            {
+                foreach (var result in findtheUser.UserResults)
+                {
+                    Results.Add("Du svarade: " + result.Result.Answer.ToString());
+                }
+            }
+        }
+
+       
+     
+    }
+    
 }
