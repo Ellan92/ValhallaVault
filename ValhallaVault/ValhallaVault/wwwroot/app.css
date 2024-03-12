@@ -52,9 +52,6 @@ h1:focus {
 
 /*Custom css*/
 
-html, body {
-    background-color: #778da9
-}
 
 .Category1, Category2, Category3{
     
@@ -80,6 +77,5 @@ h3 {
 .progress
 {
     width: 37%
-
 
 }
