@@ -36,6 +36,7 @@ namespace ValhallaVault.Data.Repository
             }
         }
 
+
         public async Task UpdateSubcategoryNameAsync(int subcategoryId, string newSubcategoryName)
         {
             var subcategory = await _context.Subcategories.FindAsync(subcategoryId);
