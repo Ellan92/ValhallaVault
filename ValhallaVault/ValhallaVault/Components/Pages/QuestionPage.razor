@@ -33,11 +33,11 @@
         opacity: .7;
     }
 </style>
-<div class="container">
-    <div class="row">
+<div class="container" style="margin-top:5%;">
+    <div class="row" style="background-color: rgba(0, 15, 89, 0.71);">
         <div class="col-md-12">
-            <h3 class="mt-3">Frågor för denna subkategori</h3>
-            <p><stronger>Återstående frågor: @Questions.Count </stronger></p>
+            <h3 class="mt-3 text-white font-monospace" style="margin-top:5%;">Frågor för denna subkategori</h3>
+            <p class="text-white font-monospace"><stronger>Återstående frågor: @Questions.Count </stronger></p>
             <!-- Observarade frågor -->
             @if (Questions != null && Questions.Any())
             {
@@ -45,7 +45,7 @@
                 {
                     <div class="card mt-3">
                         <div class="card-body">
-                            <h4 class="card-title">@question.Question</h4>
+                            <h6>@question.Question</h6>
                             <ul class="list-group"> <!-- list-group för alla frågor, vare sig de är besvarade eller inte. -->
                                 @if (question.Options != null && question.Options.Count > 0 && question.IsAnswered==false)
                                 {
@@ -53,7 +53,7 @@
                                     {
                                         <li class="list-group-item">
                                             <!-- När användaren klickar på ett option, skicka med både question och option -->
-                                            <a class="pointer" @onclick="(() => HandleOptionClick(question, option))">@option</a>
+                                            <a class="pointer font-monospace" @onclick="(() => HandleOptionClick(question, option))">@option</a>
                                         </li>
                                     }
                                 }
@@ -99,12 +99,12 @@
                 </div>
             }
 
-            <button @onclick="SubmitQuiz">Lämna in</button>
+            <button class="btn btn-primary" @onclick="SubmitQuiz" style="margin: 1%;">Lämna in</button>
             @if (MessageIsVisible==true)
             {
                 <h6>Vänligen svara på alla frågor innan du lämnar in.</h6>
             }
-            <a href="@($"SegmentPage/{chosenSegment}")" class="btn btn-primary mt-3">Tillbaka</a>
+            <a href="@($"SegmentPage/{chosenSegment}")" class="btn btn-primary mt-3" style="margin: 1%;">Tillbaka</a>
         </div>
     </div>
 </div>
@@ -202,81 +202,82 @@
         int answeredQuestions = AnsweredQuestions.Count;
         if (answeredQuestions < NumberOfQuestions)
         {
-            MessageIsVisible = true; // visa meddelandet om att alla frågor måste besvaras. 
+            MessageIsVisible = true; // Visa meddelandet om att alla frågor måste besvaras.
         }
         else if (answeredQuestions == NumberOfQuestions)
         {
             Questions.Clear();
             ResultIsVisible = true;
+            StateHasChanged(); // Tvinga en uppdatering av komponenten
         }
-
     }
 
 
-    private async Task HandleOptionClick(QuestionViewModel question, string chosenOption) // Metod för att utvärdera valt svarsalternativ
+    private async Task HandleOptionClick(QuestionViewModel question, string chosenOption)
     {
         question.IsAnswered = true;
         Questions.Remove(question);
         AnsweredQuestions.Add(question);
 
-        var solutionToQuestion = await questionManager.GetSolutionByQuestionId(question.QuestionId);  // Hämta rätt svar
-        if (solutionToQuestion!=null)
+        var solutionToQuestion = await questionManager.GetSolutionByQuestionId(question.QuestionId);
+        if (solutionToQuestion != null)
         {
-            string solution = solutionToQuestion.CorrectAnswer;  // Omvandla rätt svar till en sträng
-            bool isCorrectAnswer = chosenOption.Equals(solutionToQuestion.CorrectAnswer);  // Jämför strängen med användarens svar
+            string solution = solutionToQuestion.CorrectAnswer;
+            bool isCorrectAnswer = chosenOption.Equals(solutionToQuestion.CorrectAnswer);
 
-            ResultModel newResult = null;   // Skapa ett resultat
+            ResultModel newResult = null;
             if (isCorrectAnswer)
             {
                 question.IsCorrectAnswer = true;
-                QuestionModel questionModel = factory.CreateQuestionModel(question);   // Omvandla questionviewmodel till vanlig model
                 newResult = factory.CreateCorrectResult(chosenOption, true, question.QuestionId);
-                ResultViewModel resultviewmodel = factory.CreateResultViewModel(newResult);
-            
-                // Skapa resultat-strängarna 
+                // Skapa resultat-strängarna
                 FeedbackQuestion.Add($"\nFråga: {question.Question}");
                 FeedbackAnswer.Add($"\nDitt svar: {chosenOption}");
                 FeedbackCorrected.Add($"\nRätt svar: {solution}");
             }
-
-            else if (!isCorrectAnswer)
+            else
             {
                 question.IsCorrectAnswer = false;
-                QuestionModel questionModel = factory.CreateQuestionModel(question);
-                newResult = factory.CreateWrongResult(chosenOption, false, question.QuestionId);  // Skapa ett felaktigt resultat med hjälp av Factory
-                ResultViewModel resultviewmodel = factory.CreateResultViewModel(newResult);
-               
-                // Skapa resultat-strängarna 
+                newResult = factory.CreateWrongResult(chosenOption, false, question.QuestionId);
+                // Skapa resultat-strängarna
                 FeedbackQuestion.Add($"\nFråga: {question.Question}");
                 FeedbackAnswer.Add($"\nDitt svar: {chosenOption}");
                 FeedbackCorrected.Add($"\nRätt svar: {solution}");
-
-
             }
+
             await genericResultManager.CompleteAsync();
 
-            // Hämta den inloggade usern för att kunna koppla resultatet till rätt användare
             State = await AuthenticationProvider.GetAuthenticationStateAsync();
             var user = State.User;
             UserName = user.Identity.Name;
             var findtheUser = await usermanager.GetUserByNameAsync(UserName);
 
-            // Skapa ett UserResult
-            UserResult userresult;
             if (findtheUser != null)
             {
-                // Skapa ett UserResult med hjälp av Factory
-                userresult = factory.CreateUserResult(findtheUser, newResult);
-
-                if (userresult != null && !UserResultList.Contains(userresult))
+                var existingResult = findtheUser.UserResults.FirstOrDefault(ur => ur.Result.QuestionId == question.QuestionId);
+                if (existingResult != null)
                 {
-                        UserResultList.Add(userresult);
-                        findtheUser.UserResults.Add(userresult);
-                        await genericUserManager.CompleteAsync();
+                    // Ta bort det befintliga UserResult-objektet
+                    findtheUser.UserResults.Remove(existingResult);
+                    UserResultList.Remove(existingResult); // Om det finns en lista som håller referenser till UserResult-objektet, ta bort den också
+
+                    // Spara ändringar i databasen
+                    await genericUserManager.CompleteAsync();
                 }
 
+                // Skapa ett nytt UserResult-objekt med det uppdaterade resultatet
+                var userresult = factory.CreateUserResult(findtheUser, newResult);
+                if (userresult != null)
+                {
+                    // Lägg till det nya UserResult-objektet för användaren
+                    UserResultList.Add(userresult);
+                    findtheUser.UserResults.Add(userresult);
+
+                    // Spara ändringar i databasen
+                    await genericUserManager.CompleteAsync();
+                }
             }
-      
         }
     }
 }
+    

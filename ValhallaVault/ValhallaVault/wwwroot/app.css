@@ -52,8 +52,12 @@ h1:focus {
 
 /*Custom css*/
 
+html, body {
+    background-color: white;
+}
 
-.Category1, Category2, Category3{
+.Category1, Category2, Category3
+{
     
     color: #111111;
     font-family: Arial, Helvetica, sans-serif;

@@ -7,12 +7,12 @@
 
 @if (chosenCategory != null)
 {
-    <div class="card">
+    <div class="card" style="background-color: rgba(0, 15, 89, 0.71); padding: 2%; margin-top:5%;">
         <div class="card-body">
-            <h1 class="card-title">Kategori: @chosenCategory.CategoryName</h1>
+            <h3 class="card-title text-white font-monospace">Kategori: @chosenCategory.CategoryName</h3>
             @if (!string.IsNullOrEmpty(chosenCategory.Description))
             {
-                <p class="card-text">@chosenCategory.Description</p>
+                <p class="card-text text-white font-monospace">@chosenCategory.Description</p>
             }
         </div>
     </div>
@@ -26,13 +26,13 @@ else
 
 @if (Segments.Count > 0)
 {
-    <div class="card mt-3">
+    <div class="card mt-3" style="background-color: rgba(0, 15, 89, 0.71); padding: 4%;">
         <div class="card-body">
-            <h2 class="card-title">Segment i kategorin</h2>
-            <h4 class="card-subtitle mb-2 text-muted">Klicka på ett segment för att läsa mer om segmentet eller starta frågorna.</h4>
+            <h2 class="card-title text-white font-monospace">Segment i kategorin</h2>
+            <h4 class="card-subtitle mb-2 text-muted text-white font-monospace">Klicka på ett segment för att läsa mer om segmentet eller starta frågorna.</h4>
             @foreach (var segment in Segments)
             {
-                <a href="@($"SegmentPage/{segment.Id}")" class="card-link">@segment.SegmentName</a>
+                <a href="@($"SegmentPage/{segment.Id}")" class="card-link text-white font-monospace">@segment.SegmentName</a>
             }
         </div>
     </div>
