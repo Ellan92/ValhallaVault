@@ -11,13 +11,10 @@ using ValhallaVault.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Kommentar
-// Kommentar 2
-
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents()
-    .AddInteractiveWebAssemblyComponents();
+	.AddInteractiveServerComponents()
+	.AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -55,22 +52,22 @@ builder.Services.AddScoped<ValhallaVault.Managers.CategoryManager>();
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 
 builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = IdentityConstants.ApplicationScheme;
-        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-    })
-    .AddIdentityCookies();
+	{
+		options.DefaultScheme = IdentityConstants.ApplicationScheme;
+		options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+	})
+	.AddIdentityCookies();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+	options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddSignInManager<SignInManager<ApplicationUser>>()    // definiera vilken user som ska g‰lla fˆr signinmanager. 
-    .AddDefaultTokenProviders();
+	.AddRoles<IdentityRole>()
+	.AddEntityFrameworkStores<ApplicationDbContext>()
+	.AddSignInManager<SignInManager<ApplicationUser>>()    // definiera vilken user som ska g√§lla f√∂r signinmanager. 
+	.AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
@@ -80,66 +77,69 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-            policy =>
-            {
-                policy.AllowAnyOrigin();
-                policy.AllowAnyHeader();
-                policy.AllowAnyMethod();
-            });
+	options.AddPolicy("AllowAll",
+			policy =>
+			{
+				policy.AllowAnyOrigin();
+				policy.AllowAnyHeader();
+				policy.AllowAnyMethod();
+			});
 });
 
 
-/*using (ServiceProvider sp = builder.Services.BuildServiceProvider())
+using (ServiceProvider sp = builder.Services.BuildServiceProvider())
 {
-    var context = sp.GetRequiredService<ApplicationDbContext>();
-    var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
-    var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
 
-    //context.Database.Migrate();
+	var context = sp.GetRequiredService<ApplicationDbContext>();
+	var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
+	var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
 
-    ApplicationUser newUser = new()
-    {
-        UserName = "adminuser@mail.com",
-        Email = "adminuser@mail.com",
-        EmailConfirmed = true,
-    };
+	context.Database.Migrate();
 
-    ApplicationUser secondUser = new()
-    {
-        UserName = "user@mail.com",
-        Email = "user@mail.com",
-        EmailConfirmed = true,
-    };
+	ApplicationUser newUser = new()
+	{
+		UserName = "adminuser@mail.com",
+		Email = "adminuser@mail.com",
+		EmailConfirmed = true,
+	};
 
-    var user = signInManager.UserManager.FindByEmailAsync(newUser.Email).GetAwaiter().GetResult();
-    var user2 = signInManager.UserManager.FindByEmailAsync(secondUser.Email).GetAwaiter().GetResult();
+	ApplicationUser secondUser = new()
+	{
+		UserName = "user@mail.com",
+		Email = "user@mail.com",
+		EmailConfirmed = true,
+	};
 
-    if (user == null && user2 == null)
-    {
-        // Skapa en ny user
-        signInManager.UserManager.CreateAsync(newUser, "Password1234!").GetAwaiter().GetResult();
-        signInManager.UserManager.CreateAsync(secondUser, "Password1234!").GetAwaiter().GetResult();
-        //signInManager.UserManager.ConfirmEmailAsync(newUser);
+	var user = signInManager.UserManager.FindByEmailAsync(newUser.Email).GetAwaiter().GetResult();
+	var user2 = signInManager.UserManager.FindByEmailAsync(secondUser.Email).GetAwaiter().GetResult();
 
-        // Kolla om adminrollen existerar
-        bool adminRoleExists = roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult();
+	if (user == null && user2 == null)
+	{
+		// Skapa en ny user
+		signInManager.UserManager.CreateAsync(newUser, "Password1234!").GetAwaiter().GetResult();
+		signInManager.UserManager.CreateAsync(secondUser, "Password1234!").GetAwaiter().GetResult();
+		//signInManager.UserManager.ConfirmEmailAsync(newUser);
 
-        if (!adminRoleExists)
-        {
-            // Skapa adminrollen
-            IdentityRole adminRole = new()
-            {
-                Name = "Admin",
+		// Kolla om adminrollen existerar
+		bool adminRoleExists = roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult();
 
-            };
-            roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
-        }
+		if (!adminRoleExists)
+		{
+			// Skapa adminrollen
+			IdentityRole adminRole = new()
+			{
+				Name = "Admin",
 
-        // Tilldela adminrollen till den nya anv‰ndaren
-        signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
-    }
-}*/
+			};
+			roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
+		}
+
+		// Tilldela adminrollen till den nya anv√§ndaren
+		signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
+	}
+}
+
+
 builder.Services.AddBlazoredModal();
 
 var app = builder.Build();
@@ -150,14 +150,14 @@ app.UseSwaggerUI();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseWebAssemblyDebugging();
-    app.UseMigrationsEndPoint();
+	app.UseWebAssemblyDebugging();
+	app.UseMigrationsEndPoint();
 }
 else
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+	app.UseExceptionHandler("/Error", createScopeForErrors: true);
+	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+	app.UseHsts();
 }
 
 
@@ -168,9 +168,9 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode()
-    .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(Auth).Assembly);
+	.AddInteractiveServerRenderMode()
+	.AddInteractiveWebAssemblyRenderMode()
+	.AddAdditionalAssemblies(typeof(Auth).Assembly);
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
