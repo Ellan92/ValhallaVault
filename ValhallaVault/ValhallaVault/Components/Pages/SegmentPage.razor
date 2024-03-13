@@ -1,44 +1,67 @@
 @page "/SegmentPage/{segmentId:int}"
 @using ValhallaVault.Models
+@using ValhallaVault.Data
 @inject ValhallaVault.Managers.GenericManager<SegmentModel> genericManager
 @inject ValhallaVault.Managers.SubcategoryManager subcategoryManager
-
-
+@inject AuthenticationStateProvider AuthenticationProvider
+@inject ValhallaVault.Managers.UserManager usermanager
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject ValhallaVault.Managers.CompletedSubcategoryManager completedSubcategoryManager
 
 @if (chosenSegment != null)
 {
-    <div class="card" style="background-color: rgba(0, 15, 89, 0.71); margin-top:5%;">
+    <div class="card" style="background-color: rgba(0, 15, 89, 0.71); margin-top:1%;">
         <div class="card-body">
-            <h5 class="card-title text-white font-monospace">@chosenSegment.SegmentName</h5>
+            <h5 class="card-title text-white font-monospace">Segment: @chosenSegment.SegmentName</h5>
         </div>
     </div>
 }
+
 
 @if (Subcategories.Count > 0)
 {
     <div class="card mt-3">
-        <div class="card-body" style="background-color: rgba(0, 15, 89, 0.71); padding: 2%; margin-top:5%;">
-            <h2 class="fw-light text-white font-monospace card-title">Ämnesområden som ingår i detta segment:</h2>
+        <div class="card-body" style="background-color: rgba(0, 15, 89, 0.71); padding: 2%; margin-top:1;">
+            <h2 class="fw-light text-white font-monospace card-title">Subkategorier som ingår i detta segment:</h2>
             @foreach (var subcat in Subcategories)
             {
-                <p class="card-text text-white font-monospace card-title">@subcat.SubCategoryName</p>
+                <div>
+                    <a href="@($"QuestionPage/{subcat.Id}")" class="card-text text-white font-monospace card-title">@subcat.SubCategoryName</a>
+                </div>
+
             }
         </div>
-
-        <div>
-            <a href="@($"QuestionPage/{segmentId}")">Starta frågorna</a>
-        </div>
-
     </div>
-
-   
 }
+
+@if (CompletedSubcategories!=null && CompletedSubcategories.Any())
+{
+    <div class="card-body" style="background-color: rgba(134, 180, 16, 0.97); padding: 2%; margin-top:1%;">
+    @foreach (var subcategory in CompletedSubcategories)
+    {
+
+     <p class="fw-light text-white font-monospace">Du har redan klarat av subkategori: @subcategory.Subcategory.SubCategoryName i segment: @subcategory.SegmentId</p>
+   
+    }
+    </div>
+}
+
+
+
+
+    <a href="@($"CategoryPage/{chosenCategory}")">Tillbaka</a>
+
+
 
 @code {
 
     public SegmentModel? chosenSegment { get; set; }
-
-
+    public List<CompletedSubcategoryModel> CompletedSubcategories = new();
+    public string? Name { get; set; }
+    private AuthenticationState? State; // representerar autentiseringsstatusen för användaren
+    public int chosenCategory { get; set; }
     public List<SubcategoryModel> Subcategories { get; set; } = new();
 
     [Parameter]
@@ -49,8 +72,8 @@
         var segment = await genericManager.GetByIdAsync(segmentId);
         if (segment != null)
         {
-            segment = chosenSegment;
-     
+            chosenSegment = segment;
+            chosenCategory = segment.CategoryId;
 
             var allSubcategories = await subcategoryManager.GetSubcategoriesBySegmentIdAsync(segmentId);
             if (allSubcategories != null)
@@ -61,8 +84,32 @@
                 }
             }
 
-         }
+        }
+
+        // Hämta inloggad användare
+        State = await AuthenticationProvider.GetAuthenticationStateAsync();
+        var user = State.User;
+        Name = user.Identity.Name;
+
+        var findtheUser = await usermanager.GetUserByNameAsync(Name);
+        if (findtheUser != null)
+        {
+            var completedSubcategories = await completedSubcategoryManager.GetCompletedSubcategoriesByUserId(findtheUser.Id);
+            if (completedSubcategories != null && completedSubcategories.Any())
+            {
+                // Lägg till de befintliga avklarade subkategorierna
+                foreach (var completedsub in completedSubcategories)
+                {
+                    if (!CompletedSubcategories.Contains(completedsub))
+                    {
+                        CompletedSubcategories.Add(completedsub);
+                    }
+                 
+                }
+            }
+        }
+
     }
+    }
+    
 
-
-}

@@ -259,6 +259,33 @@ namespace ValhallaVault.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ValhallaVault.Models.CompletedSubcategoryModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("SegmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubcategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("SubcategoryId");
+
+                    b.ToTable("CompletedSubcategories");
+                });
+
             modelBuilder.Entity("ValhallaVault.Models.QuestionModel", b =>
                 {
                     b.Property<int>("Id")
@@ -1109,6 +1136,25 @@ namespace ValhallaVault.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ValhallaVault.Models.CompletedSubcategoryModel", b =>
+                {
+                    b.HasOne("ValhallaVault.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany("CompletedSubcategories")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ValhallaVault.Models.SubcategoryModel", "Subcategory")
+                        .WithMany()
+                        .HasForeignKey("SubcategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Subcategory");
+                });
+
             modelBuilder.Entity("ValhallaVault.Models.QuestionModel", b =>
                 {
                     b.HasOne("ValhallaVault.Models.SubcategoryModel", "SubCategory")
@@ -1185,6 +1231,8 @@ namespace ValhallaVault.Migrations
 
             modelBuilder.Entity("ValhallaVault.Data.ApplicationUser", b =>
                 {
+                    b.Navigation("CompletedSubcategories");
+
                     b.Navigation("UserResults");
                 });
 

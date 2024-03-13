@@ -7,6 +7,8 @@ namespace ValhallaVault.Data
     public class ApplicationUser : IdentityUser
     {
         public List<UserResult> UserResults { get; set; } = new();
+
+        public List<CompletedSubcategoryModel> CompletedSubcategories = new();
     }
 
 }
