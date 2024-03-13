@@ -19,7 +19,7 @@
 <div class="border rounded mt-5 font-monospace" style="background-color: rgba(0, 15, 89, 0.71); padding: 4%;">
     <h4 class="text-white font-monospace">Välkommen, @Name</h4>
     <h3 class="fw-light text-white font-monospace">Din statistik:</h3>
-    <h6 class="text-white font-monospace">Du har svarat på @Questions.Count frågor totalt.</h6>
+    <h6 class="text-white font-monospace">Du har svarat på @NumberOfQuestions frågor totalt.</h6>
     <h6 class="text-white font-monospace">Av dessa var @CorrectAnswers rätt, vilket motsvarar @Percentage % rätt.</h6>
     <h6 class="font-monospace fw-bolder text-white mt-2">Notera att respektive avsnitt blir tillgänglig när du fått 80% rätt.</h6>
 </div>
@@ -87,10 +87,9 @@ else if (!QuestionSubcategorySegmentTuples.Any())
 
 @code {
     public string? Name { get; set; }
-    public List<QuestionModel> Questions = new();
+    public int NumberOfQuestions;
     private bool ShowResults = false;
     public int CorrectAnswers;
-    private ApplicationUser? signedIn; // representerar den inloggade användaren 
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren 
     private string searchText = "";
     private List<ResultModel>? results;
@@ -104,39 +103,38 @@ else if (!QuestionSubcategorySegmentTuples.Any())
 
     protected async override Task OnInitializedAsync()
     {
-        State = await AuthenticationProvider.GetAuthenticationStateAsync();  // Hämta användaren med AuthenticationState
+        State = await AuthenticationProvider.GetAuthenticationStateAsync();  // Get the authentication state
         var user = State.User;
         Name = user.Identity.Name;
 
         var findtheUser = await usermanager.GetUserByNameAsync(Name);
-        if (findtheUser!=null)
+        if (findtheUser != null)
         {
 
-            if (findtheUser.UserResults != null && findtheUser.UserResults.Any())   // kolla om usern har några resultat
-
-            findtheUser = signedIn;
-            // kolla om usern har några resultat
-            if (findtheUser.UserResults!=null && findtheUser.UserResults.Any())
-
+            if (findtheUser.UserResults != null && findtheUser.UserResults.Any())
             {
                 foreach (var result in findtheUser.UserResults)
                 {
-                    QuestionModel question = await genericQuestionManager.GetByIdAsync(result.Result.QuestionId);  // hämta varje fråga.
-                    Questions.Add(question);
+                    QuestionModel question = await genericQuestionManager.GetByIdAsync(result.Result.QuestionId);
                     int questionId = question.Id;
                     int subcategoryId = question.SubcategoryId;
                     SubcategoryModel subcategory = await genericSubcategoryManager.GetByIdAsync(subcategoryId);
                     QuestionSubcategorySegmentTuples.Add((questionId, subcategoryId, subcategory.SegmentId));
 
-                    if (result.Result.IsCorrect==true) // Räkna hur många rätt det finns bland resultaten. 
+                    // räkna korrekta svar
+                    if (result.Result.IsCorrect)
                     {
                         CorrectAnswers++;
-                    }  
+                    }
+
+                    // räkna alla svar
+                    NumberOfQuestions++;
                 }
+
+                // Calculate percentage of correct answers
+                float calculation = ((float)CorrectAnswers / (float)NumberOfQuestions) * 100;
+                Percentage = (int)calculation;
             }
-            // Beräkna procent rätt på alla frågor totalt.  
-            float calculation = ((float)CorrectAnswers / (float)Questions.Count) * 100;
-            Percentage = (int)calculation;
         }
 
       
