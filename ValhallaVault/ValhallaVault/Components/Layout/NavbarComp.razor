@@ -1,42 +1,37 @@
-﻿
+﻿@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Identity
+@using ValhallaVault.Data
+@inject SignInManager<ApplicationUser> SignOutManager
+@inject NavigationManager NavigationManager
+
 <header class="header">
     <a href="#" class="logo">Pink Zombies</a>
 
     <nav class="navbar">
-        <a href="">Home</a>
-        <a href="auth">Auth Required</a>
+        <a href="Homepage">Home</a>
         <a href="admindashboard">Admin Page</a>
 
        <AuthorizeView>
            <Authorized>
                 <a href="Account/Manage">@context.User.Identity?.Name</a>
-@*                 <div class="nav-item px-3">
+@*                 <a href="MicrosoftIdentity/Account/">Log out</a *@
+   @*              <a href="Account/Login">Logout</a> *@
+                <div class="nav-item px-3">
                     <form action="Account/Logout" method="post">
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="nav-link">
+                        <button type="submit" class="btn btn-primary btn-sm">
                             <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
                         </button>
                     </form>
-                </div> *@
+                </div>
            </Authorized>
            <NotAuthorized>
 
                 <a href="Account/Register">Register</a>
                 <a href="Account/Login">Login</a>
                 <a href="#">Contact us</a>
-@* 
 
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Register">
-                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Login">
-                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
-                    </NavLink>
-                </div> *@
            </NotAuthorized>
        </AuthorizeView>
        
@@ -51,5 +46,18 @@
 @code {
 
 
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
 
 }
