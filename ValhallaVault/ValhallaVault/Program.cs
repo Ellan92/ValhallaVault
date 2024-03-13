@@ -11,9 +11,6 @@ using ValhallaVault.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Kommentar
-// Kommentar 2
-
 // Add services to the container.
 builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents()
@@ -69,7 +66,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
 	.AddRoles<IdentityRole>()
 	.AddEntityFrameworkStores<ApplicationDbContext>()
-	.AddSignInManager<SignInManager<ApplicationUser>>()    // definiera vilken user som ska g‰lla fˆr signinmanager. 
+	.AddSignInManager<SignInManager<ApplicationUser>>()    // definiera vilken user som ska g√§lla f√∂r signinmanager. 
 	.AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
@@ -92,11 +89,12 @@ builder.Services.AddCors(options =>
 
 using (ServiceProvider sp = builder.Services.BuildServiceProvider())
 {
+
 	var context = sp.GetRequiredService<ApplicationDbContext>();
 	var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
 	var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
 
-	//context.Database.Migrate();
+	context.Database.Migrate();
 
 	ApplicationUser newUser = new()
 	{
@@ -136,10 +134,12 @@ using (ServiceProvider sp = builder.Services.BuildServiceProvider())
 			roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
 		}
 
-		// Tilldela adminrollen till den nya anv‰ndaren
+		// Tilldela adminrollen till den nya anv√§ndaren
 		signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
 	}
 }
+
+
 builder.Services.AddBlazoredModal();
 
 var app = builder.Build();
