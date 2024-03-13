@@ -14,7 +14,7 @@
 {
     <div class="card" style="background-color: rgba(0, 15, 89, 0.71); margin-top:1%;">
         <div class="card-body">
-            <h5 class="card-title text-white font-monospace">Segment: @chosenSegment.SegmentName</h5>
+            <h5 class="card-title text-white font-monospace">Segments namn: @chosenSegment.SegmentName</h5>
         </div>
     </div>
 }
@@ -38,6 +38,7 @@
 
 @if (CompletedSubcategories != null && CompletedSubcategories.Any())
 {
+    <h6>Avklarade subkategorier i detta segment.</h6>
     <div class="card-body" style="background-color: rgba(134, 180, 16, 0.97); padding: 2%; margin-top:1%;">
         @foreach (var subcategory in CompletedSubcategories)
         {
@@ -107,14 +108,15 @@ else
                 // Lägg till de befintliga avklarade subkategorierna
                 foreach (var completedsub in completedSubcategories)
                 {
-                    if (!CompletedSubcategories.Contains(completedsub))
+                    
+                    if (completedsub.Subcategory != null && completedsub.Subcategory.SegmentId.Equals(chosenSegment) && !CompletedSubcategories.Contains(completedsub))
                     {
                         CompletedSubcategories.Add(completedsub);
                     }
-                 
                 }
             }
         }
+
 
     }
     }
