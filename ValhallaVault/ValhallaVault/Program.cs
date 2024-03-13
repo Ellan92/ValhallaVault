@@ -90,7 +90,7 @@ builder.Services.AddCors(options =>
 });
 
 
-using (ServiceProvider sp = builder.Services.BuildServiceProvider())
+/*using (ServiceProvider sp = builder.Services.BuildServiceProvider())
 {
     var context = sp.GetRequiredService<ApplicationDbContext>();
     var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
@@ -139,7 +139,7 @@ using (ServiceProvider sp = builder.Services.BuildServiceProvider())
         // Tilldela adminrollen till den nya användaren
         signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
     }
-}
+}*/
 builder.Services.AddBlazoredModal();
 
 var app = builder.Build();
