@@ -36,19 +36,26 @@
     </div>
 }
 
-@if (CompletedSubcategories!=null && CompletedSubcategories.Any())
+@if (CompletedSubcategories != null && CompletedSubcategories.Any())
 {
     <div class="card-body" style="background-color: rgba(134, 180, 16, 0.97); padding: 2%; margin-top:1%;">
-    @foreach (var subcategory in CompletedSubcategories)
-    {
-
-     <p class="fw-light text-white font-monospace">Du har redan klarat av subkategori: @subcategory.Subcategory.SubCategoryName i segment: @subcategory.SegmentId</p>
-   
-    }
+        @foreach (var subcategory in CompletedSubcategories)
+        {
+            if (subcategory != null && subcategory.Subcategory != null)
+            {
+                <p class="fw-light text-white font-monospace">Du har redan klarat av subkategori: @subcategory.Subcategory.Id i segment: @subcategory.SegmentId</p>
+            }
+            else
+            {
+                <p class="fw-light text-white font-monospace"> Subkategorin har inget namn </p>
+            }
+        }
     </div>
 }
-
-
+else
+{
+    <p class="fw-light text-white font-monospace">No completed subcategories found.</p>
+}
 
 
     <a href="@($"CategoryPage/{chosenCategory}")">Tillbaka</a>

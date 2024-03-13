@@ -26,7 +26,9 @@
 
  @foreach (var subcategory in CompletedSubcategories)
       {
-         <p>Du har klarat av subkategori: @subcategory.Subcategory.SubCategoryName i segment: @subcategory.SegmentId</p>
+            <div class="table-responsive font-monospace" style="background-color: rgba(0, 15, 89, 0.71); padding:1%;">
+         <p class="text-white">Du har klarat av subkategori: @subcategory.Subcategory.SubCategoryName i segment: @subcategory.SegmentId</p>
+         </div>
       }
 }
 
@@ -61,7 +63,9 @@
     
     else if (!QuestionSubcategorySegmentTuples.Any())
     {
-        <p>Inga resultat att visa</p>
+        <div class="table-responsive font-monospace" style="background-color: rgba(0, 15, 89, 0.71); padding:1%;">
+        <p class="text-white">Inga resultat att visa</p>
+        </div>
     }
 }
 
