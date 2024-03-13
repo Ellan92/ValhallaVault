@@ -1,7 +1,118 @@
 ﻿@page "/subcategorypage"
 
-<h3>SubcategoryPage</h3>
+@using Microsoft.AspNetCore.Authorization
+@using ValhallaVault.Data.Repository
+@using ValhallaVault.Managers
+@using ValhallaVault.Models
+@using Blazored
+@using Blazored.Modal
+@using Blazored.Modal.Services
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider provider
+@inject GenericRepo<CategoryModel> categoryRepo
+@inject GenericRepo<SegmentModel> segmentRepo
+@inject GenericRepo<SubcategoryModel> subcategoryRepo
+@inject GenericRepo<QuestionModel> questionRepo
+@inject GenericManager<SegmentModel> genericSegmentManager
+@inject GenericManager<SubcategoryModel> genericSubcategoryManager
+@inject SubcategoryManager subcategoryManager
+@inject IModalService modal
+@rendermode InteractiveServer
+
+
+
+
+<div style=" background-image: url('/Images/AdminPageV2.jpg'); background-size: cover; background-position: center top; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
+	<h1 class="text-white display-2">Subcategories</h1>
+
+	<ul class="list-unstyled">
+		@if (AllSubcategories != null)
+		{
+			@foreach (var subcategory in AllSubcategories)
+			{
+				<li class="text-white display-6">@subcategory.SubCategoryName</li>
+
+				<button @onclick="() => ShowEditDetails(subcategory.Id)" class="btn btn-outline-light btn-lg">Edit</button>
+				@if (isEditDetailsShown && subcategoryId == subcategory.Id)
+				{
+					<div>
+						<strong class="text-white">Subcategory Name: </strong><input @bind="subcategoryName" placeholder="@subcategory.SubCategoryName"></input>
+						<br />
+						<strong class="text-white">Subcategory Description: </strong><input @bind="subcategoryDescription" placeholder="@subcategory.Description"></input>
+						<br />
+						<button @onclick="() => UpdateSegment(subcategory)" class="btn btn-outline-light">Update</button>
+						<button @onclick="() => DeleteSegment(subcategory)" class="btn btn-outline-light">Delete</button>
+						<button @onclick="HideEditDetails" class="btn btn-outline-light">Cancel</button>
+						@if (isSubcategoryDeleted)
+						{
+							<p class="bg-danger">Segment: @subcategory.SubCategoryName deleted successfully.</p>
+						}
+					</div>
+				}
+
+			}
+		}
+	</ul>
+
+
+</div>
 
 @code {
+	public List<SubcategoryModel> AllSubcategories = new();
 
+	public List<SegmentModel> AllSegments = new();
+
+	public SubcategoryModel Subcategory;
+
+	public string subcategoryName;
+
+	public string subcategoryDescription;
+
+	public bool isEditDetailsShown = false;
+
+	public bool isSubcategoryDeleted = false;
+
+	public int subcategoryId;
+
+	protected override async Task OnInitializedAsync()
+	{
+		Subcategory = await genericSubcategoryManager.GetByIdAsync(subcategoryId);
+		AllSubcategories= await genericSubcategoryManager.GetAllAsync();
+		AllSegments = await genericSegmentManager.GetAllAsync();
+
+	}
+
+	public async Task GetAllCategories()
+	{
+		await genericSubcategoryManager.GetAllAsync();
+	}
+
+	public async Task ShowEditDetails(int selectedSubcategoryId)
+	{
+		isEditDetailsShown = true;
+
+		subcategoryId = selectedSubcategoryId;
+	}
+	public async Task HideEditDetails()
+	{
+		isEditDetailsShown = false;
+	}
+	public async Task UpdateSegment(SubcategoryModel subcategoryToUpdate)
+	{
+		await subcategoryManager.UpdateSubcategoryNameAsync(subcategoryId, subcategoryName);
+		await subcategoryManager.UpdateSubcategoryDescriptionAsync(subcategoryId, subcategoryDescription);
+	}
+	public async Task DeleteSegment(SubcategoryModel subcategoryToDelete)
+	{
+		if (subcategoryToDelete != null)
+		{
+			await genericSegmentManager.DeleteAsync(subcategoryId);
+			isSubcategoryDeleted = true;
+
+			StateHasChanged();
+		}
+
+
+	}
 }
