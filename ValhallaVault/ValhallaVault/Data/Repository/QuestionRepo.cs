@@ -3,51 +3,80 @@ using ValhallaVault.Models;
 
 namespace ValhallaVault.Data.Repository
 {
-    public class QuestionRepo
-    {
-        private readonly ApplicationDbContext _context;
-        public QuestionRepo(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+	public class QuestionRepo
+	{
+		private readonly ApplicationDbContext _context;
+		public QuestionRepo(ApplicationDbContext context)
+		{
+			_context = context;
+		}
 
-        public async Task<List<QuestionModel>> GetQuestionsBySubcategoryIdAsync(int segmentId)
-        {
-            return await _context.Questions
-                .Where(q => q.SubcategoryId == segmentId)
-                .ToListAsync();
-        }
+		public async Task<List<QuestionModel>> GetQuestionsBySubcategoryIdAsync(int segmentId)
+		{
+			return await _context.Questions
+				.Where(q => q.SubcategoryId == segmentId)
+				.ToListAsync();
+		}
 
 
 
-        public async Task<SolutionModel?> GetSolutionByQuestionId(int questionId)
-        {
-            var solution = await _context.Questions
-                 .Where(q => q.Id == questionId)
-                 .Select(q => q.Solution)
-                 .FirstOrDefaultAsync();
+		public async Task<SolutionModel?> GetSolutionByQuestionId(int questionId)
+		{
+			var solution = await _context.Questions
+				 .Where(q => q.Id == questionId)
+				 .Select(q => q.Solution)
+				 .FirstOrDefaultAsync();
 
-            return solution;
-        }
+			return solution;
+		}
 
-        public async Task UpdateQuestionAsync(int questionId, string newQuestionText)
-        {
-            var question = await _context.Questions.FindAsync(questionId);
+		public async Task UpdateQuestionAsync(int questionId, string newQuestionText)
+		{
+			var question = await _context.Questions.FindAsync(questionId);
 
-            if (question != null)
-            {
-                question.Question = newQuestionText;
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new Exception("Question not found.");
-            }
-        }
+			if (question != null)
+			{
+				question.Question = newQuestionText;
+				await _context.SaveChangesAsync();
+			}
+			else
+			{
+				throw new Exception("Question not found.");
+			}
+		}
+		public async Task UpdateQuestionAndOptionsAsync(int questionId, string newQuestionText, List<string> newOptionsText)
+		{
+			var question = await _context.Questions.FindAsync(questionId);
 
-        public async Task<List<QuestionModel>> GetAllQuestionsInCategory(int categoryId)
-        {
-            return await _context.Questions.Include(p => p.SubCategory).ThenInclude(p => p.Segment).Where(p => p.SubCategory.Segment.CategoryId == categoryId).ToListAsync();
-        }
-    }
+			if (question != null)
+			{
+				question.Question = newQuestionText;
+				question.Options = newOptionsText;
+				await _context.SaveChangesAsync();
+			}
+			else
+			{
+				throw new Exception("Question not found.");
+			}
+		}
+
+		public async Task UpdateOptionsAsync(int questionId, List<string> newOptions)
+		{
+			var question = await _context.Questions.FindAsync(questionId);
+
+			if (question != null)
+			{
+				question.Options = newOptions;
+				await _context.SaveChangesAsync();
+			}
+			else
+			{
+				throw new Exception("Question not found.");
+			}
+		}
+		public async Task<List<QuestionModel>> GetAllQuestionsInCategory(int categoryId)
+		{
+			return await _context.Questions.Include(p => p.SubCategory).ThenInclude(p => p.Segment).Where(p => p.SubCategory.Segment.CategoryId == categoryId).ToListAsync();
+		}
+	}
 }

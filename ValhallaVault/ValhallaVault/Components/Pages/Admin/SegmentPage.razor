@@ -1,7 +1,116 @@
 ﻿@page "/segmentpage"
 
-<h3>SegmentPage</h3>
+@using Microsoft.AspNetCore.Authorization
+@using ValhallaVault.Data.Repository
+@using ValhallaVault.Managers
+@using ValhallaVault.Models
+@using Blazored
+@using Blazored.Modal
+@using Blazored.Modal.Services
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider provider
+@inject GenericRepo<CategoryModel> categoryRepo
+@inject GenericRepo<SegmentModel> segmentRepo
+@inject GenericRepo<SubcategoryModel> subcategoryRepo
+@inject GenericRepo<QuestionModel> questionRepo
+@inject GenericManager<SegmentModel> genericSegmentManager
+@inject GenericManager<CategoryModel> genericCategoryManager
+@inject SegmentManager segmentManager
+@inject IModalService modal
+@rendermode InteractiveServer
+
+
+
+
+<div style=" background-image: url('/Images/AdminPageV2.jpg'); background-size: cover; background-position: center top; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
+	<h1 class="text-white display-2">Segments</h1>
+
+	<ul class="list-unstyled">
+		@if (AllSegments != null)
+		{
+			@foreach (var segment in AllSegments)
+			{
+				<li class="text-white display-6">@segment.Category.CategoryName: @segment.SegmentName</li>
+
+				<button @onclick="() => ShowEditDetails(segment.Id)" class="btn btn-outline-light btn-lg">Edit</button>
+				@if (isEditDetailsShown && segmentId == segment.Id)
+				{
+					<div>
+						<strong class="text-white">Segment Name: </strong><input @bind="segmentName" placeholder="@segment.SegmentName"></input>
+						<br />
+						<strong class="text-white">Segment Description: </strong><input @bind="segmentDescription" placeholder="@segment.Description"></input>
+						<br />
+						<button @onclick="() => UpdateSegment(segment)" class="btn btn-outline-light">Update</button>
+						<button @onclick="() => DeleteSegment(segment)" class="btn btn-outline-light">Delete</button>
+						<button @onclick="HideEditDetails" class="btn btn-outline-light">Cancel</button>
+						@if (isSegmentDeleted)
+						{
+							<p class="bg-danger">Segment: @segment.SegmentName deleted successfully.</p>
+						}
+					</div>
+				}
+
+			}
+		}
+	</ul>
+
+
+</div>
 
 @code {
+	public List<CategoryModel> AllCategories = new();
 
+	public List<SegmentModel> AllSegments = new();
+
+	public SegmentModel Segment;
+
+	public string segmentName;
+
+	public string segmentDescription;
+
+	public bool isEditDetailsShown = false;
+
+	public bool isSegmentDeleted = false;
+
+	public int segmentId;
+
+	protected override async Task OnInitializedAsync()
+	{
+		Segment = await genericSegmentManager.GetByIdAsync(segmentId);
+		AllSegments = await genericSegmentManager.GetAllAsync();
+		AllCategories = await genericCategoryManager.GetAllAsync();
+
+	}
+
+	public async Task GetAllCategories()
+	{
+		await genericSegmentManager.GetAllAsync();
+	}
+
+	public async Task ShowEditDetails(int selectedCategoryId)
+	{
+		isEditDetailsShown = true;
+
+		segmentId = selectedCategoryId;
+	}
+	public async Task HideEditDetails()
+	{
+		isEditDetailsShown = false;
+	}
+	public async Task UpdateSegment(SegmentModel segmentToUpdate)
+	{
+		await segmentManager.UpdateSegmentNameAsync(segmentId, segmentName);
+		await segmentManager.UpdateSegmentDescriptionAsync(segmentId, segmentDescription);
+	}
+	public async Task DeleteSegment(SegmentModel segmentToDelete)
+	{
+		if (segmentToDelete != null)
+		{
+			await genericSegmentManager.DeleteAsync(segmentId);
+			isSegmentDeleted = true;
+		}
+
+
+	}
 }

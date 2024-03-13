@@ -11,17 +11,11 @@
 @inject ValhallaVault.Managers.GenericManager<QuestionModel> genericQuestionManager
 @inject ValhallaVault.Managers.GenericManager<SubcategoryModel> genericSubcategoryManager
 @rendermode InteractiveServer
-
-
 @attribute [Authorize]
 <PageTitle>UserPage</PageTitle>
 
 <div class="border rounded mt-5 font-monospace" style="background-color: rgba(0, 15, 89, 0.71); padding: 4%;">
     <h4 class="text-white font-monospace">Välkommen, @Name</h4>
-    <h3 class="fw-light text-white font-monospace">Din statistik:</h3>
-    <h6 class="text-white font-monospace">Du har svarat på @NumberOfQuestions frågor totalt.</h6>
-    <h6 class="text-white font-monospace">Av dessa var @CorrectAnswers rätt, vilket motsvarar @Percentage % rätt.</h6>
-    <h6 class="font-monospace fw-bolder text-white mt-2">Notera att respektive avsnitt blir tillgänglig när du fått 80% rätt.</h6>
 </div>
 
 <button @onclick="ToggleResultsVisibility" class="btn btn-primary btn-block mb-3 mt-2 font-monospace">Se mina resultat</button>
@@ -55,39 +49,23 @@ else if (!QuestionSubcategorySegmentTuples.Any())
     <p>Inga frågor att visa.</p>
 }
 
-
 <div class="row">
-    <div class="col-md-4 d-flex flex-column align-items-center">
-        <img src="/Images/fraud.jpg" class="card-img" alt="Background Image" style="object-fit: cover; height: 30vh; border-radius:5px;">
-        <a href="@($"CategoryPage/{1}")" class="btn btn-primary btn-block mb-3 m-3">Att skydda sig mot bedrägerier</a>
-    </div>
-    <div class="col-md-4 d-flex flex-column align-items-center">
-        <img src="/Images/security.jpg" class="card-img" alt="Background Image" style="object-fit: cover; height: 30vh; border-radius:5px;">
-        @if (Percentage >= 80)
-        {
-            <a href="@($"CategoryPage/{2}")" class="btn btn-primary btn-block mb-3 m-3">Cybersäkerhet för företag</a>
-        }
-        else
-        {
-            <button class="btn btn-primary btn-block mb-3 m-3" disabled>Cybersäkerhet för företag</button>
-        }
-    </div>
-    <div class="col-md-4 d-flex flex-column align-items-center">
-        <img src="/Images/fraud.jpg" class="card-img" alt="Background Image" style="object-fit: cover; height: 30vh; border-radius:5px;">
-        @if (Percentage >= 80)
-        {
-            <a href="@($"CategoryPage/{3}")" class="btn btn-primary btn-block mb-3 m-3">Cybersäkerhet för företag</a>
-        }
-        else
-        {
-            <button class="btn btn-primary btn-block mb-3 m-3" disabled>Cybersäkerhet för företag</button>
-        }
-    </div>
+    @foreach (var category in Categories)
+    {
+        <div class="col-md-4 d-flex flex-column align-items-center">
+
+                <a href="@($"CategoryPage/{category.Id}")" class="btn btn-success btn-block mb-3 m-3" >@category.CategoryName</a>
+ 
+        </div>
+    }
 </div>
 
+
 @code {
+
     public string? Name { get; set; }
     public int NumberOfQuestions;
+    private List<CategoryModel> Categories { get; set; } = new();
     private bool ShowResults = false;
     public int CorrectAnswers;
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren 
@@ -103,7 +81,15 @@ else if (!QuestionSubcategorySegmentTuples.Any())
 
     protected async override Task OnInitializedAsync()
     {
-        State = await AuthenticationProvider.GetAuthenticationStateAsync();  // Get the authentication state
+        // Hämta alla kategorier 
+        var categories = await categoryManager.GetAllAsync();
+        if (categories!=null && categories.Any())
+        {
+            Categories = categories;
+        }
+
+        // Hämta inloggad användare 
+        State = await AuthenticationProvider.GetAuthenticationStateAsync();  
         var user = State.User;
         Name = user.Identity.Name;
 
@@ -113,12 +99,15 @@ else if (!QuestionSubcategorySegmentTuples.Any())
 
             if (findtheUser.UserResults != null && findtheUser.UserResults.Any())
             {
+                // hitta användarens resultat 
                 foreach (var result in findtheUser.UserResults)
                 {
                     QuestionModel question = await genericQuestionManager.GetByIdAsync(result.Result.QuestionId);
                     int questionId = question.Id;
                     int subcategoryId = question.SubcategoryId;
                     SubcategoryModel subcategory = await genericSubcategoryManager.GetByIdAsync(subcategoryId);
+
+                    // sträng för att displaya alla resultat i toggle-listan. 
                     QuestionSubcategorySegmentTuples.Add((questionId, subcategoryId, subcategory.SegmentId));
 
                     // räkna korrekta svar
@@ -140,7 +129,5 @@ else if (!QuestionSubcategorySegmentTuples.Any())
       
 
     }
-
-    }    
 
 }

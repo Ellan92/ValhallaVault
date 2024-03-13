@@ -1,7 +1,167 @@
 ﻿@page "/questionspage"
 
-<h3>QuestionsPage</h3>
+@using Microsoft.AspNetCore.Authorization
+@using ValhallaVault.Data.Repository
+@using ValhallaVault.Managers
+@using ValhallaVault.Models
+@using Blazored
+@using Blazored.Modal
+@using Blazored.Modal.Services
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider provider
+@inject GenericRepo<CategoryModel> categoryRepo
+@inject GenericRepo<SegmentModel> segmentRepo
+@inject GenericRepo<SubcategoryModel> subcategoryRepo
+@inject GenericRepo<QuestionModel> questionRepo
+@inject GenericManager<QuestionModel> genericQuestionManager
+@inject GenericManager<SubcategoryModel> genericSubcategoryManager
+@inject QuestionManager questionManager
+@inject IModalService modal
+@rendermode InteractiveServer
+
+
+
+
+<div style=" background-image: url('/Images/AdminPageV2.jpg'); background-size: cover; background-position: center top; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
+	<h1 class="text-white display-2">Subcategories</h1>
+	<div style="width: 2%; height: 0%;"></div>
+	<ul class="list-unstyled">
+		@if (AllQuestions != null)
+		{
+			@foreach (var question in AllQuestions)
+			{
+				<li class="text-white">@question.Question</li>
+
+				<button @onclick="() => ShowEditDetails(question.Id)" class="btn btn-outline-light btn-lg">Edit</button>
+				@if (isEditDetailsShown && questionId == question.Id)
+				{
+					<div>
+						<strong class="text-white">Question Title: </strong><input @bind="questionName" placeholder="@question.Question"></input>
+						<br/>
+						<strong class="text-white">Options:</strong>
+						<br/>
+						@{
+							index = 0;
+						}
+						@if(optionTitles != null)
+						{
+							@foreach (var option in question.Options)
+							{
+								int loopIndex = index;
+
+								<input @bind="optionTitles[loopIndex]" placeholder="@option"></input>
+
+								<br />
+
+								index++;
+							}
+						}
+						<button @onclick="() => UpdateQuestion(question)" class="btn btn-outline-light">Update</button>
+						<button @onclick="() => DeleteQuestion(question)" class="btn btn-outline-light">Delete</button>
+						<button @onclick="HideEditDetails" class="btn btn-outline-light">Cancel</button>
+						@if (isQuestionDeleted)
+						{
+							<p class="bg-danger">Segment: @question.Question deleted successfully.</p>
+						}
+					</div>
+				}
+
+			}
+		}
+	</ul>
+	<div style="width: 2%; height: 0%;"></div>
+
+</div>
 
 @code {
+	public List<SubcategoryModel> AllSubcategories = new();
 
+	public List<QuestionModel> AllQuestions = new();
+
+	public QuestionModel Question;
+
+	public List<string> options;
+
+	public string optionTitle;
+
+	private string[]? optionTitles;
+	private int index;
+
+	public string questionName;
+
+	public string questionDescription;
+
+	public bool isEditDetailsShown = false;
+
+	public bool isQuestionDeleted = false;
+
+	public int questionId;
+
+	protected override async Task OnInitializedAsync()
+	{
+
+		Question = await genericQuestionManager.GetByIdAsync(questionId);
+		AllQuestions = await genericQuestionManager.GetAllAsync();
+		AllSubcategories = await genericSubcategoryManager.GetAllAsync();
+
+		if (AllQuestions != null)
+		{
+			int totalOptionTitles = 0;
+
+			foreach (var question in AllQuestions)
+			{
+				foreach(var option in question.Options)
+				{
+					totalOptionTitles++;
+				}
+			}
+
+			optionTitles = new string[totalOptionTitles];
+		}
+	}
+
+	public async Task GetAllCategories()
+	{
+		await genericQuestionManager.GetAllAsync();
+	}
+
+	public async Task ShowEditDetails(int selectedQuestionId)
+	{
+		isEditDetailsShown = true;
+
+		questionId = selectedQuestionId;
+	}
+	public async Task HideEditDetails()
+	{
+		isEditDetailsShown = false;
+	}
+	public async Task UpdateQuestion(QuestionModel questionToUpdate)
+	{
+		// options.Add(optionTitle);
+
+		if(questionName != "")
+		{
+			await questionManager.UpdateQuestionAsync(questionId, questionName);
+		}
+
+		options = optionTitles.ToList();
+
+		await questionManager.UpdateOptionsAsync(questionId, options);
+
+		// await questionManager.UpdateQuestionAndOptionsAsync(questionId, questionName, options);
+
+		// await subcategoryManager.UpdateSubcategoryDescriptionAsync(subcategoryId, subcategoryDescription);
+	}
+	public async Task DeleteQuestion(QuestionModel questionToDelete)
+	{
+		if (questionToDelete != null)
+		{
+			await genericQuestionManager.DeleteAsync(questionId);
+			isQuestionDeleted = true;
+
+		}
+
+
+	}
 }
