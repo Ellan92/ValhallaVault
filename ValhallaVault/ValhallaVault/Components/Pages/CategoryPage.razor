@@ -1,7 +1,15 @@
 @page "/CategoryPage/{categoryId:int}"
 @using ValhallaVault.Models
+@using ValhallaVault.Data
 @inject ValhallaVault.Managers.GenericManager<CategoryModel> categoryManager
+@inject ValhallaVault.Managers.GenericManager<SegmentModel> genericSegmentManager
 @inject ValhallaVault.Managers.SegmentManager segmentManager
+@inject ValhallaVault.Managers.CompletedSegmentManager completedSegmentManager
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@inject AuthenticationStateProvider AuthenticationProvider
+@inject ValhallaVault.Managers.UserManager usermanager
+@rendermode InteractiveServer
 
 <PageTitle>Category page</PageTitle>
 
@@ -28,9 +36,22 @@ else
 {
     <div class="card mt-3" style="background-color: rgba(0, 15, 89, 0.71); padding: 4%;">
         <div class="card-body">
-            <h2 class="card-title text-white font-monospace">Segment i kategorin</h2>
-            <h4 class="card-subtitle mb-2 text-white font-monospace">Klicka på ett segment för att läsa mer om segmentet eller starta frågorna.</h4>
+            <h3 class="card-title text-white font-monospace">Segment i kategorin</h3>
             @foreach (var segment in Segments)
+            {
+                <p class="text-white font-monospace">@segment.SegmentName</p>
+            }
+        </div>
+    </div>
+}
+
+@if (OpenSegments.Count>0)
+{
+    <div class="card mt-3" style="background-color: rgba(0, 15, 89, 0.71); padding: 4%;">
+        <div class="card-body">
+            <h4 class="card-subtitle mb-2 text-white font-monospace">Öppna segment:</h4>
+            <p class="text-white font-monospace">Nästa segment låses upp när du fått minst 80% rätt på det föregående segmentet.</p>
+            @foreach (var segment in OpenSegments)
             {
                 <a href="@($"SegmentPage/{segment.Id}/{categoryId}")" class="card-link text-white font-monospace">@segment.SegmentName</a>
             }
@@ -38,33 +59,86 @@ else
     </div>
 }
 
+
+
 <a href="@($"Homepage")">Tillbaka</a>
 
 @code {
 
     public CategoryModel? chosenCategory { get; set; }
-
     public List<SegmentModel> Segments { get; set; } = new();
+    public string? Name { get; set; }
+    private AuthenticationState? State;
+    public bool FirstSegmentIsCompleted = false; 
+    public ApplicationUser? LoggedInUser { get; set; } 
+    public List<SegmentModel> FinishedSegments { get; set; } = new();
+    public List<SegmentModel> OpenSegments { get; set; } = new();
+    public List<SegmentModel> ClosedSegments { get; set; } = new();
+
 
     [Parameter]
     public int categoryId { get; set; }
 
+
     protected override async Task OnInitializedAsync()
     {
-        // Försök hitta en kategori med detta id
+        // Hitta den valda kategorin
         chosenCategory = await categoryManager.GetByIdAsync(categoryId);
 
-        if (chosenCategory!=null)
+        if (chosenCategory != null)
         {
+            // Hämta alla segment utifrån kategori
             var segments = await segmentManager.GetSegmentsByCategoryIdAsync(categoryId);
-            if (segments!=null)
+            if (segments != null)
             {
                 foreach (var segment in segments)
                 {
+                    // visa alla segment i kategorin 
                     Segments.Add(segment);
                 }
+                // Lägg till det första segmentet i listan över öppna segment, det ska alltid vara tillgängligt
+                var firstSegment = Segments.First();
+                OpenSegments.Add(firstSegment);
+            }
+
+            // Hämta den inloggade användaren
+            State = await AuthenticationProvider.GetAuthenticationStateAsync();
+            var user = State.User;
+            Name = user.Identity.Name;
+
+            var findtheUser = await usermanager.GetUserByNameAsync(Name);
+            if (findtheUser != null)
+            {
+                LoggedInUser = findtheUser;
+                // kolla om det finns några avklarade segment kopplade till denna user
+                var finishedSegments = await completedSegmentManager.GetCompletedSegmentsByUserId(LoggedInUser.Id);
+                if (finishedSegments!=null && finishedSegments.Any())
+                {
+                    foreach (var completedSegment in finishedSegments)
+                    {
+                        int categoryIdOfCompletedSegment = completedSegment.CategoryId;
+                        int segmentIdOfCompletedSegment = completedSegment.SegmentId;
+
+                        // Kolla om användaren klarat det första segmentet
+                        var firstSegment = Segments.First();
+                        if (firstSegment.CategoryId == categoryIdOfCompletedSegment && firstSegment.Id == segmentIdOfCompletedSegment)
+                        {
+                            FirstSegmentIsCompleted = true;
+                            // Hämta det första segmentet som kommer efter det första
+                            SegmentModel? secondSegment = Segments[1];
+                            if (secondSegment != null && !OpenSegments.Contains(secondSegment))
+                            {
+                                // Gör nästa segment tillgängligt 
+
+                                OpenSegments.Add(secondSegment);
+
+                            }
+
+                        }
+
+                    }
+                }                
             }
         }
-
     }
 }

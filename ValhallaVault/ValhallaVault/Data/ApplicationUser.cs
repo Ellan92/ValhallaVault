@@ -9,6 +9,8 @@ namespace ValhallaVault.Data
         public List<UserResult> UserResults { get; set; } = new();
 
         public List<CompletedSubcategoryModel> CompletedSubcategories = new();
+
+        public List<CompletedSegmentModel> CompletedSegments = new();
     }
 
 }

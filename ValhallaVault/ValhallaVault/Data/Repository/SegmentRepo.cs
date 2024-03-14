@@ -12,6 +12,13 @@ namespace ValhallaVault.Data.Repository
             _context = context;
         }
 
+        public async Task<SegmentModel?> GetSegmentByCategoryAndSegmentIdAsync(int categoryId, int segmentId)
+        {
+            var segment = await _context.Segments
+                .FirstOrDefaultAsync(s => s.CategoryId == categoryId && s.Id == segmentId);
+
+            return segment;
+        }
 
         public async Task<List<SegmentModel>> GetSegmentsByCategoryIdAsync(int categoryId)
         {
