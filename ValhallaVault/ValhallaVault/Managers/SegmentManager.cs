@@ -11,6 +11,12 @@ namespace ValhallaVault.Managers
         {
             _segmentRepo = segmentRepo;
         }
+
+        public async Task<SegmentModel?> GetSegmentByCategoryAndSegmentIdAsync(int categoryId, int segmentId)
+        {
+            return await _segmentRepo.GetSegmentByCategoryAndSegmentIdAsync(categoryId, segmentId);
+        }
+
         public async Task UpdateSegmentDescriptionAsync(int segmentId, string newDescription)
         {
             await _segmentRepo.UpdateSegmentDescriptionAsync(segmentId, newDescription);

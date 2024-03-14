@@ -2,6 +2,8 @@
 @using ValhallaVault.Models
 @using ValhallaVault.Data
 @inject ValhallaVault.Managers.GenericManager<SegmentModel> genericManager
+@inject ValhallaVault.Managers.GenericManager<ApplicationUser> genericUserManager
+@inject ValhallaVault.Managers.GenericManager<SubcategoryModel> genericSubcategoryManager
 @inject ValhallaVault.Managers.SubcategoryManager subcategoryManager
 @inject AuthenticationStateProvider AuthenticationProvider
 @inject ValhallaVault.Managers.UserManager usermanager
@@ -9,24 +11,37 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject ValhallaVault.Managers.CompletedSubcategoryManager completedSubcategoryManager
+@inject ValhallaVault.Managers.CompletedSegmentManager completedSegmentmanager
+
+
 
 @if (chosenSegment != null)
 {
     <div class="card" style="background-color: rgba(0, 15, 89, 0.71); margin-top:1%;">
         <div class="card-body">
             <h5 class="card-title text-white font-monospace">Segments namn: @chosenSegment.SegmentName</h5>
+            @if(chosenSegment.Description!=null)
+            {
+                <p>@chosenSegment.Description</p>
+            }
         </div>
     </div>
 }
+
+<h6 class="font-monospace">@CompletionMessage</h6>
 
 @if (OpenSubcategories!=null && OpenSubcategories.Any())
 {
     <h2 class="font-monospace">Öppna subkategorier</h2>
     foreach (var subcategory in OpenSubcategories)
     {
-        <!-- Skicka vidare användaren till subkategorins sida med frågor.-->
+        <!-- Skicka vidare användaren till subkategorin nedan-->
         <div>
         <a href="@($"QuestionPage/{segmentId}/{subcategory.Id}/{chosenCategory}")">@subcategory.SubCategoryName</a>
+        @if (subcategory.Description!=null)
+        {
+            <p>@subcategory.Description</p>
+        }
         </div>
     }
 }
@@ -34,6 +49,7 @@
 @if (ClosedSubcategories != null && ClosedSubcategories.Any())
 {
     <h2 class="font-monospace">Låsta subkategorier</h2>
+    <p class="font-monospace">Nästa subkategori låses upp när du klarat den föregående.</p>
     foreach (var subcategory in ClosedSubcategories)
     {
         <!-- Skicka inte vidare användaren till subkategorins sida med frågor.-->
@@ -47,6 +63,7 @@
 
 @code {
 
+    public int NumberOfSubcategories { get; set; }
     public SegmentModel? chosenSegment { get; set; }
     List<(int, int, int)> UserCompletionIds = new List<(int, int, int)>();
     List<(int, int, int)> AllCompletionIds = new List<(int, int, int)>();
@@ -56,6 +73,8 @@
     public int chosenCategory { get; set; }
     public List<SubcategoryModel> OpenSubcategories { get; set; } = new();
     public List<SubcategoryModel> ClosedSubcategories { get; set; } = new();
+    public ApplicationUser? LoggedInUser;
+    public string CompletionMessage = "";
 
     [Parameter]
     public int segmentId { get; set; }
@@ -63,8 +82,53 @@
     [Parameter]
     public int CategoryId { get; set; }
 
+
+    public async Task CheckIfAllSubcategoriesAreCompleted()
+    {
+        // Om det finns lika många öppna subkategorier som det finns subkategorier i segmentet, 
+        // så betyder det att alla är avklarade.
+        int completedSubcategories = OpenSubcategories.Count;
+        if (completedSubcategories==NumberOfSubcategories && LoggedInUser!=null && chosenSegment!=null)
+        {
+            CompletionMessage = "Du har klarat av alla subkategorier i detta segment.";
+
+            // Kontrollera om ett identiskt CompletedSegmentModel redan finns i databasen
+            var existingCompletedSegment = await completedSegmentmanager.GetExistingCompletedSegmentAsync(chosenCategory, chosenSegment.Id, LoggedInUser.Id);
+            if (existingCompletedSegment == null)
+            {
+                // Skapa en lista av alla avklarade subcategoryIds
+                List<int> subcategoryIds = new();
+                foreach (var completedSubcategory in OpenSubcategories)
+                {
+                    // Lägg till alla subcategoryIds i listan.
+                    int subcategoryId = completedSubcategory.Id;
+                    subcategoryIds.Add(subcategoryId);
+                }
+
+                // Skapa en ny CompletedSegmentModel
+                CompletedSegmentModel completedSegment = new CompletedSegmentModel
+                    {
+                        CategoryId = chosenCategory,
+                        ApplicationUser = LoggedInUser,
+                        ApplicationUserId = LoggedInUser.Id,
+                        SegmentId = chosenSegment.Id,
+                        SubcategoryIds = subcategoryIds
+                    };
+
+                // Lägg till det avklarade segmentet i användarens lista.
+                LoggedInUser.CompletedSegments.Add(completedSegment);
+                // Spara i databasen
+                await genericUserManager.CompleteAsync();
+            }
+
+        }
+
+    }
+
     protected override async Task OnInitializedAsync()
     {
+
+
         // Hämta först den inloggade användaren
         State = await AuthenticationProvider.GetAuthenticationStateAsync();
         var user = State.User;
@@ -73,6 +137,8 @@
         var findtheUser = await usermanager.GetUserByNameAsync(Name);
         if (findtheUser != null)
         {
+            LoggedInUser = findtheUser;
+
             // Hämta användarens alla godkända subkategorier
             var completedSubcategories = await completedSubcategoryManager.GetCompletedSubcategoriesByUserId(findtheUser.Id);
             if (completedSubcategories != null && completedSubcategories.Any())
@@ -80,10 +146,9 @@
                 foreach (var completedsub in completedSubcategories)
                 {
                     // Skapa en ny tupel med de tre int-värdena
-                    var completionId = (completedsub.CategoryId, completedsub.SegmentId, completedsub.SubcategoryId);
+                    var completionId = (Convert.ToInt32(completedsub.CategoryId), Convert.ToInt32(completedsub.SegmentId), Convert.ToInt32(completedsub.SubcategoryId));
                     // Lägg till tupeln i listan
                     UserCompletionIds.Add(completionId);
-
                     CompletedSubcategories.Add(completedsub);
 
                 }
@@ -101,6 +166,8 @@
             var allSubcategories = await subcategoryManager.GetSubcategoriesBySegmentIdAsync(segmentId);
             if (allSubcategories != null)
             {
+                // Spara antalet subkategorier i en variabel 
+                NumberOfSubcategories = allSubcategories.Count;
                 foreach (var subcategory in allSubcategories)
                 {
                     // Skapa en ny tupel med de tre int-värdena
@@ -111,10 +178,13 @@
                     int currentSubcategoryId = subcategory.Id;
                     int previousSubcategoryId = currentSubcategoryId - 1;
 
-                    if (currentSubcategoryId==1)
+                    // Hämta första subcategoryId i segmentets lista över subkategorier 
+                    SubcategoryModel firstSubcategory = segment.GetFirstSubcategory();
+                    if (firstSubcategory!=null && !OpenSubcategories.Contains(firstSubcategory))
                     {
-                        OpenSubcategories.Add(subcategory); // subkategorin med id = 1 ska alltid vara öppen. 
+                        OpenSubcategories.Add(firstSubcategory); // subkategorin med första id ska alltid vara öppen 
                     }
+
                     if (previousSubcategoryId>0)
                     {
                         var tupleToCheck = (subcategory.Segment.CategoryId, subcategory.SegmentId, previousSubcategoryId);
@@ -131,7 +201,7 @@
                             ClosedSubcategories.Add(subcategory);
                         }
                     }
-                   
+                    await CheckIfAllSubcategoriesAreCompleted();
                  
                 }
             }
