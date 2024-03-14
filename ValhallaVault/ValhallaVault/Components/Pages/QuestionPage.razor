@@ -131,38 +131,38 @@
     [Parameter]
     public int segmentId { get; set; }
 
-    public SubcategoryModel Subcategory { get; set; }
+    private SubcategoryModel Subcategory { get; set; }
 
-    public int index;
+    private int index;
 
-    public int Points = 0;
+    private int Points = 0;
 
     private bool MessageIsVisible = false;
 
     private bool ResultIsVisible = false;
 
-    public string? UserName { get; set; }
+    private string? UserName { get; set; }
 
-    public int SegmentId { get; set; }
+    private int SegmentId { get; set; }
 
-    public List<SubcategoryModel> Subcategories { get; set; } = new();
+    private List<SubcategoryModel> Subcategories { get; set; } = new();
 
-    public int NumberOfQuestions = 0;
+    private int NumberOfQuestions = 0;
 
-    public List<QuestionViewModel> Questions { get; set; } = new();
+    private List<QuestionViewModel> Questions { get; set; } = new();
 
-    public List<QuestionViewModel> AnsweredQuestions { get; set; } = new();
+    private List<QuestionViewModel> AnsweredQuestions { get; set; } = new();
 
-    public List<UserResult> UserResultList { get; set; } = new();
+    private List<UserResult> UserResultList { get; set; } = new();
 
     // strängar för att displaya resultat
-    public List<String> FeedbackQuestion { get; set; } = new();
+    private List<String> FeedbackQuestion { get; set; } = new();
 
-    public List<String> FeedbackAnswer { get; set; } = new();
+    private List<String> FeedbackAnswer { get; set; } = new();
 
-    public List<String> FeedbackCorrected { get; set; } = new();
+    private List<String> FeedbackCorrected { get; set; } = new();
 
-    public string passOrNot = "Du fick tyvärr inte tillräckligt många rätt för att godkännas i denna subkategori.";
+    private string passOrNot = "Du fick tyvärr inte tillräckligt många rätt för att godkännas i denna subkategori.";
 
     private ApplicationUser? signedIn; // representerar den inloggade användaren
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren

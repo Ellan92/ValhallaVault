@@ -40,16 +40,16 @@
 
 @code {
 
-    public string? Name { get; set; }
-    public int NumberOfQuestions;
+    private string? Name { get; set; }
+    private int NumberOfQuestions;
     private List<CategoryModel> Categories { get; set; } = new();
     private bool ShowCompletionResults =false; 
-    public int CorrectAnswers;
+    private int CorrectAnswers;
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren 
     private string searchText = "";
-    public List<string> completedSubcategories = new();
-    public int Percentage;
-    public List <CompletedSubcategoryModel> CompletedSubcategories = new();
+    private List<string> completedSubcategories = new();
+    private int Percentage;
+    private List <CompletedSubcategoryModel> CompletedSubcategories = new();
 
 
     private void ToggleCompletionVisibility()
