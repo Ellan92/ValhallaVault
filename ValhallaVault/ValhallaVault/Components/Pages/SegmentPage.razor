@@ -25,7 +25,9 @@
     foreach (var subcategory in OpenSubcategories)
     {
         <!-- Skicka vidare användaren till subkategorins sida med frågor.-->
+        <div>
         <a href="@($"QuestionPage/{segmentId}/{subcategory.Id}/{chosenCategory}")">@subcategory.SubCategoryName</a>
+        </div>
     }
 }
 
