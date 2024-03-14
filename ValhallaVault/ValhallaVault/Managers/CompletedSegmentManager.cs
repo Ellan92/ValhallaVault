@@ -24,5 +24,7 @@ namespace ValhallaVault.Managers
             return await _completedSegmentRepo.GetExistingCompletedSegmentAsync(categoryId, segmentId, userId);
         }
 
+
+
     }
 }

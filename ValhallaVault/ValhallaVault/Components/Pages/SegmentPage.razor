@@ -3,6 +3,7 @@
 @using ValhallaVault.Data
 @inject ValhallaVault.Managers.GenericManager<SegmentModel> genericManager
 @inject ValhallaVault.Managers.GenericManager<ApplicationUser> genericUserManager
+@inject ValhallaVault.Managers.GenericManager<SubcategoryModel> genericSubcategoryManager
 @inject ValhallaVault.Managers.SubcategoryManager subcategoryManager
 @inject AuthenticationStateProvider AuthenticationProvider
 @inject ValhallaVault.Managers.UserManager usermanager
@@ -48,6 +49,7 @@
 @if (ClosedSubcategories != null && ClosedSubcategories.Any())
 {
     <h2 class="font-monospace">Låsta subkategorier</h2>
+    <p class="font-monospace">Nästa subkategori låses upp när du klarat den föregående.</p>
     foreach (var subcategory in ClosedSubcategories)
     {
         <!-- Skicka inte vidare användaren till subkategorins sida med frågor.-->
@@ -125,7 +127,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-     
+
 
         // Hämta först den inloggade användaren
         State = await AuthenticationProvider.GetAuthenticationStateAsync();
@@ -176,10 +178,13 @@
                     int currentSubcategoryId = subcategory.Id;
                     int previousSubcategoryId = currentSubcategoryId - 1;
 
-                    if (currentSubcategoryId==1)
+                    // Hämta första subcategoryId i segmentets lista över subkategorier 
+                    SubcategoryModel firstSubcategory = segment.GetFirstSubcategory();
+                    if (firstSubcategory!=null && !OpenSubcategories.Contains(firstSubcategory))
                     {
-                        OpenSubcategories.Add(subcategory); // subkategorin med id = 1 ska alltid vara öppen. 
+                        OpenSubcategories.Add(firstSubcategory); // subkategorin med första id ska alltid vara öppen 
                     }
+
                     if (previousSubcategoryId>0)
                     {
                         var tupleToCheck = (subcategory.Segment.CategoryId, subcategory.SegmentId, previousSubcategoryId);
