@@ -19,14 +19,6 @@ namespace ValhallaVault.Data.Repository
                 .ToListAsync();
         }
 
-        public async Task<CompletedSubcategoryModel?> GetCompletedSubcategoryByParamsAsync(int subcategoryId, int segmentId, string userId)
-        {
-            return await _context.CompletedSubcategories
-                .FirstOrDefaultAsync(cs =>
-                    cs.Subcategory.Id == subcategoryId &&
-                    cs.SegmentId == segmentId &&
-                    cs.ApplicationUserId == userId);
-        }
 
     }
 

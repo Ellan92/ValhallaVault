@@ -7,9 +7,11 @@ namespace ValhallaVault.Models
     {
         [Key]
         public int Id { get; set; }
+
+        public int CategoryId { get; set; }
         public int SegmentId { get; set; }
 
-        public SubcategoryModel Subcategory { get; set; } = null!;
+        public int SubcategoryId { get; set; }
 
         public string ApplicationUserId { get; set; }
 

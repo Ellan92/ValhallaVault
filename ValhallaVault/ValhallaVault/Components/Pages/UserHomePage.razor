@@ -20,54 +20,8 @@
     <h4 class="text-white font-monospace">Välkommen, @Name</h4>
 </div>
 
-<button @onclick="ToggleCompletionVisibility" class="btn btn-primary btn-block mb-3 mt-2 font-monospace" style=" margin:1%;">Avklarade subkategorier</button>
-@if (ShowCompletionResults)
-{
-
- @foreach (var subcategory in CompletedSubcategories)
-      {
-            <div class="table-responsive font-monospace" style="background-color: rgba(0, 15, 89, 0.71); padding:1%;">
-         <p class="text-white">Du har klarat av subkategori: @subcategory.Subcategory.SubCategoryName i segment: @subcategory.SegmentId</p>
-         </div>
-      }
-}
 
 
-<button @onclick="ToggleResultsVisibility" class="btn btn-primary btn-block mb-3 mt-2 font-monospace">Alla resultat</button>
-@if (ShowResults)
-{
-    @if (QuestionSubcategorySegmentTuples.Any())
-    {
-        <div class="table-responsive font-monospace" style="background-color: rgba(0, 15, 89, 0.71);">
-            <table class="table font-monospace">
-                <thead>
-                    <tr>
-                        <th class="text-white">Fråga ID</th>
-                        <th class="text-white">Subkategori ID</th>
-                        <th class="text-white">Segment ID</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var tuple in QuestionSubcategorySegmentTuples)
-                    {
-                        <tr>
-                            <td class="text-white">@tuple.QuestionId</td>
-                            <td class="text-white">@tuple.SubcategoryId</td>
-                            <td class="text-white">@tuple.SegmentId</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    
-    else if (!QuestionSubcategorySegmentTuples.Any())
-    {
-        <div class="table-responsive font-monospace" style="background-color: rgba(0, 15, 89, 0.71); padding:1%;">
-        <p class="text-white">Inga resultat att visa</p>
-        </div>
-    }
-}
 
 <div class="row">
     <div class="col text-center">
@@ -89,21 +43,14 @@
     public string? Name { get; set; }
     public int NumberOfQuestions;
     private List<CategoryModel> Categories { get; set; } = new();
-    private bool ShowResults = false;
     private bool ShowCompletionResults =false; 
     public int CorrectAnswers;
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren 
     private string searchText = "";
-    private List<ResultModel>? results;
     public List<string> completedSubcategories = new();
     public int Percentage;
     public List <CompletedSubcategoryModel> CompletedSubcategories = new();
-    public List<(int QuestionId, int SubcategoryId, int SegmentId)> QuestionSubcategorySegmentTuples { get; set; } = new();
 
-    private void ToggleResultsVisibility()
-    {
-        ShowResults = !ShowResults;
-    }
 
     private void ToggleCompletionVisibility()
     {
@@ -124,45 +71,8 @@
         var user = State.User;
         Name = user.Identity.Name;
 
-        var findtheUser = await usermanager.GetUserByNameAsync(Name);
-        if (findtheUser != null)
-        {
-            var completedSubcategories = await completedSubcategoryManager.GetCompletedSubcategoriesByUserId(findtheUser.Id);
-            if (completedSubcategories != null && completedSubcategories.Any())
-            {
-                // Lägg till de befintliga avklarade subkategorierna
-                foreach (var completedsub in completedSubcategories)
-                {
-                    CompletedSubcategories.Add(completedsub);
-                }
-            }
-
-            if (findtheUser.UserResults != null && findtheUser.UserResults.Any())
-            {
-                // Skapa en temporär lista för att lagra nya element
-                var tempList = new List<CompletedSubcategoryModel>();
-
-                // hitta användarens resultat
-                foreach (var result in findtheUser.UserResults)
-                {
-                    QuestionModel question = await genericQuestionManager.GetByIdAsync(result.Result.QuestionId);
-                    int questionId = question.Id;
-                    int subcategoryId = question.SubcategoryId;
-                    SubcategoryModel subcategory = await genericSubcategoryManager.GetByIdAsync(subcategoryId);
-
-                    // Lägg till element i temporär lista
-                    tempList.Add(new CompletedSubcategoryModel
-                        {
-                            SegmentId = subcategory.SegmentId,
-                            Subcategory = subcategory,
-                            ApplicationUserId = findtheUser.Id
-                        });
-                }
-
-                // Lägg till alla element från temporär lista till CompletedSubcategories
-                CompletedSubcategories.AddRange(tempList);
-            }
-        }
+    
+        
 
     }
 }

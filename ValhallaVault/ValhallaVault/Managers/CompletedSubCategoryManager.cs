@@ -17,10 +17,7 @@ namespace ValhallaVault.Managers
             var subcategories = await _completedSubcategoryRepo.GetCompletedSubcategoriesByUserIdAsync(userId);
             return subcategories;
         }
-        public async Task<CompletedSubcategoryModel?> GetCompletedSubcategoryByParamsAsync(int subcategoryId, int segmentId, string userId)
-        {
-            return await _completedSubcategoryRepo.GetCompletedSubcategoryByParamsAsync(subcategoryId, segmentId, userId);
-        }
+
 
 
     }

@@ -29,10 +29,10 @@ else
     <div class="card mt-3" style="background-color: rgba(0, 15, 89, 0.71); padding: 4%;">
         <div class="card-body">
             <h2 class="card-title text-white font-monospace">Segment i kategorin</h2>
-            <h4 class="card-subtitle mb-2 text-muted text-white font-monospace">Klicka på ett segment för att läsa mer om segmentet eller starta frågorna.</h4>
+            <h4 class="card-subtitle mb-2 text-white font-monospace">Klicka på ett segment för att läsa mer om segmentet eller starta frågorna.</h4>
             @foreach (var segment in Segments)
             {
-                <a href="@($"SegmentPage/{segment.Id}")" class="card-link text-white font-monospace">@segment.SegmentName</a>
+                <a href="@($"SegmentPage/{segment.Id}/{categoryId}")" class="card-link text-white font-monospace">@segment.SegmentName</a>
             }
         </div>
     </div>

@@ -271,6 +271,9 @@ namespace ValhallaVault.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<int>("SegmentId")
                         .HasColumnType("int");
 
@@ -280,8 +283,6 @@ namespace ValhallaVault.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("SubcategoryId");
 
                     b.ToTable("CompletedSubcategories");
                 });
@@ -789,6 +790,7 @@ namespace ValhallaVault.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("SubCategoryName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1144,15 +1146,7 @@ namespace ValhallaVault.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ValhallaVault.Models.SubcategoryModel", "Subcategory")
-                        .WithMany()
-                        .HasForeignKey("SubcategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ApplicationUser");
-
-                    b.Navigation("Subcategory");
                 });
 
             modelBuilder.Entity("ValhallaVault.Models.QuestionModel", b =>

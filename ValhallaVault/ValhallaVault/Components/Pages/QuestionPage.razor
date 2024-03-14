@@ -1,4 +1,4 @@
-﻿@page "/QuestionPage/{subcatId:int}"
+﻿@page "/QuestionPage/{segmentId:int}/{subcatId:int}/{categoryId:int}"
 @using ValhallaVault.Models
 @using ValhallaVault.Models.ViewModels
 @using ValhallaVault.Data
@@ -125,6 +125,12 @@
     [Parameter]
     public int subcatId { get; set; }
 
+    [Parameter]
+    public int CategoryId { get; set; }
+
+    [Parameter]
+    public int segmentId { get; set; }
+
     public SubcategoryModel Subcategory { get; set; }
 
     public int index;
@@ -191,7 +197,7 @@
         Questions.Clear();
         // Hämta alla frågor i subkategorin 
         var allQuestionsInSubcategory = await questionManager.GetQuestionsBySubcategoryIdAsync(subcatId);
-        if (allQuestionsInSubcategory!=null)
+        if (allQuestionsInSubcategory!=null && allQuestionsInSubcategory.Any())
         {
             foreach (var question in allQuestionsInSubcategory)
             {
@@ -200,7 +206,6 @@
                 Questions.Add(questionViewmodel);
             }
         }
-
 
     }
 
@@ -214,30 +219,23 @@
 
         if (findtheUser != null)
         {
-            // Kontrollera om en subkategori redan är avklarad för den inloggade användaren
-            var existingCompletion = await completedSubcategoryManager.GetCompletedSubcategoryByParamsAsync(Subcategory.Id, SegmentId, findtheUser.Id);
-            if (existingCompletion == null)
-            {
-                // Skapa en ny completedSubcategory
-                CompletedSubcategoryModel completedSubcategory = new CompletedSubcategoryModel
+
+          // Skapa en ny completedSubcategory
+            CompletedSubcategoryModel completedSubcategory = new CompletedSubcategoryModel
                     {
                         ApplicationUser = findtheUser,
-                        Subcategory = Subcategory,
+                        SubcategoryId = Subcategory.Id,
+                        CategoryId = CategoryId,
                         SegmentId = SegmentId
-                    };
+           };
 
-                // Lägg till i användarens lista
-                findtheUser.CompletedSubcategories.Add(completedSubcategory);
-
-                passOrNot = "Grattis! Du blev godkänd i denna subkategori. ";
+           // Lägg till i användarens lista
+           findtheUser.CompletedSubcategories.Add(completedSubcategory);
+            passOrNot = "Grattis! Du blev godkänd i denna subkategori. ";
 
                 // Spara i databasen
                 await genericUserManager.CompleteAsync();
-            }
-            else
-            {
-                passOrNot = "Du har redan passerat denna subkategori";
-            }
+
         }
     }
 
