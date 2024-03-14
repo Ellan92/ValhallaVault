@@ -37,24 +37,23 @@
 				@if (isEditDetailsShown && questionId == question.Id)
 				{
 					<div>
-						<strong class="text-white">Question Title: </strong><input @bind="questionName" placeholder="@question.Question"></input>
+						@{
+							userInput.questionName = question.Question;
+						}
+						<strong class="text-white">Question Title: </strong><input class="form-control" type="text" @bind-value="userInput.questionName"></input>
 						<br/>
 						<strong class="text-white">Options:</strong>
 						<br/>
-						@{
-							index = 0;
-						}
-						@if(optionTitles != null)
+						@if (optionViewModels != null)
 						{
-							@foreach (var option in question.Options)
+							@foreach (var optionViewModel in optionViewModels)
 							{
-								int loopIndex = index;
+								if(optionViewModel.QuestionId == question.Id)
+								{
+									<input @bind="optionViewModel.Option" placeholder="@optionViewModel.Option"></input>
+									<br />
+								}
 
-								<input @bind="optionTitles[loopIndex]" placeholder="@option"></input>
-
-								<br />
-
-								index++;
 							}
 						}
 						<button @onclick="() => UpdateQuestion(question)" class="btn btn-outline-light">Update</button>
@@ -86,9 +85,18 @@
 	public string optionTitle;
 
 	private string[]? optionTitles;
+
+	private List<OptionViewModel>? optionViewModels;
+
 	private int index;
 
-	public string questionName;
+	public class UserInput
+	{
+		public string questionName { get; set; }
+
+	}
+
+	private UserInput userInput = new UserInput();
 
 	public string questionDescription;
 
@@ -109,11 +117,26 @@
 		{
 			int totalOptionTitles = 0;
 
+			optionViewModels = new();
+
 			foreach (var question in AllQuestions)
 			{
+				int optionIndex = 0;
+
 				foreach(var option in question.Options)
 				{
 					totalOptionTitles++;
+
+					OptionViewModel optionViewModel = new()
+					{
+						Option = option,
+						QuestionId = question.Id,
+						OptionIndex = optionIndex
+					};
+
+					optionViewModels.Add(optionViewModel);
+
+					optionIndex++;
 				}
 			}
 
@@ -140,14 +163,22 @@
 	{
 		// options.Add(optionTitle);
 
-		if(questionName != "")
+		if(userInput.questionName != "")
 		{
-			await questionManager.UpdateQuestionAsync(questionId, questionName);
+			// await questionManager.UpdateQuestionAsync(questionId, userInput.questionName);
 		}
 
-		options = optionTitles.ToList();
+		List<string> viewModelOptions = optionViewModels.Where(v => v.QuestionId == questionToUpdate.Id).Select(v => v.Option).ToList();
 
-		await questionManager.UpdateOptionsAsync(questionId, options);
+		for (int i = 0; i < questionToUpdate.Options.Count(); i++)
+		{
+			if(questionToUpdate.Options[i] != viewModelOptions[i])
+			{
+				questionToUpdate.Options[i] = viewModelOptions[i];
+			}
+		}
+
+		await questionManager.UpdateQuestionAndOptionsAsync(questionId, userInput.questionName, viewModelOptions);
 
 		// await questionManager.UpdateQuestionAndOptionsAsync(questionId, questionName, options);
 
@@ -163,5 +194,14 @@
 		}
 
 
+	}
+
+	private sealed class OptionViewModel
+	{
+		public string? Option { get; set; }
+
+		public int QuestionId { get; set; }
+
+		public int OptionIndex { get; set; }
 	}
 }
