@@ -31,6 +31,11 @@
 			<button @onclick="NavigateToQuestionsPage" class="btn btn-lg btn-outline-light">Questions</button>
 		</div>
 	</div>
+	<div class="flex-row row justify-content-center">
+	<div class="col-5">
+		<button @onclick="NavigateToAddPage" class="btn btn-lg btn-outline-light">AddPage</button>
+	</div>
+	</div>
 </div>
 @code {
 	public async Task NavigateToCategoryPage()
@@ -49,5 +54,9 @@
 	public async Task NavigateToQuestionsPage()
 	{
 		navigationManager.NavigateTo("/questionspage");
+	}
+	public async Task NavigateToAddPage()
+	{
+		navigationManager.NavigateTo("/addpage");
 	}
 }
