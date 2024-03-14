@@ -1,4 +1,4 @@
-﻿@page "/QuestionPage/{chosenSegment:int}"
+﻿@page "/QuestionPage/{segmentId:int}/{subcatId:int}/{categoryId:int}"
 @using ValhallaVault.Models
 @using ValhallaVault.Models.ViewModels
 @using ValhallaVault.Data
@@ -8,8 +8,11 @@
 @inject NavigationManager Navigation
 @inject ValhallaVault.Managers.GenericManager<SegmentModel> genericManager
 @inject ValhallaVault.Managers.GenericManager<ResultModel> genericResultManager
+@inject ValhallaVault.Managers.GenericManager<SubcategoryModel> genericSubcategoryManager
 @inject ValhallaVault.Managers.GenericManager<ApplicationUser> genericUserManager
+@inject ValhallaVault.Managers.CompletionManager completionmanager
 @inject ValhallaVault.Managers.SubcategoryManager subcategoryManager
+@inject ValhallaVault.Managers.CompletedSubcategoryManager completedSubcategoryManager
 @inject AuthenticationStateProvider AuthenticationProvider
 @inject ValhallaVault.Managers.UserManager usermanager
 @inject ValhallaVault.Managers.Factory factory
@@ -36,8 +39,14 @@
 <div class="container" style="margin-top:5%;">
     <div class="row" style="background-color: rgba(0, 15, 89, 0.71);">
         <div class="col-md-12">
-            <h3 class="mt-3 text-white font-monospace" style="margin-top:5%;">Frågor för denna subkategori</h3>
+
+            @if (Subcategory!=null)
+            {
+                <h3 class="mt-3 text-white font-monospace" style="margin-top:5%;">Frågor för subkategori: @Subcategory.SubCategoryName</h3>
+            }
+      
             <p class="text-white font-monospace"><stronger>Återstående frågor: @Questions.Count </stronger></p>
+         
             <!-- Observarade frågor -->
             @if (Questions != null && Questions.Any())
             {
@@ -68,7 +77,8 @@
                 <div class="container mt-3">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Resultat</h5>
+                            <h2>@Points poäng av @NumberOfQuestions möjliga</h2>
+                            <h5 class="text-primary fw-bolder">@passOrNot</h5>
                             <div>
                                 <h2>Frågor</h2>
                                 <ol>
@@ -104,7 +114,7 @@
             {
                 <h6>Vänligen svara på alla frågor innan du lämnar in.</h6>
             }
-            <a href="@($"SegmentPage/{chosenSegment}")" class="btn btn-primary mt-3" style="margin: 1%;">Tillbaka</a>
+            <a href="@($"SegmentPage/{SegmentId}/{CategoryId}")" class="btn btn-primary mt-3" style="margin: 1%;">Tillbaka</a>
         </div>
     </div>
 </div>
@@ -113,9 +123,19 @@
 
 @code {
     [Parameter]
-    public int chosenSegment { get; set; }
+    public int subcatId { get; set; }
 
-    public int index; 
+    [Parameter]
+    public int CategoryId { get; set; }
+
+    [Parameter]
+    public int segmentId { get; set; }
+
+    public SubcategoryModel Subcategory { get; set; }
+
+    public int index;
+
+    public int Points = 0;
 
     private bool MessageIsVisible = false;
 
@@ -123,7 +143,7 @@
 
     public string? UserName { get; set; }
 
-    public SegmentModel? ChosenSegment { get; set; }
+    public int SegmentId { get; set; }
 
     public List<SubcategoryModel> Subcategories { get; set; } = new();
 
@@ -142,6 +162,8 @@
 
     public List<String> FeedbackCorrected { get; set; } = new();
 
+    public string passOrNot = "Du fick tyvärr inte tillräckligt många rätt för att godkännas i denna subkategori.";
+
     private ApplicationUser? signedIn; // representerar den inloggade användaren
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren
 
@@ -149,55 +171,76 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        // Hämta vald subkategori
+        var subcategory = await genericSubcategoryManager.GetByIdAsync(subcatId);
+        if (subcategory!=null)
+        {
+            Subcategory = subcategory; 
+
+            // Hämta segmentet 
+            int segmentid = subcategory.SegmentId;
+            SegmentId = segmentid;
+        }
+
+        // Ladda in alla frågor 
         if (Questions.Count == 0)
         {
             await LoadQuestionsAsync();
         }
+
+        NumberOfQuestions = Questions.Count;
     }
 
 
     private async Task LoadQuestionsAsync()
     {
         Questions.Clear();
-
-        var segment = await genericManager.GetByIdAsync(chosenSegment);
-        if (segment != null)
+        // Hämta alla frågor i subkategorin 
+        var allQuestionsInSubcategory = await questionManager.GetQuestionsBySubcategoryIdAsync(subcatId);
+        if (allQuestionsInSubcategory!=null && allQuestionsInSubcategory.Any())
         {
-            ChosenSegment = segment;
-
-            var allSubcategories = await subcategoryManager.GetSubcategoriesBySegmentIdAsync(chosenSegment);
-            if (allSubcategories != null)
+            foreach (var question in allQuestionsInSubcategory)
             {
-                foreach (var subcategory in allSubcategories)
-                {
-                    Subcategories.Add(subcategory);
-                }
-
-                if (Subcategories.Count > 0)
-                {
-                    foreach (var sc in Subcategories)
-                    {
-                        var questionList = await questionManager.GetQuestionsBySubcategoryIdAsync(sc.Id);
-                        if (questionList != null && questionList.Count > 0)
-                        {
-                            foreach (var question in questionList)
-                            {
-                                QuestionViewModel viewmodelQuestion = factory.CreateQuestionViewModel(question);
-                                if (!Questions.Contains(viewmodelQuestion))
-                                {
-                                    Questions.Add(viewmodelQuestion);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                NumberOfQuestions = Questions.Count;
+                // Lägg till alla frågor från subkategorin
+                QuestionViewModel questionViewmodel = factory.CreateQuestionViewModel(question);
+                Questions.Add(questionViewmodel);
             }
+        }
+
+    }
+
+    private async Task AddSubcategoryCompletionToUser()
+    {
+        // Hämta den inloggade användaren
+        State = await AuthenticationProvider.GetAuthenticationStateAsync();
+        var user = State.User;
+        UserName = user.Identity.Name;
+        var findtheUser = await usermanager.GetUserByNameAsync(UserName);
+
+        if (findtheUser != null)
+        {
+
+          // Skapa en ny completedSubcategory
+            CompletedSubcategoryModel completedSubcategory = new CompletedSubcategoryModel
+                    {
+                        ApplicationUser = findtheUser,
+                        SubcategoryId = Subcategory.Id,
+                        CategoryId = CategoryId,
+                        SegmentId = SegmentId
+           };
+
+           // Lägg till i användarens lista
+           findtheUser.CompletedSubcategories.Add(completedSubcategory);
+            passOrNot = "Grattis! Du blev godkänd i denna subkategori. ";
+
+                // Spara i databasen
+                await genericUserManager.CompleteAsync();
+
         }
     }
 
-    private void SubmitQuiz()
+
+    private async Task SubmitQuiz()
     {
         int answeredQuestions = AnsweredQuestions.Count;
         if (answeredQuestions < NumberOfQuestions)
@@ -206,6 +249,14 @@
         }
         else if (answeredQuestions == NumberOfQuestions)
         {
+            bool UserPassedSubcategory = completionmanager.UserPassedSubcategory(Subcategory, Points);
+            if (UserPassedSubcategory)
+            {
+                // Lägg till en ny CompletedCategory
+                 await AddSubcategoryCompletionToUser();
+
+            }
+
             Questions.Clear();
             ResultIsVisible = true;
             StateHasChanged(); // Tvinga en uppdatering av komponenten
@@ -226,16 +277,17 @@
             bool isCorrectAnswer = chosenOption.Equals(solutionToQuestion.CorrectAnswer);
 
             ResultModel newResult = null;
-            if (isCorrectAnswer)
+            if (isCorrectAnswer) // skapa ett userResult som är korrekt 
             {
                 question.IsCorrectAnswer = true;
                 newResult = factory.CreateCorrectResult(chosenOption, true, question.QuestionId);
+
                 // Skapa resultat-strängarna
                 FeedbackQuestion.Add($"\nFråga: {question.Question}");
                 FeedbackAnswer.Add($"\nDitt svar: {chosenOption}");
                 FeedbackCorrected.Add($"\nRätt svar: {solution}");
             }
-            else
+            else // skapa ett userResult som inte är korrekt 
             {
                 question.IsCorrectAnswer = false;
                 newResult = factory.CreateWrongResult(chosenOption, false, question.QuestionId);
@@ -254,18 +306,18 @@
 
             if (findtheUser != null)
             {
+                // om det redan finns ett UserResult på denna användare så ska det tas bort först 
                 var existingResult = findtheUser.UserResults.FirstOrDefault(ur => ur.Result.QuestionId == question.QuestionId);
                 if (existingResult != null)
                 {
                     // Ta bort det befintliga UserResult-objektet
                     findtheUser.UserResults.Remove(existingResult);
-                    UserResultList.Remove(existingResult); // Om det finns en lista som håller referenser till UserResult-objektet, ta bort den också
-
-                    // Spara ändringar i databasen
+                    UserResultList.Remove(existingResult); 
+                    // Spara ändringarna i databasen
                     await genericUserManager.CompleteAsync();
                 }
 
-                // ersätt - Skapa ett nytt UserResult-objekt med det uppdaterade resultatet
+                // annars- skapa ett nytt UserResult-objekt direkt 
                 var userresult = factory.CreateUserResult(findtheUser, newResult);
                 if (userresult != null)
                 {
@@ -275,6 +327,11 @@
 
                     // Spara ändringar i databasen
                     await genericUserManager.CompleteAsync();
+
+                    if (newResult.IsCorrect == true)
+                    {
+                        Points++;
+                    }
                 }
             }
         }

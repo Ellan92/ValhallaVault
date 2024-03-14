@@ -12,8 +12,8 @@ using ValhallaVault.Data;
 namespace ValhallaVault.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240313145020_initCreate")]
-    partial class initCreate
+    [Migration("20240314082723_dd")]
+    partial class dd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -260,6 +260,34 @@ namespace ValhallaVault.Migrations
                             CategoryName = "Cyberspionage",
                             Description = "Cyberspionage är en form av spionage där angripare använder digitala metoder för att infiltrera och stjäla konfidentiell information från organisationer, myndigheter eller enskilda individer. Det innebär vanligtvis användning av avancerade tekniker såsom malware, phishing och social engineering för att få tillgång till känslig data utan att upptäckas."
                         });
+                });
+
+            modelBuilder.Entity("ValhallaVault.Models.CompletedSubcategoryModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SegmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubcategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("CompletedSubcategories");
                 });
 
             modelBuilder.Entity("ValhallaVault.Models.QuestionModel", b =>
@@ -765,6 +793,7 @@ namespace ValhallaVault.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("SubCategoryName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1112,6 +1141,17 @@ namespace ValhallaVault.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ValhallaVault.Models.CompletedSubcategoryModel", b =>
+                {
+                    b.HasOne("ValhallaVault.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany("CompletedSubcategories")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
             modelBuilder.Entity("ValhallaVault.Models.QuestionModel", b =>
                 {
                     b.HasOne("ValhallaVault.Models.SubcategoryModel", "SubCategory")
@@ -1188,6 +1228,8 @@ namespace ValhallaVault.Migrations
 
             modelBuilder.Entity("ValhallaVault.Data.ApplicationUser", b =>
                 {
+                    b.Navigation("CompletedSubcategories");
+
                     b.Navigation("UserResults");
                 });
 

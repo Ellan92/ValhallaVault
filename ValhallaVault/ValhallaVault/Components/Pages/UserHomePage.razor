@@ -6,58 +6,35 @@
 @inject AuthenticationStateProvider AuthenticationProvider
 @inject ValhallaVault.Managers.UserManager usermanager
 @inject ValhallaVault.Managers.GenericManager<CategoryModel> categoryManager
+@inject ValhallaVault.Managers.GenericManager<SegmentModel> segmentManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject ValhallaVault.Managers.QuestionManager questionmanager
+@inject ValhallaVault.Managers.CompletedSubcategoryManager completedSubcategoryManager 
 @inject ValhallaVault.Managers.GenericManager<QuestionModel> genericQuestionManager
 @inject ValhallaVault.Managers.GenericManager<SubcategoryModel> genericSubcategoryManager
 @rendermode InteractiveServer
 @attribute [Authorize]
 <PageTitle>UserPage</PageTitle>
 
-<div class="border rounded mt-5 font-monospace" style="background-color: rgba(0, 15, 89, 0.71); padding: 4%;">
+<div class="mt-5 font-monospace" style="background-color: rgba(0, 15, 89, 0.71); padding: 4%;">
     <h4 class="text-white font-monospace">Välkommen, @Name</h4>
 </div>
 
-<button @onclick="ToggleResultsVisibility" class="btn btn-primary btn-block mb-3 mt-2 font-monospace">Se mina resultat</button>
 
-@if (ShowResults && QuestionSubcategorySegmentTuples.Any())
-{
-    <div class="table-responsive font-monospace" style="background-color: rgba(0, 15, 89, 0.71);">
-        <table class="table font-monospace">
-            <thead>
-                <tr>
-                    <th class="text-white">Fråga ID</th>
-                    <th class="text-white">Subkategori ID</th>
-                    <th class="text-white">Segment ID</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var tuple in QuestionSubcategorySegmentTuples)
-                {
-                    <tr>
-                        <td class="text-white">@tuple.QuestionId</td>
-                        <td class="text-white">@tuple.SubcategoryId</td>
-                        <td class ="text-white" >@tuple.SegmentId</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
-else if (!QuestionSubcategorySegmentTuples.Any())
-{
-    <p>Inga frågor att visa.</p>
-}
+
 
 <div class="row">
-    @foreach (var category in Categories)
-    {
-        <div class="col-md-4 d-flex flex-column align-items-center">
-
-                <a href="@($"CategoryPage/{category.Id}")" class="btn btn-success btn-block mb-3 m-3" >@category.CategoryName</a>
- 
-        </div>
-    }
+    <div class="col text-center">
+        <h2 class="font-monospace">Välj en kategori:</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="btn-group-vertical w-100" role="group">
+        @foreach (var category in Categories)
+        {
+            <a href="@($"CategoryPage/{category.Id}")" class="btn btn-success btn-lg btn-block mb-3">@category.CategoryName</a>
+        }
+    </div>
 </div>
 
 
@@ -66,68 +43,37 @@ else if (!QuestionSubcategorySegmentTuples.Any())
     public string? Name { get; set; }
     public int NumberOfQuestions;
     private List<CategoryModel> Categories { get; set; } = new();
-    private bool ShowResults = false;
+    private bool ShowCompletionResults =false; 
     public int CorrectAnswers;
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren 
     private string searchText = "";
-    private List<ResultModel>? results;
+    public List<string> completedSubcategories = new();
     public int Percentage;
-    public List<(int QuestionId, int SubcategoryId, int SegmentId)> QuestionSubcategorySegmentTuples { get; set; } = new List<(int QuestionId, int SubcategoryId, int SegmentId)>();
+    public List <CompletedSubcategoryModel> CompletedSubcategories = new();
 
-    private void ToggleResultsVisibility()
+
+    private void ToggleCompletionVisibility()
     {
-        ShowResults = !ShowResults;
+        ShowCompletionResults = !ShowCompletionResults;
     }
 
     protected async override Task OnInitializedAsync()
     {
-        // Hämta alla kategorier 
+        // Hämta alla kategorier
         var categories = await categoryManager.GetAllAsync();
-        if (categories!=null && categories.Any())
+        if (categories != null && categories.Any())
         {
             Categories = categories;
         }
 
-        // Hämta inloggad användare 
-        State = await AuthenticationProvider.GetAuthenticationStateAsync();  
+        // Hämta inloggad användare
+        State = await AuthenticationProvider.GetAuthenticationStateAsync();
         var user = State.User;
         Name = user.Identity.Name;
 
-        var findtheUser = await usermanager.GetUserByNameAsync(Name);
-        if (findtheUser != null)
-        {
-
-            if (findtheUser.UserResults != null && findtheUser.UserResults.Any())
-            {
-                // hitta användarens resultat 
-                foreach (var result in findtheUser.UserResults)
-                {
-                    QuestionModel question = await genericQuestionManager.GetByIdAsync(result.Result.QuestionId);
-                    int questionId = question.Id;
-                    int subcategoryId = question.SubcategoryId;
-                    SubcategoryModel subcategory = await genericSubcategoryManager.GetByIdAsync(subcategoryId);
-
-                    // sträng för att displaya alla resultat i toggle-listan. 
-                    QuestionSubcategorySegmentTuples.Add((questionId, subcategoryId, subcategory.SegmentId));
-
-                    // räkna korrekta svar
-                    if (result.Result.IsCorrect)
-                    {
-                        CorrectAnswers++;
-                    }
-
-                    // räkna alla svar
-                    NumberOfQuestions++;
-                }
-
-                // Calculate percentage of correct answers
-                float calculation = ((float)CorrectAnswers / (float)NumberOfQuestions) * 100;
-                Percentage = (int)calculation;
-            }
-        }
-
-      
+    
+        
 
     }
-
 }
+

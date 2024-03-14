@@ -12,6 +12,7 @@ namespace ValhallaVault.Data
         public DbSet<QuestionModel> Questions { get; set; }
         public DbSet<SubcategoryModel> Subcategories { get; set; }
         public DbSet<SolutionModel> Solutions { get; set; }
+        public DbSet<CompletedSubcategoryModel> CompletedSubcategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -875,7 +876,11 @@ namespace ValhallaVault.Data
                 .WithMany(t => t.UserResults)
             .HasForeignKey(tt => tt.ResultId);
 
-
+            // one to many mellan user och completedsubcategories 
+            builder.Entity<CompletedSubcategoryModel>()
+              .HasOne(c => c.ApplicationUser)
+              .WithMany(u => u.CompletedSubcategories)
+              .HasForeignKey(c => c.ApplicationUserId);
 
         }
     }
