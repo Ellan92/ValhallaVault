@@ -1,8 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Microsoft.AspNetCore.Identity
 @using ValhallaVault.Data
-@inject SignInManager<ApplicationUser> SignOutManager
-@inject NavigationManager NavigationManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject NavigationManager NavigationManager 
 
 <header class="header">
     <a href="#" class="logo">Pink Zombies</a>
@@ -14,17 +15,18 @@
        <AuthorizeView>
            <Authorized>
                 <a href="Account/Manage">@context.User.Identity?.Name</a>
-@*                 <a href="MicrosoftIdentity/Account/">Log out</a *@
-   @*              <a href="Account/Login">Logout</a> *@
+                <a href="#">Contact us</a>
+@*              <a @onclick=Logout>Logout</a> *@
                 <div class="nav-item px-3">
                     <form action="Account/Logout" method="post">
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="btn btn-primary btn-sm">
+                        <button type="submit" class="btn btn-link">
                             <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
                         </button>
                     </form>
                 </div>
+
            </Authorized>
            <NotAuthorized>
 
@@ -47,6 +49,18 @@
 
 
     private string? currentUrl;
+
+
+    //En metod för att loga ut användaren när man trycker på "Logout"
+    //metoden fungerar inte och har därav mig använt mig av en annan metod. Se nedanför.
+    // private async Task Logout()
+    // {
+
+    //     await SignInManager.SignOutAsync();
+    //     NavigationManager.NavigateTo("Account/Login");
+    // }
+
+    //
 
     protected override void OnInitialized()
     {

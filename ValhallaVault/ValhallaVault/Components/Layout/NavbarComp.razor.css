@@ -45,7 +45,7 @@ a:hover:not(.logo)
     font-weight: 700
 }
 
-.btn
-{
-    font-size: 8px;
+.btn {
+    font-size: 10px;
+    color: lightblue;
 }
