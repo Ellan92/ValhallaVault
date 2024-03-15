@@ -9,6 +9,7 @@ using ValhallaVault.Components.Account;
 using ValhallaVault.Data;
 using ValhallaVault.Data.Repository;
 using ValhallaVault.EmeliesMiddleware;
+using ValhallaVault.FarresMiddleware;
 using ValhallaVault.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -228,11 +229,12 @@ app.Use(async (context, next) =>
 //en enkel Middleware - end of pipeline
 //app.Run(async context =>
 //{
-    
+
 //    await context.Response.WriteAsync("This is a Middleware");
 //});
 
 //============================================================================ Farre
 
+app.UseMiddleware<FarresMiddleware>(); //Farres middleware med hjälp av middleware class
 
 app.Run();
