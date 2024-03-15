@@ -131,7 +131,7 @@
     [Parameter]
     public int segmentId { get; set; }
 
-    public SubcategoryModel Subcategory { get; set; }
+    public SubcategoryModel? Subcategory { get; set; }
 
     public int index;
 
@@ -163,8 +163,7 @@
     public List<String> FeedbackCorrected { get; set; } = new();
 
     public string passOrNot = "Du fick tyvärr inte tillräckligt många rätt för att godkännas i denna subkategori.";
-
-    private ApplicationUser? signedIn; // representerar den inloggade användaren
+    
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren
 
 
@@ -222,11 +221,11 @@
 
           // Skapa en ny completedSubcategory
             CompletedSubcategoryModel completedSubcategory = new CompletedSubcategoryModel
-                    {
-                        ApplicationUser = findtheUser,
-                        SubcategoryId = Subcategory.Id,
-                        CategoryId = CategoryId,
-                        SegmentId = SegmentId
+            {
+               ApplicationUser = findtheUser,
+               SubcategoryId = Subcategory.Id,
+               CategoryId = CategoryId,
+               SegmentId = SegmentId
            };
 
            // Lägg till i användarens lista
@@ -254,7 +253,6 @@
             {
                 // Lägg till en ny CompletedCategory
                  await AddSubcategoryCompletionToUser();
-
             }
 
             Questions.Clear();
