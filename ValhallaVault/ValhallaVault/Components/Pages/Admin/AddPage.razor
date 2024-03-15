@@ -39,15 +39,15 @@
                 
                 <p class="text-danger">Only one category may be added at a time.</p>
             }
-
-            @if (isCategoryAdded)
-            {
-                <p class="text-success">Category added successfully.</p>               
-            }
-
-            @if (isCategoryEmpty == true)
+                  
+           @if (isCategoryEmpty == true)
             {
                 <p class="text-danger">Field cannot be empty!</p>
+            }
+
+            else if (isCategoryAdded)
+            {
+                <p class="text-success">Segment added successfully.</p>
             }
                
             
@@ -68,20 +68,21 @@
     <button @onclick="AddSegment" class="btn btn-primary">Add Segment</button>
     <br/>
 
-            @if (isSegmentAdded)
+            @if (selectedCategoryId == 0)
             {
-                <p class="text-success">Segment added successfully.</p>
+                <p class="text-danger">Please select a segment</p>
             }
             
-            @if (isSegmentEmpty == true)
+            else if (isSegmentEmpty == true)
             {
                 <p class="text-danger">Field cannot be empty!</p>
             }
 
-            @if (isSelected)
+            else if(isSegmentAdded)
             {
-                <p class="text-success">You need to select a category first.</p>
+                <p class="text-success">Segment added successfully.</p>
             }
+          
             
     </div>
     </div>
@@ -93,9 +94,7 @@
     <strong class="text-white">Subcategory Description: </strong><input class="form-control input-lg" type="text" @bind="subcategoryDescription"></input>
     <br/>
     <strong class="text-white">Select a Segment:</strong>
-            <select @bind="selectedSegmentId">
-                <option value="" selected>@selectSegmentPlaceholder</option>
-
+            <select @bind="selectedSegmentId">              
                 @foreach (var segment in AllSegments)
                 {
                     <option value="@segment.Id">@segment.Category.CategoryName : @segment.SegmentName</option>
@@ -103,16 +102,21 @@
 
             </select>
     <button @onclick="AddSubcategory" class="btn btn-primary">Add Subcategory</button>
-    <br/>
-    
-            @if (isSubcategoryAdded)
+    <br/>             
+
+            @if (selectedSegmentId == 0)
             {
-                <p class="text-success">Subcategory added successfully.</p>
+                <p class="text-danger">Please select a segment</p>
             }
-            
-            @if (isSubcategoryEmpty == true)
+
+            else if (isSubcategoryEmpty == true)
             {
                 <p class="text-danger">Field cannot be empty!</p>
+            }
+
+            else if (isSubcategoryAdded)
+            {
+                <p class="text-success">Segment added successfully.</p>
             }
             
         </div>
@@ -142,28 +146,34 @@
                     <li class="text-white">@option</li>
                 }
                 </ul>
-            }
-            @if (isOptionsAdded)
-            {
-                <p class="text-success">Option added successfully.</p>
-            }
+            }            
             
             @if (isOptionsEmpty == true)
             {
                 <p class="text-danger">Field cannot be empty!</p>
+            }                  
+
+            else if (isOptionsAdded)
+            {
+                <p class="text-success">Option added successfully.</p>
             }
 
     <br/>
     <button @onclick="AddQuestion" class="btn btn-primary">Add Question</button>
 
-            @if (isQuestionAdded)
+            @if (selectedSubcategoryId == 0)
             {
-                <p class="text-success">Question added successfully.</p>
+                <p class="text-danger">Please select a subcategory</p>
             }
-            
-            @if (isQuestionEmpty == true)
+
+            else if (isQuestionEmpty == true)
             {
                 <p class="text-danger">Field cannot be empty!</p>
+            }
+
+            else if (isQuestionAdded)
+            {
+                <p class="text-success">Segment added successfully.</p>
             }
         </div>
 </div>
@@ -247,6 +257,7 @@
 
     private async Task AddCategory()
     {
+        isCategoryEmpty = false;
         if (!string.IsNullOrEmpty((categoryName)))
         {           
             // Create a new category and add it to the list
@@ -257,95 +268,122 @@
 
             // To display category added successfully
             isCategoryAdded = true;
+            isCategoryEmpty = false;
 
+            categoryName = "";
+            categoryDescription = "";
         }
         else
         {
             isCategoryEmpty = true;
         }
 
-        // Clear input fields
-        categoryName = "";
-        categoryDescription = "";
-
-
     }
 
     private async Task AddSegment()
     {
-        if(selectedCategoryId != 0 || !string.IsNullOrEmpty(segmentName))
+        isSegmentEmpty = false;
+        if(selectedCategoryId != 0)
         {
-            var newSegment = new SegmentModel { SegmentName = segmentName, Description = segmentDescription, CategoryId = selectedCategoryId };
-            Segments.Add(newSegment);
+            isSelected = true;
+            if (!string.IsNullOrEmpty(segmentName))
+            {
+                var newSegment = new SegmentModel { SegmentName = segmentName, Description = segmentDescription, CategoryId = selectedCategoryId };
+                Segments.Add(newSegment);
 
-            await genericSegmentManager.AddAsync(newSegment);
+                await genericSegmentManager.AddAsync(newSegment);
 
-            // To display segment added successfully
-            isSegmentAdded = true;
+                // To display segment added successfully
+                isSegmentAdded = true;
+                isSegmentEmpty = false;
 
-        }
+                segmentName = "";
+                segmentDescription = "";
+            }
+            else
+            {
+                isSegmentEmpty = true;
+            }
+        }        
         else
-        {
-            isSegmentEmpty = true;
+        {          
             isSelected = false;
         }
         // Clear input fields
-        segmentName = "";
-        segmentDescription = "";
-
     }
 
     private async Task AddSubcategory()
     {
-        if (!string.IsNullOrEmpty((subcategoryName)))
+        isSubcategoryEmpty = false;
+        if(selectedSegmentId != 0)
         {
+            isSelected = true;
+            if (!string.IsNullOrEmpty((subcategoryName)))
+            {
+                // Create a new segment and add it to the list
+                var newSubcategory = new SubcategoryModel { SubCategoryName = subcategoryName, Description = subcategoryDescription, SegmentId = selectedSegmentId };
+                Subcategories.Add(newSubcategory);
 
-            // Create a new segment and add it to the list
-            var newSubcategory = new SubcategoryModel { SubCategoryName = subcategoryName, Description = subcategoryDescription, SegmentId = selectedSegmentId };
-            Subcategories.Add(newSubcategory);
-            await genericSubcategoryManager.AddAsync(newSubcategory);
+                await genericSubcategoryManager.AddAsync(newSubcategory);
 
-            // To display subcategory added successfully
-            isSubcategoryAdded = true;
+                // To display subcategory added successfully
+                isSubcategoryAdded = true;
+                isSubcategoryEmpty = false;
 
+                subcategoryName = "";
+                subcategoryDescription = "";
+            }
+            else
+            {
+                isSubcategoryEmpty = true;
+            }
         }
         else
         {
-            isSubcategoryEmpty = true;
+            isSelected = false;
         }
-        // Clear input fields
-        subcategoryName = "";
-        subcategoryDescription = "";
+
+
     }
 
     private async Task AddQuestion()
     {
-        if (!string.IsNullOrEmpty(question))
+        isQuestionEmpty = false;
+
+        if(selectedSubcategoryId != 0)
         {
+            isSelected = true;
+            if (!string.IsNullOrEmpty(question))
+            {
+                var newQuestion = new QuestionModel { Question = question, Options = options, SubcategoryId = selectedSubcategoryId };
+                Questions.Add(newQuestion);
 
-            var newQuestion = new QuestionModel { Question = question, Options = options, SubcategoryId = selectedSubcategoryId };
-            Questions.Add(newQuestion);
+                await genericQuestionManager.AddAsync(newQuestion);
 
-            await genericQuestionManager.AddAsync(newQuestion);
+                // To display question added successfully
+                isQuestionAdded = true; 
+                isQuestionEmpty = false;
 
-            // To display question added successfully
-            isQuestionAdded = true;
+                question = "";
+                options.Clear();
+            }
+            else
+            {
+                isQuestionEmpty = true;
+            }
         }
         else
         {
-            isQuestionEmpty = true;
+            isSelected = false;
         }
-
-        // Clear input fields
-        question = "";
-        options.Clear();
     }
 
     private async Task AddOption()
     {
         if(option != null)
         {
-            options.Add(option);        
+            options.Add(option);   
+            isOptionsEmpty = false;
         }
         else
         {

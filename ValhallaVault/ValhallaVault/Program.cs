@@ -2,6 +2,7 @@ using Blazored.Modal;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ValhallaVault.CallesMiddleware;
 using ValhallaVault.Client.Pages;
 using ValhallaVault.Components;
 using ValhallaVault.Components.Account;
@@ -170,6 +171,11 @@ else
 
 
 app.UseMiddleware<Middleware>();  // Emelie 
+
+
+app.UseMiddleware<LogURLMiddleware>(); // Calle
+app.UseLogUrl(); // Calle
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
