@@ -7,6 +7,7 @@ using ValhallaVault.Components;
 using ValhallaVault.Components.Account;
 using ValhallaVault.Data;
 using ValhallaVault.Data.Repository;
+using ValhallaVault.EliasMiddleware;
 using ValhallaVault.EmeliesMiddleware;
 using ValhallaVault.Models;
 
@@ -171,6 +172,8 @@ else
 
 app.UseMiddleware<Middleware>();  // Emelie 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<RequestMiddleware>(); // Elias
 
 app.UseStaticFiles();
 app.UseAntiforgery();
