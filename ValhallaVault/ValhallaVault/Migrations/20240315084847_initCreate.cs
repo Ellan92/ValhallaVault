@@ -173,6 +173,28 @@ namespace ValhallaVault.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CompletedSegments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SegmentId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    SubcategoryIds = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompletedSegments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CompletedSegments_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CompletedSubcategories",
                 columns: table => new
                 {
@@ -502,6 +524,11 @@ namespace ValhallaVault.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CompletedSegments_ApplicationUserId",
+                table: "CompletedSegments",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CompletedSubcategories_ApplicationUserId",
                 table: "CompletedSubcategories",
                 column: "ApplicationUserId");
@@ -555,6 +582,9 @@ namespace ValhallaVault.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "CompletedSegments");
 
             migrationBuilder.DropTable(
                 name: "CompletedSubcategories");

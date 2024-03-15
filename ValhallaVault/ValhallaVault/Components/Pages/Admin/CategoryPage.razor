@@ -82,13 +82,13 @@
 		await genericCategoryManager.GetAllAsync();
 	}
 
-	public async Task ShowEditDetails(int selectedCategoryId)
+	public void ShowEditDetails(int selectedCategoryId)
 	{
 		isEditDetailsShown = true;
 
 		categoryId = selectedCategoryId;
 	}
-	public async Task HideEditDetails()
+	public void HideEditDetails()
 	{
 		isEditDetailsShown = false;
 	}
