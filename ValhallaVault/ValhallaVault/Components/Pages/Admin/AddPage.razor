@@ -13,6 +13,8 @@
 @inject GenericRepo<QuestionModel> questionRepo
 @inject GenericManager<CategoryModel> genericCategoryManager
 @inject GenericManager<SegmentModel> genericSegmentManager
+@inject GenericManager<SubcategoryModel> genericSubcategoryManager
+@inject GenericManager<QuestionModel> genericQuestionManager
 @inject CategoryManager categoryManager
 @rendermode InteractiveServer
 
@@ -61,12 +63,13 @@
     <br/>
     <strong class="text-white">Segment Description: </strong><input class="form-control input-lg" type="text" @bind="segmentDescription"></input>
     <br/>
-    <InputSelect @bind-Value="Category.Id">
+            <strong class="text-white">Select a Category:</strong>
+    <select @bind="selectedCategoryId">
                 @foreach(var category in AllCategories)
                 {
-                    <option value="@Category.CategoryName">@category.CategoryName</option>
+                    <option value="@category.Id">@category.CategoryName</option>
                 }
-            </InputSelect>
+            </select>
     <button @onclick="AddSegment" class="btn btn-primary">Add Segment</button>
     <br/>
 
@@ -74,15 +77,12 @@
             {
                 <p class="text-success">Segment added successfully.</p>
             }
-            @*     @if (Segments != null)
-    {
-        <ul>
-            @foreach (var segment in Segments)
+
+            @if (isSelected)
             {
-                 <li class="text-white">@segment.SegmentName</li>
+                <p class="text-success">You need to select a category first.</p>
             }
-        </ul>
-    } *@
+            
     </div>
     </div>
     <div class="flex-row row justify-content-between">
@@ -92,9 +92,24 @@
     <br/>
     <strong class="text-white">Subcategory Description: </strong><input class="form-control input-lg" type="text" @bind="subcategoryDescription"></input>
     <br/>
+    <strong class="text-white">Select a Segment:</strong>
+            <select @bind="selectedSegmentId">
+                <option value="" selected>@selectSegmentPlaceholder</option>
+
+                @foreach (var segment in AllSegments)
+                {
+                    <option value="@segment.Id">@segment.Category.CategoryName : @segment.SegmentName</option>
+                }
+
+            </select>
     <button @onclick="AddSubcategory" class="btn btn-primary">Add Subcategory</button>
     <br/>
-    @if (Subcategories != null)
+    
+            @if (isSubcategoryAdded)
+            {
+                <p class="text-success">Subcategory added successfully.</p>
+            }
+            @*     @if (Subcategories != null)
     {
         <ul>
             @foreach (var subCategory in Subcategories)
@@ -102,23 +117,21 @@
                 <li class="text-white">@subCategory.SubCategoryName</li>
             }
         </ul>
-    }
+    } *@
         </div>
         <div class="col-5">
     <h3 class="text-white display-6">Questions</h3>
     <strong class="text-white">Question Name: </strong><input @bind="question"></input>
     <br/>
-    <button @onclick="AddQuestion" class="btn btn-primary">Add Question</button>
+            <strong class="text-white">Select a Subcategory:</strong>
+            <select @bind="selectedSubcategoryId">
+                @foreach (var subcategory in AllSubcategories)
+                {
+                    <option value="@subcategory.Id">@subcategory.SubCategoryName</option>
+                }
+            </select>
     <br/>
-    @if (Questions != null)
-    {
-        <ul>
-            @foreach (var question in Questions)
-            {
-                <li class="text-white">@question.Question</li>
-            }
-        </ul>
-    }
+
     <br/>
 
     <strong class="text-white">Options: </strong><input @bind="option"></input>
@@ -127,7 +140,7 @@
     <br/>
     @if(options != null)
     {
-        <ul>
+        <ul class="list-unstyled">
         @foreach(string option in options)
         {
             <li class="text-white">@option</li>
@@ -135,10 +148,14 @@
         </ul>
     }
     <br/>
-    </div>
-</div>
-    <button @onclick="SubmitForm" class="btn btn-success btn-lg">Submit</button>
+    <button @onclick="AddQuestion" class="btn btn-primary">Add Question</button>
 
+            @if (isQuestionAdded)
+            {
+                <p class="text-success">Question added successfully.</p>
+            }
+        </div>
+</div>
 </div>
 
 @code {
@@ -147,25 +164,43 @@
     private List<CategoryModel> Categories { get; set; } = new();
     private List<CategoryModel> AllCategories { get; set; } = new();
 
+    private int selectedCategoryId;
+
     private string? categoryName;
     private string? categoryDescription;
 
     private bool isCategoryAdded = false;
 
     private List<SegmentModel> Segments { get; set; } = new();
+    private List<SegmentModel> AllSegments { get; set; } = new();
     private string? segmentName;
     private string? segmentDescription;
+
+    private string? selectCategoryPlaceholder = "Pick a category!";
+    private string? selectSegmentPlaceholder = "Pick a segment!";
+
+    private bool isSelected = false;
+    private bool isSegmentSelected = false;
+
+    private int selectedSegmentId;
 
     private bool isSegmentAdded = false;
 
     private List<SubcategoryModel> Subcategories { get; set; } = new();
+    private List<SubcategoryModel> AllSubcategories { get; set; } = new();
     private string? subcategoryName;
     private string? subcategoryDescription;
+
+    private int selectedSubcategoryId;
+
+    private bool isSubcategoryAdded = false;
 
     private List<QuestionModel> Questions { get; set; } = new();
     private string? question;
     private string? option;
     private List<string> options = new();
+
+    private bool isQuestionAdded = false;
 
     public CategoryModel NewCategory { get; set; } = new();
     public SegmentModel NewSegment { get; set; } = new();
@@ -175,6 +210,8 @@
     protected override async Task OnInitializedAsync()
     {
         AllCategories = await genericCategoryManager.GetAllAsync();
+        AllSegments = await genericSegmentManager.GetAllAsync();
+        AllSubcategories = await genericSubcategoryManager.GetAllAsync();
     }
 
     private async Task HandleSubmit()
@@ -193,9 +230,11 @@
         // Create a new category and add it to the list
         var newCategory = new CategoryModel { CategoryName = categoryName, Description = categoryDescription };
         Categories.Add(newCategory);
-        isCategoryAdded = true;
 
         await genericCategoryManager.AddAsync(newCategory);
+
+        // To display category added successfully
+        isCategoryAdded = true;
 
         // Clear input fields
         categoryName = "";
@@ -205,23 +244,36 @@
 
     private async Task AddSegment()
     {
+        if(selectedCategoryId != 0)
+        {
+            var newSegment = new SegmentModel { SegmentName = segmentName, Description = segmentDescription, CategoryId = selectedCategoryId };
+            Segments.Add(newSegment);
+
+            await genericSegmentManager.AddAsync(newSegment);
+
+            // To display segment added successfully
+            isSegmentAdded = true;
+
+            // Clear input fields
+            segmentName = "";
+            segmentDescription = "";
+        }
+        else
+        {
+            isSelected = false;
+        }
         // Create a new segment and add it to the list
-        var newSegment = new SegmentModel { SegmentName = segmentName, Description = segmentDescription, CategoryId = Category.Id };
-        Segments.Add(newSegment);
-        isSegmentAdded = true;
-
-        await genericSegmentManager.AddAsync(newSegment);
-
-        // Clear input fields
-        segmentName = "";
-        segmentDescription = "";
     }
 
     private async Task AddSubcategory()
     {
         // Create a new segment and add it to the list
-        var newSubcategory = new SubcategoryModel { SubCategoryName = subcategoryName, Description = subcategoryDescription };
+        var newSubcategory = new SubcategoryModel { SubCategoryName = subcategoryName, Description = subcategoryDescription, SegmentId = selectedSegmentId };
         Subcategories.Add(newSubcategory);
+        await genericSubcategoryManager.AddAsync(newSubcategory);
+
+        // To display subcategory added successfully
+        isSubcategoryAdded = true;
 
         // Clear input fields
         subcategoryName = "";
@@ -230,11 +282,17 @@
 
     private async Task AddQuestion()
     {
-        var newQuestion = new QuestionModel { Question = question, Options = options };
+        var newQuestion = new QuestionModel { Question = question, Options = options, SubcategoryId = selectedSubcategoryId };
         Questions.Add(newQuestion);
+
+        await genericQuestionManager.AddAsync(newQuestion);
+
+        // To display question added successfully
+        isQuestionAdded = true;
 
         // Clear input fields
         question = "";
+        options.Clear();
     }
 
     private async Task AddOption()
@@ -243,39 +301,9 @@
         option = "";
     }
 
-    public async Task SubmitForm()
+    private async Task HandleSegmentSelection(ChangeEventArgs e)
     {
-        
+        isSelected = true;
     }
-
-    // private sealed class InputModel
-    // {
-    //     // [Required]
-    //     [Display(Name = "Category Name")]
-    //     public string CategoryName { get; set; } = "";
-
-    //     [Display(Name = "Category Description")]
-    //     public string CategoryDescription { get; set; } = "";
-
-    //     // [SupplyParameterFromForm]
-    //     // public List<SegmentModel> Segments { get; set; } = new();
-
-    //     // [Required]
-    //     [Display(Name = "Segment Name")]
-    //     public string SegmentName { get; set; } = "";
-
-    //     [Display(Name = "Segment Decsription")]
-    //     public string SegmentDescription { get; set; } = "";
-
-    //     // [Required]
-    //     [Display(Name = "Subcategory Name")]
-    //     public string SubcategoryName { get; set; } = "";
-
-    //     [Display(Name = "Subcategory Description")]
-    //     public string SubcategoryDescription { get; set; } = "";
-
-    //     public int SegmentCategoryId { get; set; }
-    // }
-
 
 }

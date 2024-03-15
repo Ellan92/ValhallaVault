@@ -40,6 +40,7 @@
 						<button @onclick="() => UpdateCategory(category)" class="btn btn-outline-light">Update</button>
 						<button @onclick="() => DeleteCategory(category)" class="btn btn-outline-light">Delete</button>
 						<button @onclick="HideEditDetails" class="btn btn-outline-light">Cancel</button>
+
 						@if (isCategoryDeleted)
 						{
 							<p class="bg-danger">Category: @category.CategoryName deleted successfully.</p>
