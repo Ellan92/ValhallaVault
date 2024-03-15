@@ -40,11 +40,9 @@
 
 @code {
 
-    private string? Name { get; set; }
-    private int NumberOfQuestions;
+    private string? Name { get; set; }    
     private List<CategoryModel> Categories { get; set; } = new();
-    private bool ShowCompletionResults =false; 
-    private int CorrectAnswers;
+    private bool ShowCompletionResults =false;    
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren 
     private string searchText = "";
     private List<string> completedSubcategories = new();
