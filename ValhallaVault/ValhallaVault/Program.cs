@@ -7,6 +7,7 @@ using ValhallaVault.Components;
 using ValhallaVault.Components.Account;
 using ValhallaVault.Data;
 using ValhallaVault.Data.Repository;
+using ValhallaVault.EmeliesMiddleware;
 using ValhallaVault.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -168,7 +169,7 @@ else
 }
 
 
-
+app.UseMiddleware<Middleware>();  // Emelie 
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
