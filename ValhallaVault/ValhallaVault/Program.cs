@@ -191,4 +191,48 @@ app.MapAdditionalIdentityEndpoints();
 
 app.MapControllers();
 
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Farre
+//Farres Middleware 
+//källor:
+//https://www.youtube.com/watch?v=2Gv71TvkroI
+//https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-8.0
+//https://www.tutorialsteacher.com/core/aspnet-core-middleware
+
+// finns tre metoder som man kan configuera request.
+// -run
+//vet inget om nästa middleware och används för att executa. end of pipeline
+// -use 
+// används vid använding av flera middlewares.
+// -Map
+//Uppfattar det som att när en request görs så jämför den med den angivna vägen.
+
+//
+app.Map("/Farre", name =>
+{
+    name.Run(async context =>
+    {
+        await context.Response.WriteAsync("Du har skrivit in Farre i HTTP req.");
+    });
+    //Om man skriver Farre så kommer det visa "Du har skrivit in Farre i HTTP req."
+});
+
+
+//Använder flera middlewares. för att visa "This is a Middleware"
+app.Use(async (context, next) =>
+{
+    Console.WriteLine("före en HTTP förfrågan");
+    await next();
+    Console.WriteLine("Efter HTTP förfrågan");
+});
+
+//en enkel Middleware - end of pipeline
+//app.Run(async context =>
+//{
+    
+//    await context.Response.WriteAsync("This is a Middleware");
+//});
+
+//============================================================================ Farre
+
+
 app.Run();
