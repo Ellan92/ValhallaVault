@@ -63,18 +63,18 @@
 
 @code {
 
-    public int NumberOfSubcategories { get; set; }
-    public SegmentModel? chosenSegment { get; set; }
+    private int NumberOfSubcategories { get; set; }
+    private SegmentModel? chosenSegment { get; set; }
     List<(int, int, int)> UserCompletionIds = new List<(int, int, int)>();
     List<(int, int, int)> AllCompletionIds = new List<(int, int, int)>();
-    public List<CompletedSubcategoryModel> CompletedSubcategories = new();
-    public string? Name { get; set; }
+    private List<CompletedSubcategoryModel> CompletedSubcategories = new();
+    private string? Name { get; set; }
     private AuthenticationState? State; // representerar autentiseringsstatusen för användaren
-    public int chosenCategory { get; set; }
-    public List<SubcategoryModel> OpenSubcategories { get; set; } = new();
-    public List<SubcategoryModel> ClosedSubcategories { get; set; } = new();
-    public ApplicationUser? LoggedInUser;
-    public string CompletionMessage = "";
+    private int chosenCategory { get; set; }
+    private List<SubcategoryModel> OpenSubcategories { get; set; } = new();
+    private List<SubcategoryModel> ClosedSubcategories { get; set; } = new();
+    private ApplicationUser? LoggedInUser;
+    private string CompletionMessage = "";
 
     [Parameter]
     public int segmentId { get; set; }

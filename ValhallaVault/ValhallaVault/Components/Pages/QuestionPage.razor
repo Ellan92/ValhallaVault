@@ -177,18 +177,17 @@
         {
             Subcategory = subcategory; 
 
-            // Hämta segmentet 
+            // Hämta segmentet som vald subkategori tillhör 
             int segmentid = subcategory.SegmentId;
             SegmentId = segmentid;
         }
 
-        // Ladda in alla frågor 
+        // Ladda in alla frågor om inga är hämtade än
         if (Questions.Count == 0)
         {
             await LoadQuestionsAsync();
         }
-
-        NumberOfQuestions = Questions.Count;
+        NumberOfQuestions = Questions.Count; // Räkna antalet frågor. 
     }
 
 
@@ -201,7 +200,7 @@
         {
             foreach (var question in allQuestionsInSubcategory)
             {
-                // Lägg till alla frågor från subkategorin
+                // Lägg till alla frågor
                 QuestionViewModel questionViewmodel = factory.CreateQuestionViewModel(question);
                 Questions.Add(questionViewmodel);
             }
@@ -219,7 +218,6 @@
 
         if (findtheUser != null)
         {
-
           // Skapa en ny completedSubcategory
             CompletedSubcategoryModel completedSubcategory = new CompletedSubcategoryModel
                     {
@@ -254,7 +252,6 @@
             {
                 // Lägg till en ny CompletedCategory
                  await AddSubcategoryCompletionToUser();
-
             }
 
             Questions.Clear();
