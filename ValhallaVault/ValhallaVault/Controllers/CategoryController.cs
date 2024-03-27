@@ -21,10 +21,9 @@ namespace ValhallaVault.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CategoryModel>>> GetAllResponses()
+        public async Task<ActionResult<List<CategoryModel>>> GetAllCategorys()
         {
             var responses = await _repo.GetAllAsync();
-
             return Ok(responses);
         }
 

@@ -8,6 +8,6 @@ namespace ValhallaVault.Models
         public int Id { get; set; }
         public string? CategoryName { get; set; }
         public string? Description { get; set; }
-        public List<SegmentModel> Segments { get; set; } = null!; // one-to-many med segments
+        public List<SegmentModel>? Segments { get; set; } // one-to-many med segments
     }
 }
