@@ -23,7 +23,6 @@ namespace ValhallaVault.Controllers
         public async Task<ActionResult<List<QuestionModel>>> GetAllQuestions()
         {
             var responses = await _repo.GetAllAsync();
-
             return Ok(responses);
         }
 
