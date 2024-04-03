@@ -130,9 +130,9 @@
 
     [Parameter]
     public int segmentId { get; set; }
-  
+
     public SubcategoryModel Subcategory { get; set; }
-  
+
     private int index;
 
     private int Points = 0;
@@ -218,7 +218,7 @@
 
         if (findtheUser != null)
         {
-          // Skapa en ny completedSubcategory
+            // Skapa en ny completedSubcategory
             CompletedSubcategoryModel completedSubcategory = new CompletedSubcategoryModel
             {
                ApplicationUser = findtheUser,
@@ -227,12 +227,12 @@
                SegmentId = SegmentId
            };
 
-           // Lägg till i användarens lista
-           findtheUser.CompletedSubcategories.Add(completedSubcategory);
+            // Lägg till i användarens lista
+            findtheUser.CompletedSubcategories.Add(completedSubcategory);
             passOrNot = "Grattis! Du blev godkänd i denna subkategori. ";
 
-                // Spara i databasen
-                await genericUserManager.CompleteAsync();
+            // Spara i databasen
+            await genericUserManager.CompleteAsync();
 
         }
     }
@@ -251,7 +251,7 @@
             if (UserPassedSubcategory)
             {
                 // Lägg till en ny CompletedCategory
-                 await AddSubcategoryCompletionToUser();
+                await AddSubcategoryCompletionToUser();
             }
 
             Questions.Clear();
@@ -259,7 +259,6 @@
             StateHasChanged(); // Tvinga en uppdatering av komponenten
         }
     }
-
 
     private async Task HandleOptionClick(QuestionViewModel question, string chosenOption)
     {
@@ -295,7 +294,6 @@
             }
 
             await genericResultManager.CompleteAsync();
-
             State = await AuthenticationProvider.GetAuthenticationStateAsync();
             var user = State.User;
             UserName = user.Identity.Name;
