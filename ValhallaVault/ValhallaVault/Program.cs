@@ -97,7 +97,7 @@ builder.Services.AddCors(options =>
 });
 
 
-using (ServiceProvider sp = builder.Services.BuildServiceProvider())
+/*using (ServiceProvider sp = builder.Services.BuildServiceProvider())
 {
 
     var context = sp.GetRequiredService<ApplicationDbContext>();
@@ -147,7 +147,7 @@ using (ServiceProvider sp = builder.Services.BuildServiceProvider())
         // Tilldela adminrollen till den nya användaren
         signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
     }
-}
+}*/
 
 
 builder.Services.AddBlazoredModal();
@@ -231,7 +231,7 @@ app.Use(async (context, next) =>
 //en enkel Middleware - end of pipeline
 //app.Run(async context =>
 //{
-    
+
 //    await context.Response.WriteAsync("This is a Middleware");
 //});
 

@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc;
-
-//namespace ValhallaVault.Models
+﻿//namespace ValhallaVault.Models
 //{
 //    public class LogoutModel : PageModel
 //    {
 //           [IgnoreAntiforgeryToken]
-       
+
 //            private readonly SignInManager<IdentityUser> _signInManager;
 //            private readonly ILogger<LogoutModel> _logger;
 
@@ -33,7 +29,7 @@ using Microsoft.AspNetCore.Mvc;
 //                //}
 //                return Redirect("/");
 //            }
-        
+
 
 //    }
 //}

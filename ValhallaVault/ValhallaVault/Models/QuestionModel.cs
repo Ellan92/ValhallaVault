@@ -13,7 +13,6 @@ namespace ValhallaVault.Models
         public int SubcategoryId { get; set; }  // one-to-many med SubcategoryModel
         public SubcategoryModel SubCategory { get; set; }
         // one-to-many med SubcategoryModel
-
         public List<ResultModel> Results { get; set; } // one-to-many med Resultmodel
     }
 }

@@ -15,6 +15,14 @@ namespace ValhallaVault.Data
         public DbSet<CompletedSubcategoryModel> CompletedSubcategories { get; set; }
         public DbSet<CompletedSegmentModel> CompletedSegments { get; set; }
 
+        // Parameterlös konstruktor för Moq
+        // Parameterlös konstruktor för Moq
+        public ApplicationDbContext()
+            : this(new DbContextOptions<ApplicationDbContext>())
+        {
+        }
+
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

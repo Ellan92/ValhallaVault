@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValhallaVault", "ValhallaVa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValhallaVault.Client", "ValhallaVault\ValhallaVault.Client\ValhallaVault.Client.csproj", "{DF7D460D-EF5F-48AE-A6A4-13E97346A496}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValhallaTest", "ValhallaTest\ValhallaTest.csproj", "{D92CDCD6-9E41-46D1-BF6F-A35CD4A4D716}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DF7D460D-EF5F-48AE-A6A4-13E97346A496}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF7D460D-EF5F-48AE-A6A4-13E97346A496}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF7D460D-EF5F-48AE-A6A4-13E97346A496}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D92CDCD6-9E41-46D1-BF6F-A35CD4A4D716}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D92CDCD6-9E41-46D1-BF6F-A35CD4A4D716}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D92CDCD6-9E41-46D1-BF6F-A35CD4A4D716}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D92CDCD6-9E41-46D1-BF6F-A35CD4A4D716}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
