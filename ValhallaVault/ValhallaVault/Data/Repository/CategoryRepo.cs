@@ -41,6 +41,7 @@
             }
         }
 
+        // Virtuella varianter av metoderna för att kunna göra testning. 
 
         public virtual async Task VirtualUpdateCategoryDescriptionAsync(int categoryId, string newDescription)
         {

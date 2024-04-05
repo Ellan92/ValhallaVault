@@ -28,6 +28,23 @@ namespace ValhallaVault.Data.Repository
                 .Where(cs => cs.CategoryId == categoryId && cs.SegmentId == segmentId && cs.ApplicationUserId == userId)
                 .FirstOrDefaultAsync();
         }
+
+        // Gör metoden virtuell
+        public virtual async Task<List<CompletedSegmentModel>> VirtualGetCompletedSegmentsByUserIdAsync(string userId)
+        {
+            return await _context.CompletedSegments
+               .Where(c => c.ApplicationUserId == userId)
+               .ToListAsync();
+        }
+
+        // Gör även denna metoden virtuell
+        public virtual async Task<CompletedSegmentModel?> VirtualGetExistingCompletedSegmentAsync(int categoryId, int segmentId, string userId)
+        {
+            return await _context.CompletedSegments
+                .Include(cs => cs.ApplicationUser)
+                .Where(cs => cs.CategoryId == categoryId && cs.SegmentId == segmentId && cs.ApplicationUserId == userId)
+                .FirstOrDefaultAsync();
+        }
     }
 }
 
