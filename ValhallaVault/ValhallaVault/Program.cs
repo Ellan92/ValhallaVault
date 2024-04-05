@@ -149,6 +149,10 @@ using (ServiceProvider sp = builder.Services.BuildServiceProvider())
     }
 }
 
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN"; // Använd samma namn som i din klientkod
+});
 
 builder.Services.AddBlazoredModal();
 
@@ -182,18 +186,29 @@ app.UseHttpsRedirection();
 app.UseMiddleware<RequestMiddleware>(); // Elias
 
 app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
 app.UseAntiforgery();
+
+
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Auth).Assembly);
 
+
+
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
 
+
 app.MapControllers();
 
+app.UseCors("AllowAll");
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Farre
 //Farres Middleware 
 //källor:
@@ -231,7 +246,7 @@ app.Use(async (context, next) =>
 //en enkel Middleware - end of pipeline
 //app.Run(async context =>
 //{
-    
+
 //    await context.Response.WriteAsync("This is a Middleware");
 //});
 

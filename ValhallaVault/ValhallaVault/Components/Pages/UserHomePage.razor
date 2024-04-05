@@ -1,4 +1,5 @@
 ﻿@page "/Homepage"
+@using Microsoft.AspNetCore.Mvc
 @using ValhallaVault.Data
 @using ValhallaVault.Models
 @using Microsoft.AspNetCore.Authorization
@@ -55,6 +56,7 @@
         ShowCompletionResults = !ShowCompletionResults;
     }
 
+    [IgnoreAntiforgeryToken]
     protected async override Task OnInitializedAsync()
     {
         // Hämta alla kategorier

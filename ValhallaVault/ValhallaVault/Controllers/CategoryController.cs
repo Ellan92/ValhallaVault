@@ -46,6 +46,7 @@ namespace ValhallaVault.Controllers
         {
             if (newCategory != null)
             {
+
                 await _repo.AddAsync(newCategory);
                 return Ok();
             }
@@ -68,14 +69,16 @@ namespace ValhallaVault.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateCategory(int categoryId, string newCategoryText)
+        public async Task<ActionResult<CategoryModel>> UpdateCategory(CategoryModel categoryModel)
         {
-            if (newCategoryText != null)
+            if (categoryModel != null)
             {
-                await _categoryRepo.UpdateCategoryDescriptionAsync(categoryId, newCategoryText);
+                await _categoryRepo.UpdateCategoryAsync(categoryModel);
                 return Ok();
             }
             return BadRequest();
         }
+
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ValhallaVault.Data.Repository;
+using ValhallaVault.Models;
 namespace ValhallaVault.Managers
 {
     public class CategoryManager
@@ -9,14 +10,11 @@ namespace ValhallaVault.Managers
         {
             _categoryRepo = categoryRepo;
         }
-        public async Task UpdateCategoryDescriptionAsync(int categoryId, string newDescription)
-        {
-            await _categoryRepo.UpdateCategoryDescriptionAsync(categoryId, newDescription);
-        }
 
-        public async Task UpdateCategoryNameAsync(int categoryId, string newCategoryName)
+
+        public async Task UpdateCategoryAsync(CategoryModel categoryModel)
         {
-            await _categoryRepo.UpdateCategoryNameAsync(categoryId, newCategoryName);
+            await _categoryRepo.UpdateCategoryAsync(categoryModel);
         }
     }
 }
