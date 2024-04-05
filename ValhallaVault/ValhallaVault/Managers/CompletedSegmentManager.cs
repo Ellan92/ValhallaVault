@@ -24,6 +24,18 @@ namespace ValhallaVault.Managers
             return await _completedSegmentRepo.GetExistingCompletedSegmentAsync(categoryId, segmentId, userId);
         }
 
+        // Gör metoden virtuell
+        public virtual async Task<List<CompletedSegmentModel>> VirtualGetCompletedSegmentsByUserId(string userId)
+        {
+            var segments = await _completedSegmentRepo.VirtualGetCompletedSegmentsByUserIdAsync(userId);
+            return segments;
+        }
+
+        // Gör även denna metoden virtuell
+        public virtual async Task<CompletedSegmentModel?> VirtualGetExistingCompletedSegmentAsync(int categoryId, int segmentId, string userId)
+        {
+            return await _completedSegmentRepo.VirtualGetExistingCompletedSegmentAsync(categoryId, segmentId, userId);
+        }
 
 
     }
