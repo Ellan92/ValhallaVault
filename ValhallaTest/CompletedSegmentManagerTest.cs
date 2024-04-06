@@ -11,7 +11,7 @@ namespace ValhallaTest
         [Fact]
         public async Task GetCompletedSegmentsByUserId_ReturnsSegmentsForUser()
         {
-            // Arrange
+            // Arrange.
             string userId = "user-id";
             var mockRepo = new Mock<CompletedSegmentRepo>(MockBehavior.Strict, new Mock<ApplicationDbContext>().Object);
             mockRepo.Setup(repo => repo.VirtualGetCompletedSegmentsByUserIdAsync(userId))
