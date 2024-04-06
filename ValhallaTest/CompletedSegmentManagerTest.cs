@@ -1,14 +1,12 @@
 ﻿
+using Moq;
+using ValhallaVault.Data;
+using ValhallaVault.Data.Repository;
+using ValhallaVault.Managers;
+using ValhallaVault.Models;
 
 namespace ValhallaTest
 {
-    using Moq;
-    using ValhallaVault.Data;
-    using ValhallaVault.Data.Repository;
-    using ValhallaVault.Managers;
-    using ValhallaVault.Models;
-
-
     public class CompletedSegmentManagerTest
     {
         [Fact]
