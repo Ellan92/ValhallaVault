@@ -1,0 +1,77 @@
+﻿@page "/Homepage"
+@using ValhallaVault.Data
+@using ValhallaVault.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@inject AuthenticationStateProvider AuthenticationProvider
+@inject ValhallaVault.Managers.UserManager usermanager
+@inject ValhallaVault.Managers.GenericManager<CategoryModel> categoryManager
+@inject ValhallaVault.Managers.GenericManager<SegmentModel> segmentManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject ValhallaVault.Managers.QuestionManager questionmanager
+@inject ValhallaVault.Managers.CompletedSubcategoryManager completedSubcategoryManager
+@inject ValhallaVault.Managers.GenericManager<QuestionModel> genericQuestionManager
+@inject ValhallaVault.Managers.GenericManager<SubcategoryModel> genericSubcategoryManager
+@rendermode InteractiveServer
+@attribute [Authorize]
+<PageTitle>UserPage</PageTitle>
+
+<div class="mt-5 font-monospace" style="background-color: rgba(0, 15, 89, 0.71); padding: 4%;">
+    <h4 class="text-white font-monospace">Välkommen, @Name</h4>
+</div>
+
+
+
+
+<div class="row">
+    <div class="col text-center">
+        <h2 class="font-monospace">Välj en kategori:</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="btn-group-vertical w-100" role="group">
+        @foreach (var category in Categories)
+        {
+            <a href="@($"CategoryPage/{category.Id}")" class="btn btn-success btn-lg btn-block mb-3">@category.CategoryName</a>
+        }
+    </div>
+</div>
+
+
+@code {
+
+    private string? Name { get; set; }
+    private List<CategoryModel> Categories { get; set; } = new();
+    private bool ShowCompletionResults = false;
+    private AuthenticationState? State; // representerar autentiseringsstatusen för användaren
+    private string searchText = "";
+    private List<string> completedSubcategories = new();
+    private int Percentage;
+    private List<CompletedSubcategoryModel> CompletedSubcategories = new();
+
+
+    private void ToggleCompletionVisibility()
+    {
+        ShowCompletionResults = !ShowCompletionResults;
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        // Hämta alla kategorier
+        var categories = await categoryManager.GetAllAsync();
+        if (categories != null && categories.Any())
+        {
+            Categories = categories;
+        }
+
+        // Hämta inloggad användare
+        State = await AuthenticationProvider.GetAuthenticationStateAsync();
+        var user = State.User;
+        Name = user.Identity.Name;
+
+
+
+
+    }
+}
+
