@@ -1,0 +1,16 @@
+import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
+
+Given('I am on the welcomepage', () => {
+  // TODO: implement step
+});
+
+Then('I see the following elements:', () => {
+  // TODO: implement step
+});
+
+/* No duplicate steps, this one already in Login.js
+When('I click the login button', () => {});*/
+
+Then('I should be redirected to the login page', () => {
+  // TODO: implement step
+});
