@@ -149,6 +149,7 @@ builder.Services.AddCors(options =>
     }
 }*/
 
+builder.Services.AddAntiforgery(options => { options.Cookie.Expiration = TimeSpan.Zero; });
 
 builder.Services.AddBlazoredModal();
 

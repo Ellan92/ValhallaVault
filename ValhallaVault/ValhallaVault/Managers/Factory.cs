@@ -86,6 +86,18 @@ namespace ValhallaVault.Managers
             };
             return modelQuestion;
         }
+
+
+        public SubcategoryModel CreateSubcategory(SubcategoryModel subcategories)
+        {
+            SubcategoryModel subcategory = new SubcategoryModel
+            {
+                Id = subcategories.Id,
+                SubCategoryName = subcategories.SubCategoryName
+            };
+            return subcategory;
+        }
+
     }
 }
 
