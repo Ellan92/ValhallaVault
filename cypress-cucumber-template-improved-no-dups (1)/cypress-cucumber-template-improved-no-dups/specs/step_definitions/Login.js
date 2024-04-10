@@ -1,13 +1,17 @@
 import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
+import '../../cypress/support/commands'
 
 Given('I am on the login page', () => {
   cy.visit("/account/login");
 });
 
 When('I enter the correct email and password', () => {
-  // Ange korrekt e-post och lösenord
+  /* loggar in manuellt dvs utan ett command: 
   cy.get('input[placeholder="name@example.com"]').type('user@mail.com');
-  cy.get('input[placeholder="password"]').type('Password1234!');
+  cy.get('input[placeholder="password"]').type('Password1234!'); */
+
+  // gör samma sak fast med ett command:
+    cy.login('user@mail.com', 'Password1234!');
 });
 
 When('I click the login button to log in', () => {
