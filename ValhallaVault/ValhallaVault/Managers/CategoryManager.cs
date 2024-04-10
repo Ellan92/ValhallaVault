@@ -10,8 +10,8 @@ namespace ValhallaVault.Managers
         {
             _categoryRepo = categoryRepo;
         }
-      
-      public async Task UpdateCategoryAsync(CategoryModel categoryModel)
+
+        public async Task UpdateCategoryAsync(CategoryModel categoryModel)
         {
             await _categoryRepo.UpdateCategoryAsync(categoryModel);
         }
@@ -21,7 +21,7 @@ namespace ValhallaVault.Managers
         {
             try
             {
-                await _categoryRepo.UpdateCategoryDescriptionAsync(categoryId, newDescription);
+                await _categoryRepo.VirtualUpdateCategoryDescriptionAsync(categoryId, newDescription);
             }
             catch (Exception ex)
             {

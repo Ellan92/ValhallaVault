@@ -1,45 +1,69 @@
+using ValhallaVault.Managers;
+using ValhallaVault.Models;
+
 namespace TestValhallaVault
 {
     public class UnitTest1
     {
-        //private SubcategoryModel? subcategoryModel = new();
+        private readonly GenericManager<SubcategoryModel> _genericSubcategoryManager;
+        private readonly GenericManager<SegmentModel> _genericSegmentManager;
+        public int LimitToPassSubcategory(SubcategoryModel subcategory)
+        {
+            int numberOfQuestions = subcategory.Questions.Count;
+            double limit = numberOfQuestions * 0.85;
+            int roundedToNearestInt = (int)Math.Round(limit); // antalet frågor man måste ha rätt på för att passera subkategorin.
+            return roundedToNearestInt;
+        }
 
-        //[Fact]
+        public bool UserPassedSubcategory(SubcategoryModel subcategory, int numberOfCorrectAnswers)
+        {
+            int minimumCorrectAnswers = LimitToPassSubcategory(subcategory);
+            if (numberOfCorrectAnswers < minimumCorrectAnswers)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
 
-        //public void TestLimitToPassSubcategory()
-        //{
-        //    // Arrange
-        //    var subcategory = new SubcategoryModel();
-        //    subcategory.Questions = new List<QuestionModel>(); // Lägg till några frågor för att testa
 
-        //    // Skapa en instans av klassen som innehåller metoden
-        //    var classUnderTest = new TestUserPassedSubcategory();
 
-        //    // Act
-        //    var result = classUnderTest.LimitToPassSubcategory(subcategory);
+        [Fact]
+        public void LimitToPassSubcategory_ReturnsCorrectValue()
+        {
+            // Arrange
+            var subcategory = new SubcategoryModel();
+            subcategory.Questions = new List<QuestionModel>();
 
-        //    // Assert
-        //    Assert.Equal(expectedResult, result); // Ersätt "expectedResult" med det förväntade resultatet från metoden
-        //}
+            var expected = (int)Math.Round(subcategory.Questions.Count * 0.85);
+            CompletionManager completionManager = new(_genericSubcategoryManager, _genericSegmentManager);
 
-        //[Theory]
-        //[InlineData(true, 10)] // Förväntat värde true om antalet rätt svar är tillräckligt för att passera subkategorin
-        //[InlineData(false, 5)] // Förväntat värde false om antalet rätt svar inte är tillräckligt för att passera subkategorin
-        //public void TestUserPassedSubcategory(bool expectedResult, int numberOfCorrectAnswers)
-        //{
-        //    // Arrange
-        //    var subcategory = new SubcategoryModel();
-        //    subcategory.Questions = new List<QuestionModel>(); // Lägg till några frågor för att testa
+            // Act
+            var actual = completionManager.LimitToPassSubcategory(subcategory);
 
-        //    // Skapa en instans av klassen som innehåller metoden
-        //    var classUnderTest = new YourClassContainingMethod();
+            // Assert
+            Assert.Equal(expected, actual);
+        }
 
-        //    // Act
-        //    var result = classUnderTest.UserPassedSubcategory(subcategory, numberOfCorrectAnswers);
+        [Theory]
+        [InlineData(6, 3, false)]
+        [InlineData(6, 4, true)]
+        public void UserPassedSubcategory_ReturnsCorrectResult(int totalQuestions, int correctAnswers, bool expected)
+        {
+            // Arrange
+            var subcategory = new SubcategoryModel();
+            subcategory.Questions = new List<QuestionModel>();
 
-        //    // Assert
-        //    Assert.Equal(expectedResult, result); // Kontrollera om användaren passerade subkategorin korrekt
-        //}
+            CompletionManager completionManager = new(_genericSubcategoryManager, _genericSegmentManager);
+
+            // Act
+            var actual = completionManager.UserPassedSubcategory(subcategory, correctAnswers);
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
 
     }
 }
