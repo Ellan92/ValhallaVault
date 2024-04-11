@@ -97,7 +97,7 @@ builder.Services.AddCors(options =>
 });
 
 
-/*using (ServiceProvider sp = builder.Services.BuildServiceProvider())
+using (ServiceProvider sp = builder.Services.BuildServiceProvider())
 {
 
     var context = sp.GetRequiredService<ApplicationDbContext>();
@@ -147,7 +147,8 @@ builder.Services.AddCors(options =>
         // Tilldela adminrollen till den nya användaren
         signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
     }
-}*/
+}
+
 
 builder.Services.AddAntiforgery(options =>
 {

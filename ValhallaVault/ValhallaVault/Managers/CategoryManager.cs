@@ -17,18 +17,18 @@ namespace ValhallaVault.Managers
         }
 
 
-        public async Task UpdateCategoryDescriptionAsync(int categoryId, string newDescription)
-        {
-            try
-            {
-                await _categoryRepo.UpdateCategoryDescriptionAsync(categoryId, newDescription);
-            }
-            catch (Exception ex)
-            {
-                // Anpassa här hur du vill hantera exceptionen när kategorin inte hittas
-                throw new Exception("Failed to update category description.", ex);
-            }
-        }
+        //public async Task UpdateCategoryDescriptionAsync(int categoryId, string newDescription)
+        //{
+        //    try
+        //    {
+        //        await _categoryRepo.UpdateCategoryDescriptionAsync(categoryId, newDescription);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Anpassa här hur du vill hantera exceptionen när kategorin inte hittas
+        //        throw new Exception("Failed to update category description.", ex);
+        //    }
+        //}
 
 
         public virtual async Task VirtualUpdateCategoryDescriptionAsync(int categoryId, string newDescription)

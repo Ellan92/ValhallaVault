@@ -11,6 +11,16 @@ namespace ValhallaVault.Data.Repository
         {
             _context = context;
         }
+        public async Task <List<SubcategoryModel>> GetAllSubcategories()
+        {
+           return await _context.Subcategories.ToListAsync();
+
+        }
+
+        public async Task <SubcategoryModel?> GetSubcategoryById(int id)
+        {
+            return await _context.Subcategories.FirstOrDefaultAsync(sub => sub.Id == id);
+        }
 
         public async Task<List<SubcategoryModel>> GetSubcategoriesBySegmentIdAsync(int segmentId)
         {
@@ -50,6 +60,31 @@ namespace ValhallaVault.Data.Repository
             {
                 throw new Exception("Subcategory not found.");
             }
+        }
+
+        //public async Task Fake(int subcategoryId, string subcategoryDescription)
+        //{
+        //    var subcategory = await _context.Subcategories.FindAsync(subcategoryId);
+
+        //    if (subcategory != null)
+        //    {
+        //        subcategory.Id = subcategoryId;
+        //        subcategory.SubCategoryName = subcategoryDescription;
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    else
+        //    {
+        //        throw new Exception("subcategory not found.");
+        //    }
+        //}
+
+        public async Task<List<SubcategoryModel>> FakeGetSubcategory(int segmentId)
+        {
+            var subcategories = await _context.Subcategories
+                .Where(s => s.SegmentId == segmentId)
+                .ToListAsync();
+
+            return subcategories;
         }
     }
 }
