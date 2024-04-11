@@ -11,15 +11,15 @@ using ValhallaVault.Models;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Reflection.Metadata.BlobBuilder;
 
-namespace ValhallaTest
+namespace ValhallaTest.FarresTest
 {
     //Farre
-    public  class SubcategoryRepoTest
+    public class SubcategoryRepoTest
     {
 
         private readonly SubcategoryRepo _subcategoryRepo;
         private readonly ApplicationDbContext _dbContext;
-        private readonly GenericRepo <SubcategoryModel> _genericRepo;
+        private readonly GenericRepo<SubcategoryModel> _genericRepo;
 
         //this is a constructor
         //sets up the test environment
@@ -45,8 +45,8 @@ namespace ValhallaTest
             int expectedSubcategories = 45;
             //Act
             var actualSubcategoriesCount = await _subcategoryRepo.GetAllSubcategories();
-           //Assert
-           Assert.Equal(expectedSubcategories, actualSubcategoriesCount.Count);
+            //Assert
+            Assert.Equal(expectedSubcategories, actualSubcategoriesCount.Count);
 
         }
 
@@ -92,7 +92,7 @@ namespace ValhallaTest
             // Add a test subcategory
             var subcategory = new SubcategoryModel { Id = 1, SubCategoryName = "OldSubcategoryName" };
 
-            
+
             var subcategoryRepo = new SubcategoryRepo(_dbContext);
 
             // Act
