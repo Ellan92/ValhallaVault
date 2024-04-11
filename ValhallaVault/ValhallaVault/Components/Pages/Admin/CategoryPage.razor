@@ -94,8 +94,8 @@
 	}
 	public async Task UpdateCategory(CategoryModel categoryToUpdate)
 	{
-		await categoryManager.UpdateCategoryNameAsync(categoryId, categoryName);
-		await categoryManager.UpdateCategoryDescriptionAsync(categoryId, categoryDescription);
+		await categoryManager.UpdateCategoryAsync(categoryToUpdate);
+		
 	}
 	public async Task DeleteCategory(CategoryModel categoryToDelete)
 	{

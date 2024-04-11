@@ -1,0 +1,357 @@
+{
+	"info": {
+		"_postman_id": "3941ddcf-e8cb-4a7b-8eb9-48dca16fa784",
+		"name": "Valhalla Vault API Calle",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33871208"
+	},
+	"item": [
+		{
+			"name": "GET ALL CATEGORIES",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Att skydda sig mot bedrägerier\");\r",
+							"});\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Request has all properties\", function () {\r",
+							"    var categories = pm.response.json();\r",
+							"    for(let category of categories)\r",
+							"    {\r",
+							"    pm.expect(category).to.have.all.keys(\"id\",\r",
+							"     \"categoryName\", \"description\", \"segments\")\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7214/api/Category/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7214",
+					"path": [
+						"api",
+						"Category",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST CATEGORY",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Response time is less than 200ms', function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"})",
+							"",
+							"pm.test('Successful POST request', function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([",
+							"        200,",
+							"        201,",
+							"        202",
+							"    ]);",
+							"})",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{      \r\n    \"categoryName\": \"New Category\",\r\n    \"description\": \"New Category Desc\",\r\n    \"segments\": []\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7214/api/Category",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7214",
+					"path": [
+						"api",
+						"Category"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET BY ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7214/api/Category/4",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7214",
+					"path": [
+						"api",
+						"Category",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT CATEGORY",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is empty\", function () {\r",
+							"    pm.expect(pm.response.text()).to.be.empty\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 4,\r\n  \"categoryName\": \"Updated Category\",\r\n  \"description\": \"Updated Category Desc\"\r\n  \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7214/api/Category",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7214",
+					"path": [
+						"api",
+						"Category"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET BY ID Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7214/api/Category/4",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7214",
+					"path": [
+						"api",
+						"Category",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE CATEGORY",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7214/api/Category/4",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7214",
+					"path": [
+						"api",
+						"Category",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET ALL CATEGORIES Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Att skydda sig mot bedrägerier\");\r",
+							"});\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Request has all properties\", function () {\r",
+							"    var categories = pm.response.json();\r",
+							"    for(let category of categories)\r",
+							"    {\r",
+							"    pm.expect(category).to.have.all.keys(\"id\",\r",
+							"     \"categoryName\", \"description\", \"segments\")\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7214/api/Category/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7214",
+					"path": [
+						"api",
+						"Category",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

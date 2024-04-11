@@ -66,15 +66,33 @@ namespace ValhallaVault.Controllers
             return NoContent();
         }
 
+        //[HttpPut]
+        //public async Task<IActionResult> UpdateSubCategory(int segmentId, string newSubcategoryText)
+        //{
+        //    if (newSubcategoryText != null)
+        //    {
+        //        await _subcategoryRepo.UpdateSubcategoryDescriptionAsync(segmentId, newSubcategoryText);
+        //        return Ok();
+        //    }
+        //    return BadRequest();
+        //}
+
+
+        //update subcategory name
+
         [HttpPut]
-        public async Task<IActionResult> UpdateSubCategory(int segmentId, string newSubcategoryText)
+        public async Task<IActionResult> UpdateSubCategoryName(int subcategoryId, string newSubcategoryText)
         {
             if (newSubcategoryText != null)
             {
-                await _subcategoryRepo.UpdateSubcategoryDescriptionAsync(segmentId, newSubcategoryText);
+                await _subcategoryRepo.UpdateSubcategoryNameAsync(subcategoryId, newSubcategoryText);
                 return Ok();
             }
             return BadRequest();
         }
+
+
+
+
     }
 }
