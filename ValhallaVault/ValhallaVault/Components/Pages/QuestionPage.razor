@@ -247,7 +247,7 @@
         }
         else if (answeredQuestions == NumberOfQuestions)
         {
-            bool UserPassedSubcategory = completionmanager.UserPassedSubcategory(Subcategory, Points);
+            bool UserPassedSubcategory = completionmanager.UserPassedSubcategory(Subcategory, Points, ResultIsVisible);
             if (UserPassedSubcategory)
             {
                 // Lägg till en ny CompletedCategory

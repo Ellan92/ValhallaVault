@@ -12,7 +12,7 @@ using ValhallaVault.Data;
 namespace ValhallaVault.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240405122434_initCreate")]
+    [Migration("20240411123627_initCreate")]
     partial class initCreate
     {
         /// <inheritdoc />
