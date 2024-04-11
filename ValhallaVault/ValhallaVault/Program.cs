@@ -97,7 +97,7 @@ builder.Services.AddCors(options =>
 });
 
 
-/*using (ServiceProvider sp = builder.Services.BuildServiceProvider())
+using (ServiceProvider sp = builder.Services.BuildServiceProvider())
 {
 
     var context = sp.GetRequiredService<ApplicationDbContext>();
@@ -147,9 +147,13 @@ builder.Services.AddCors(options =>
         // Tilldela adminrollen till den nya anvÃ¤ndaren
         signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
     }
-}*/
+}
 
-builder.Services.AddAntiforgery(options => { options.Cookie.Expiration = TimeSpan.Zero; });
+
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN"; // Använd samma namn som i din klientkod
+});
 
 builder.Services.AddBlazoredModal();
 
@@ -183,18 +187,29 @@ app.UseHttpsRedirection();
 app.UseMiddleware<RequestMiddleware>(); // Elias
 
 app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
 app.UseAntiforgery();
+
+
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Auth).Assembly);
 
+
+
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
 
+
 app.MapControllers();
 
+app.UseCors("AllowAll");
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Farre
 //Farres Middleware 
 //källor:

@@ -1,14 +1,19 @@
 ﻿@page "/Account/Login"
 
 @using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Antiforgery
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc
 @using ValhallaVault.Data
+
+
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject IAntiforgery Antiforgery
 
 <PageTitle>Log in</PageTitle>
 
@@ -19,7 +24,7 @@
     <div class="col-md-12">
         <section style="background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 10px;">
             <StatusMessage Message="@errorMessage" />
-            <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+            <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">       
                 <DataAnnotationsValidator />
                     <h2 class="text-white">Use a local account to log in.</h2>
                     <hr class="text-white" />
@@ -72,6 +77,7 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
+
     protected override async Task OnInitializedAsync()
     {
         if (HttpMethods.IsGet(HttpContext.Request.Method))
@@ -79,10 +85,16 @@
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
         }
+
     }
+
 
     public async Task LoginUser()
     {
+
+        //antiforgeryStateProvider.GetAntiforgeryToken();
+
+
         // This doesn't count login failures towards account lockout
         // To enable password failures to trigger account lockout, set lockoutOnFailure: true
         var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
