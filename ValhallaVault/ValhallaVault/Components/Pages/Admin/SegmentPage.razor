@@ -37,9 +37,9 @@
 				@if (isEditDetailsShown && segmentId == segment.Id)
 				{
 					<div>
-						<strong class="text-white">Segment Name: </strong><input @bind="segmentName" placeholder="@segment.SegmentName"></input>
+						<strong class="text-white">Segment Name: </strong><input @bind="segmentName" placeholder="@segment.SegmentName" class="segmentNameInput"></input>
 						<br />
-						<strong class="text-white">Segment Description: </strong><input @bind="segmentDescription" placeholder="@segment.Description"></input>
+						<strong class="text-white">Segment Description: </strong><input @bind="segmentDescription" placeholder="@segment.Description" class="segmentDescriptionInput"></input>
 						<br />
 						<button @onclick="() => UpdateSegment(segment)" class="btn btn-outline-light">Update</button>
 						<button @onclick="() => DeleteSegment(segment)" class="btn btn-outline-light">Delete</button>
