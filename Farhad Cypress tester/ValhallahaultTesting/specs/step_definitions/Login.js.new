@@ -1,0 +1,72 @@
+import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
+
+Given('I am on the login page', () => {
+  // TODO: implement step
+});
+
+When('I enter the correct email and password', () => {
+  // TODO: implement step
+});
+
+When('I click the login button to log in', () => {
+  // TODO: implement step
+});
+
+Then('I should be redirected to the userhomepage', () => {
+  // TODO: implement step
+});
+
+Given('I am on the homepage', () => {
+  // TODO: implement step
+});
+
+When('I click on Admin page', () => {
+  // TODO: implement step
+});
+
+Then('I should be redirected to admindashboard', () => {
+  // TODO: implement step
+});
+
+When('I click the Subcategories button', () => {
+  // TODO: implement step
+});
+
+/* No duplicate steps, this one already in EditButton.js
+Then('I should be redirected to subcategorypage', () => {});*/
+
+Then('I click on the first edit button', () => {
+  // TODO: implement step
+});
+
+Then('I fill the information in the fields', () => {
+  // TODO: implement step
+});
+
+Then('I click on the update button to update', () => {
+  // TODO: implement step
+});
+
+Then('I click on home page', () => {
+  // TODO: implement step
+});
+
+Then('i should be redirected to homepage', () => {
+  // TODO: implement step
+});
+
+When('I click on the first category option', () => {
+  // TODO: implement step
+});
+
+Then('I should be redirected to Categorypage', () => {
+  // TODO: implement step
+});
+
+Given('I am on the CategoryPage', () => {
+  // TODO: implement step
+});
+
+When('i click on segment 1 button I can then see the changes', () => {
+  // TODO: implement step
+});
