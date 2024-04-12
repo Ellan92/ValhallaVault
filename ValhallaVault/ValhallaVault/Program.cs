@@ -144,21 +144,15 @@ using (ServiceProvider sp = builder.Services.BuildServiceProvider())
 			roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
 		}
 
-<<<<<<< HEAD
 		// Tilldela adminrollen till den nya anvÃ¤ndaren
 		signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
 	}
-=======
-        // Tilldela adminrollen till den nya anvÃ¤ndaren
-        signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
-    }
->>>>>>> dd9263dc85b2e9e62e382715af3e5ad16dcb5fb7
 }
 
 
 builder.Services.AddAntiforgery(options =>
 {
-    options.HeaderName = "X-CSRF-TOKEN"; // Använd samma namn som i din klientkod
+	options.HeaderName = "X-CSRF-TOKEN"; // Använd samma namn som i din klientkod
 });
 
 builder.Services.AddBlazoredModal();
