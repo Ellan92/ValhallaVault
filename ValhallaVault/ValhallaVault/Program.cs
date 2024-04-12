@@ -76,7 +76,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddSignInManager<SignInManager<ApplicationUser>>()    // definiera vilken user som ska gÃ¤lla fÃ¶r signinmanager. 
+    .AddSignInManager<SignInManager<ApplicationUser>>()    // definiera vilken user som ska gÃƒÂ¤lla fÃƒÂ¶r signinmanager. 
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
@@ -100,6 +100,54 @@ builder.Services.AddCors(options =>
 using (ServiceProvider sp = builder.Services.BuildServiceProvider())
 {
 
+
+	var context = sp.GetRequiredService<ApplicationDbContext>();
+	var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
+	var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
+
+	context.Database.Migrate();
+
+	ApplicationUser newUser = new()
+	{
+		UserName = "adminuser@mail.com",
+		Email = "adminuser@mail.com",
+		EmailConfirmed = true,
+	};
+
+	ApplicationUser secondUser = new()
+	{
+		UserName = "user@mail.com",
+		Email = "user@mail.com",
+		EmailConfirmed = true,
+	};
+
+	var user = signInManager.UserManager.FindByEmailAsync(newUser.Email).GetAwaiter().GetResult();
+	var user2 = signInManager.UserManager.FindByEmailAsync(secondUser.Email).GetAwaiter().GetResult();
+
+	if (user == null && user2 == null)
+	{
+		// Skapa en ny user
+		signInManager.UserManager.CreateAsync(newUser, "Password1234!").GetAwaiter().GetResult();
+		signInManager.UserManager.CreateAsync(secondUser, "Password1234!").GetAwaiter().GetResult();
+		//signInManager.UserManager.ConfirmEmailAsync(newUser);
+
+		// Kolla om adminrollen existerar
+		bool adminRoleExists = roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult();
+
+		if (!adminRoleExists)
+		{
+			// Skapa adminrollen
+			IdentityRole adminRole = new()
+			{
+				Name = "Admin",
+
+			};
+			roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
+		}
+
+		// Tilldela adminrollen till den nya anvÃƒÂ¤ndaren
+		signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
+	}
     var context = sp.GetRequiredService<ApplicationDbContext>();
     var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
     var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
@@ -152,7 +200,7 @@ using (ServiceProvider sp = builder.Services.BuildServiceProvider())
 
 builder.Services.AddAntiforgery(options =>
 {
-    options.HeaderName = "X-CSRF-TOKEN"; // Använd samma namn som i din klientkod
+	options.HeaderName = "X-CSRF-TOKEN"; // AnvÃ¤nd samma namn som i din klientkod
 });
 
 builder.Services.AddBlazoredModal();
@@ -212,18 +260,18 @@ app.MapControllers();
 app.UseCors("AllowAll");
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Farre
 //Farres Middleware 
-//källor:
+//kÃ¤llor:
 //https://www.youtube.com/watch?v=2Gv71TvkroI
 //https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-8.0
 //https://www.tutorialsteacher.com/core/aspnet-core-middleware
 
 // finns tre metoder som man kan configuera request.
 // -run
-//vet inget om nästa middleware och används för att executa. end of pipeline
+//vet inget om nÃ¤sta middleware och anvÃ¤nds fÃ¶r att executa. end of pipeline
 // -use 
-// används vid använding av flera middlewares.
+// anvÃ¤nds vid anvÃ¤nding av flera middlewares.
 // -Map
-//Uppfattar det som att när en request görs så jämför den med den angivna vägen.
+//Uppfattar det som att nÃ¤r en request gÃ¶rs sÃ¥ jÃ¤mfÃ¶r den med den angivna vÃ¤gen.
 
 //
 app.Map("/Farre", name =>
@@ -232,16 +280,16 @@ app.Map("/Farre", name =>
     {
         await context.Response.WriteAsync("Du har skrivit in Farre i HTTP req.");
     });
-    //Om man skriver Farre så kommer det visa "Du har skrivit in Farre i HTTP req."
+    //Om man skriver Farre sÃ¥ kommer det visa "Du har skrivit in Farre i HTTP req."
 });
 
 
-//Använder flera middlewares. för att visa "This is a Middleware"
+//AnvÃ¤nder flera middlewares. fÃ¶r att visa "This is a Middleware"
 app.Use(async (context, next) =>
 {
-    Console.WriteLine("före en HTTP förfrågan");
+    Console.WriteLine("fÃ¶re en HTTP fÃ¶rfrÃ¥gan");
     await next();
-    Console.WriteLine("Efter HTTP förfrågan");
+    Console.WriteLine("Efter HTTP fÃ¶rfrÃ¥gan");
 });
 
 //en enkel Middleware - end of pipeline
